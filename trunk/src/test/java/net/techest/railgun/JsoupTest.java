@@ -22,28 +22,31 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.techest.railgun.net.HttpClient;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 /**
  *
  * @author baizhongwei.pt
  */
-public class Main {
+public class JsoupTest {
 
     public static void main(String[] argvs) throws IOException {
 //        Document doc = Jsoup.parse(new URL("http://www.zhaokunyao.com/"),3000);
 //        Elements d = doc.select("#content div");
-        HttpClient hc = new HttpClient("http://www.baidu.com");
+          HttpClient hc = new HttpClient("http://www.baidu.com");
 
-        while (1 == 1) {
             long sttime = System.currentTimeMillis();
             try {
-                byte[] c = hc.exec();
-                System.out.println(new String(c, "GBK"));
+                String result = hc.get();
+                Document doc = Jsoup.parse(result);
+                Elements d = doc.select("#content div");
+                System.out.println(d.outerHtml());
             }
             catch (Exception ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(JsoupTest.class.getName()).log(Level.SEVERE, null, ex);
             }
             System.out.println("Done " + (System.currentTimeMillis() - sttime));
-        }
     }
 }

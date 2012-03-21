@@ -17,7 +17,6 @@
  */
 package net.techest.railgun.net;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -28,6 +27,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import net.techest.util.Log4j;
 
@@ -40,7 +41,7 @@ public class HttpClient implements Cloneable {
 
     public enum REQ_TYPE {
 
-        POST, GET, HEAD
+        POST, GET
     };
     private HttpURLConnection httpConn = null;
     private URL turl;
@@ -67,8 +68,7 @@ public class HttpClient implements Cloneable {
         try {
             turl = new URL(url);
             Log4j.getInstance().debug("URL SET :" + url);
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             Log4j.getInstance().error("错误的URL格式" + e.getMessage());
             return;
         }
@@ -78,8 +78,7 @@ public class HttpClient implements Cloneable {
         try {
             turl = new URL(url);
             Log4j.getInstance().debug("URL SET :" + url);
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             Log4j.getInstance().error("错误的URL格式" + e.getMessage());
         }
     }
@@ -153,6 +152,39 @@ public class HttpClient implements Cloneable {
     public Cookies getCookies() {
         return cookies;
     }
+    private static final Pattern charsetPattern = Pattern.compile("(?i)\\bcharset=\\s*\"?([^\\s;\"]*)]");
+
+    /**
+     * 得到页面返回body的string
+     *
+     * @param charset 页面编码 可以指定auto自动从Content-Type猜测
+     * @return
+     * @throws Exception
+     */
+    public String get(String charset) throws Exception {
+        byte[] result = this.exec();
+        // Content-Type: text/html; charset=UTF-8
+        if (charset.equals("auto") && responseHeader.get("Content-Type") != null) {
+            charset = "utf8";
+            Matcher m = charsetPattern.matcher(responseHeader.get("Content-Type").toString());
+            if (m.find()) {
+                charset = m.group(1).trim().toUpperCase();
+            }
+        }
+        Log4j.getInstance().debug("Page Encode : " + charset);
+        String resultString = new String(result, charset);
+        return resultString;
+    }
+
+    /**
+     * 得到页面返回body的string
+     *
+     * @return
+     * @throws Exception
+     */
+    public String get() throws Exception {
+        return this.get("auto");
+    }
 
     /**
      *
@@ -174,21 +206,18 @@ public class HttpClient implements Cloneable {
             if (getRequestType().equals(REQ_TYPE.POST.toString())) {
                 httpConn.setRequestMethod("POST");
             }
-            if (getRequestType().equals(REQ_TYPE.HEAD.toString())) {
-                httpConn.setRequestMethod("HEAD");
-            }
             httpConn.setRequestProperty("Host", turl.getHost());
             httpConn.setRequestProperty("User-Agent",
-                    "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1");
+                    "railgun");
             httpConn.setRequestProperty("Accept",
                     "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
             httpConn.setRequestProperty("Accept-Encoding", "gzip");
-            httpConn.setRequestProperty("Accept-Language", "zh-cn,zh;q=0.5");
+            httpConn.setRequestProperty("Accept-Language", "en,zh-cn,zh;q=0.5");
             httpConn.setRequestProperty("Accept-Charset",
-                    "gbk,GB2312;q=0.7,*;q=0.7");
+                    "utf8,gbk,GB2312;q=0.7,*;q=0.7");
             // 发送cookie
             String cookieString = cookies.toString();
-            if (!( cookieString.equals("") )) {
+            if (!(cookieString.equals(""))) {
                 httpConn.setRequestProperty("Cookie", cookieString);
             }
             httpConn.setRequestProperty("Keep-Alive", "off");
@@ -221,13 +250,14 @@ public class HttpClient implements Cloneable {
                 bufferCache = new byte[1024];
             }
             InputStream uurl = httpConn.getInputStream();
+            // gzip支持
             if (httpConn.getHeaderField("Content-Encoding") != null && httpConn.getHeaderField("Content-Encoding").equalsIgnoreCase("gzip")) {
                 uurl = new GZIPInputStream(uurl);
             }
-            
-            // 放到header去
+
+            // 放到响应header去
             this.responseHeader = httpConn.getHeaderFields();
-            // 放到mseega
+            // 放到响应message中
             this.responseMessage = httpConn.getHeaderFieldKey(0);
 
             if (httpConn.getHeaderField("Set-Cookie") != null) {
@@ -245,12 +275,11 @@ public class HttpClient implements Cloneable {
             }
 
             int length;
-            while (( length = uurl.read(bufferCache) ) > 0) {
+            while ((length = uurl.read(bufferCache)) > 0) {
                 content.write(bufferCache, 0, length);
             }
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             httpConn.disconnect();
             throw e;
@@ -272,8 +301,7 @@ public class HttpClient implements Cloneable {
         try {
             // call clone in Object.
             return super.clone();
-        }
-        catch (CloneNotSupportedException e) {
+        } catch (CloneNotSupportedException e) {
             System.out.println("Cloning not allowed.");
             return this;
         }

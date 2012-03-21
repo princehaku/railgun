@@ -14,19 +14,19 @@
  *
  *  Author     : princehaku
  */
-
 package net.techest.util;
 
 public class Timer {
-		private long interval;
-		private long sysTime;
-		
-		public void setInterval(long milliontime){
-			this.interval=milliontime;
-			this.sysTime=System.currentTimeMillis();
-		}
-		
-		public boolean isTimeUp(){
-			return (System.currentTimeMillis()-this.sysTime>this.interval);
-		}
+
+    private long interval;
+    private long sysTime;
+
+    public void setInterval(long milliontime) {
+        this.interval = milliontime;
+        this.sysTime = System.currentTimeMillis();
+    }
+
+    public boolean isTimeUp() {
+        return (System.currentTimeMillis() - this.sysTime > this.interval);
+    }
 }
