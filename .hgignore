@@ -1,0 +1,4 @@
+syntax: glob
+trunk/nbactions.xml
+trunk/nb-configuration.xml
+trunk/target
