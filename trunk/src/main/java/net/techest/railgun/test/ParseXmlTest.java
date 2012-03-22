@@ -18,14 +18,12 @@
  */
 package net.techest.railgun.test;
 
-import net.techest.railgun.Resource;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import net.techest.util.Log4j;
-import net.techest.railgun.action.ActionFactory;
-import net.techest.railgun.action.NodeAction;
+import net.techest.railgun.action.ActionNodeFactory;
+import net.techest.railgun.action.ActionNode;
+import net.techest.railgun.system.Shell;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -42,27 +40,24 @@ public class ParseXmlTest {
         File inputXml = new File("src/main/java/testtask1.xml");
         Document document = saxReader.read(inputXml);
         Element root = document.getRootElement();
-        Resource res = new Resource();
-        ParseXmlTest.applyAction(root, res);
+        Shell shell = new Shell();
+        ParseXmlTest.applyAction(root, shell);
     }
 
-    public static void applyAction(Element e, Resource res) {
-        if (e.elements().isEmpty()) {
-            return;
-        } 
+    public static void applyAction(Element e, Shell shell) {
+        // 处理当前节点
+        ActionNode action = ActionNodeFactory.getNodeAction(e.getName());
+        if (action == null) {
+            Log4j.getInstance().error("No Such Action " + e.getName());
+            //return;
+        } else {
+            Log4j.getInstance().debug("Execute Action " + e.getName());
+            ActionNodeFactory.executeAction(action, e, shell);
+        }
         for (Iterator i = e.elementIterator(); i.hasNext();) {
-            // 克隆资源节点
-            Resource res_tmp = (Resource) res.clone();
-            Element eone = (Element) i.next();
-            // 处理当前节点
-            NodeAction action = ActionFactory.getNodeAction(eone.getName());
-            if (action == null) {
-                Log4j.getInstance().error("No Such Action " + eone.getName());
-                return;
-            }
-            action.execute(eone, res);
-            //递归处理子节点
-            applyAction(eone, res_tmp);
+            Element childe = (Element) i.next();
+            // 处理子节点 递归
+            applyAction(childe, shell);
         }
     }
 }

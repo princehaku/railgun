@@ -1,27 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bullet>
+<shell>
     <name>wordpress</name>
     <description>common rules for wordpress blog</description>
     <baseurl>*</baseurl>
     <fetch>
-        <url>http://www.baidu.com/</url>
+        <url>http://127.0.0.1:8888/</url>
         <cookie>enable</cookie>
-        <encoding>utf8</encoding>
-        <param>
-            <key>User-Agent</key>
-            <value>Mozilla/5.0 (Windows NT 6.1; WOW64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1</value>
-        </param>
+        <charset>auto</charset>
+        <params>
+            <param>
+                <key>User-Agent</key>
+                <value>Mozilla/5.0 (Windows NT 6.1; WOW64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1</value>
+            </param>
+            <param>
+                <key>By</key>
+                <value>princehaku</value>
+            </param>
+        </params>
         <cookies>
-            <key>a</key>
-            <value>b</value>
+            <cookie>
+                <key>a</key>
+                <value>b</value>
+            </cookie>
         </cookies>
     </fetch>
-    <filter>net.techest.testFilter</filter>    
     <parse method="dom" rule="#content div" filter="net.techest.testFilter">
-        <parse method="dom" clone="true" rule=".posttitle a">
+        <parse method="dom" fork="true" rule=".posttitle a">
             <store>APP_ROOT/tmp/DATA TIME</store>
         </parse>
-        <parse method="regxp" clone="true" rule="img.*src=[&apos;&quot;](.*?)[&apos;&quot;]">
+        <parse method="regxp" fork="true" rule="img.*src=[&apos;&quot;](.*?)[&apos;&quot;]">
             <fetch>
                 <url>$1</url>
             </fetch>
@@ -29,4 +36,4 @@
         </parse>
     </parse>
     <store>APP_ROOT/tmp/DATA TIME</store>
-</bullet>
+</shell>

@@ -25,7 +25,7 @@ import net.sf.json.JSONObject;
 public class HttpJsonClient extends HttpClient implements Cloneable {
 
     public JSONObject getJson() throws Exception {
-        String res = this.get();
+        String res = this.getBodyString();
         return JSONObject.fromObject(res);
     }
 }

@@ -20,15 +20,15 @@
 
 package net.techest.railgun.action;
 
-import net.techest.railgun.Resource;
+import net.techest.railgun.system.Shell;
 import org.dom4j.Element;
 
 /**
  *
  * @author baizhongwei.pt
  */
-public interface NodeAction {
+public interface ActionNode {
 
-    public void execute(Element node, Resource res);
+    public void execute(Element node, Shell bullet);
 
 }

@@ -37,7 +37,7 @@ import net.techest.util.Log4j;
  *
  * @author princehaku
  */
-public class HttpClient implements Cloneable {
+public class HttpClient implements Client {
 
     public enum REQ_TYPE {
 
@@ -50,20 +50,30 @@ public class HttpClient implements Cloneable {
     private Map<String, List<String>> responseHeader;
     private String responseMessage;
     Cookies cookies = new Cookies();
+    boolean cookieEnable = true;
     QuestParams requestParam = new QuestParams();
     QuestParams postParams = new QuestParams();
     private int responseTimerOut = 30000;
+    // 页面编码
+    String charset = "auto";
 
+    @Override
     public URL getUrl() {
         return this.turl;
     }
-
+    /**是否启用cookie特性
+     * 
+     */
+    public void enableCookie(boolean cookieEnable) {
+        this.cookieEnable = cookieEnable;
+    }
     /**
      * 设置请求的url
      *
      * @param url
      * @throws MalformedURLException
      */
+    @Override
     public void setUrl(String url) {
         try {
             turl = new URL(url);
@@ -82,7 +92,13 @@ public class HttpClient implements Cloneable {
             Log4j.getInstance().error("错误的URL格式" + e.getMessage());
         }
     }
-
+    /**得到当前编码
+     * 
+     * @return 
+     */
+    public String getCharset() {
+        return this.charset;
+    }
     /**
      * 设置请求类型
      *
@@ -155,13 +171,23 @@ public class HttpClient implements Cloneable {
     private static final Pattern charsetPattern = Pattern.compile("(?i)\\bcharset=\\s*\"?([^\\s;\"]*)]");
 
     /**
+     *
+     * @param charset 页面编码 
+     * 可以指定auto然后会自动从Content-Type猜测
+     */
+    @Override
+    public void setCharset(String charset){
+        this.charset = charset;
+    }
+
+    /**
      * 得到页面返回body的string
      *
-     * @param charset 页面编码 可以指定auto自动从Content-Type猜测
      * @return
      * @throws Exception
      */
-    public String get(String charset) throws Exception {
+    @Override
+    public String getBodyString() throws Exception {
         byte[] result = this.exec();
         // Content-Type: text/html; charset=UTF-8
         if (charset.equals("auto") && responseHeader.get("Content-Type") != null) {
@@ -177,19 +203,10 @@ public class HttpClient implements Cloneable {
     }
 
     /**
-     * 得到页面返回body的string
-     *
-     * @return
-     * @throws Exception
-     */
-    public String get() throws Exception {
-        return this.get("auto");
-    }
-
-    /**
      *
      * @param url 提交地址
      */
+    @Override
     public byte[] exec() throws Exception {
 
         ByteArrayOutputStream content = new ByteArrayOutputStream();
@@ -260,7 +277,7 @@ public class HttpClient implements Cloneable {
             // 放到响应message中
             this.responseMessage = httpConn.getHeaderFieldKey(0);
 
-            if (httpConn.getHeaderField("Set-Cookie") != null) {
+            if (this.cookieEnable && httpConn.getHeaderField("Set-Cookie") != null) {
                 List<String> newCookies = httpConn.getHeaderFields().get("Set-Cookie");
                 if (newCookies != null) {
                     Iterator<String> nit = newCookies.iterator();
@@ -280,8 +297,10 @@ public class HttpClient implements Cloneable {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            httpConn.disconnect();
+            //e.printStackTrace();
+            if (httpConn != null) {
+                httpConn.disconnect();
+            }
             throw e;
         }
         httpConn.disconnect();
@@ -307,6 +326,7 @@ public class HttpClient implements Cloneable {
         }
     }
 
+    @Override
     public void setResponseTimeOut(int i) {
         this.responseTimerOut = i;
     }

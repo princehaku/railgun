@@ -39,7 +39,7 @@ public class JsoupTest {
 
             long sttime = System.currentTimeMillis();
             try {
-                String result = hc.get();
+                String result = hc.getBodyString();
                 Document doc = Jsoup.parse(result);
                 Elements d = doc.select("#content div");
                 System.out.println(d.outerHtml());
