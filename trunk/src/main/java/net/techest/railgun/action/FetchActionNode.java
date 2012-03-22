@@ -88,7 +88,8 @@ public class FetchActionNode implements ActionNode {
         bullet.setClient(client);
         try {
             byte[] result = client.exec();
-            Resource res = new Resource(result, client.getCharset());
+            Resource res = new Resource();
+            res.add(new Resource(result, client.getCharset()));
             bullet.setResource(res);
         } catch (Exception ex) {
             Log4j.getInstance().error("Fetch Error " + ex.getMessage());

@@ -25,9 +25,9 @@ import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import net.techest.railgun.test.JsoupTest;
 import net.techest.util.Log4j;
-import org.dom4j.Element;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.dom4j.Element;
 import org.jsoup.select.Elements;
 
 /**parse节点处理类
@@ -47,23 +47,30 @@ class ParseActionNode implements ActionNode {
             return;
         }
         String rule = node.attribute("rule").getData().toString();
+        
+        System.out.println("当前资源节点内有"+bullet.getResource().size());
+        Resource resnew = new Resource();
         for(Iterator i = bullet.getResource().iterator();i.hasNext();) {
             Resource res = (Resource) i.next();
-            System.out.println(res.toString());
             if (node.attribute("method").getData().toString().equals("dom")) {
+                // dom搜索 使用jsoup
                 Document doc = Jsoup.parse(res.toString());
                 Elements els = doc.select(rule);
                 //循环els存放为新的r节点
                 for(Iterator ri = els.iterator();ri.hasNext();) {
-                    Elements el = (Elements) ri.next();
+                    org.jsoup.nodes.Element el = (org.jsoup.nodes.Element) ri.next();
                     Resource r = new Resource(el.outerHtml().getBytes(), res.getCharset());
-                    res.add(r);
+                    resnew.add(r);
                 }
             }
             if (node.attribute("method").getData().toString().equals("regxp")) {
-
+                // 正则搜索
+                
             }
         }
+        
+        System.out.println("处理后节点内有"+resnew.size());
+        bullet.setResource(resnew);
     }
 
 }

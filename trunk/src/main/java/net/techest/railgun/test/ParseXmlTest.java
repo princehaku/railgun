@@ -52,6 +52,12 @@ public class ParseXmlTest {
             //return;
         } else {
             Log4j.getInstance().debug("Execute Action " + e.getName());
+            // 进行资源节点克隆
+            if (e.attribute("fork") != null && e.attribute("fork").getData().toString().equals("true")) {
+                Log4j.getInstance().info("Shell Cloned");
+                Shell newshell = (Shell) shell.clone();
+                shell = newshell;
+            }
             ActionNodeFactory.executeAction(action, e, shell);
         }
         for (Iterator i = e.elementIterator(); i.hasNext();) {

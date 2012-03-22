@@ -61,12 +61,15 @@ public class HttpClient implements Client {
     public URL getUrl() {
         return this.turl;
     }
-    /**是否启用cookie特性
-     * 
+
+    /**
+     * 是否启用cookie特性
+     *
      */
     public void enableCookie(boolean cookieEnable) {
         this.cookieEnable = cookieEnable;
     }
+
     /**
      * 设置请求的url
      *
@@ -79,6 +82,7 @@ public class HttpClient implements Client {
             turl = new URL(url);
             Log4j.getInstance().debug("URL SET :" + url);
         } catch (MalformedURLException e) {
+            turl = null;
             Log4j.getInstance().error("错误的URL格式" + e.getMessage());
             return;
         }
@@ -92,13 +96,16 @@ public class HttpClient implements Client {
             Log4j.getInstance().error("错误的URL格式" + e.getMessage());
         }
     }
-    /**得到当前编码
-     * 
-     * @return 
+
+    /**
+     * 得到当前编码
+     *
+     * @return
      */
     public String getCharset() {
         return this.charset;
     }
+
     /**
      * 设置请求类型
      *
@@ -172,11 +179,10 @@ public class HttpClient implements Client {
 
     /**
      *
-     * @param charset 页面编码 
-     * 可以指定auto然后会自动从Content-Type猜测
+     * @param charset 页面编码 可以指定auto然后会自动从Content-Type猜测
      */
     @Override
-    public void setCharset(String charset){
+    public void setCharset(String charset) {
         this.charset = charset;
     }
 
@@ -189,15 +195,6 @@ public class HttpClient implements Client {
     @Override
     public String getBodyString() throws Exception {
         byte[] result = this.exec();
-        // Content-Type: text/html; charset=UTF-8
-        if (charset.equals("auto") && responseHeader.get("Content-Type") != null) {
-            charset = "utf8";
-            Matcher m = charsetPattern.matcher(responseHeader.get("Content-Type").toString());
-            if (m.find()) {
-                charset = m.group(1).trim().toUpperCase();
-            }
-        }
-        Log4j.getInstance().debug("Page Encode : " + charset);
         String resultString = new String(result, charset);
         return resultString;
     }
@@ -208,7 +205,9 @@ public class HttpClient implements Client {
      */
     @Override
     public byte[] exec() throws Exception {
-
+        if (turl == null) {
+            throw new Exception("错误的URL格式");
+        }
         ByteArrayOutputStream content = new ByteArrayOutputStream();
 
         byte[] bufferCache;
@@ -296,6 +295,18 @@ public class HttpClient implements Client {
                 content.write(bufferCache, 0, length);
             }
 
+            // Content-Type: text/html; charset=UTF-8
+            if (charset.equals("auto")) {
+                charset = "utf8";
+                if (responseHeader.get("Content-Type") != null) {
+                    Matcher m = charsetPattern.matcher(responseHeader.get("Content-Type").toString());
+                    if (m.find()) {
+                        charset = m.group(1).trim().toUpperCase();
+                    }
+                }
+            }
+
+            Log4j.getInstance().debug("Page Encode : " + charset);
         } catch (Exception e) {
             //e.printStackTrace();
             if (httpConn != null) {

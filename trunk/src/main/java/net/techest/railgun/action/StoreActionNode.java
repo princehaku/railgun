@@ -13,41 +13,28 @@
  *  limitations under the License.
  *
  *  Project Name : railgun
- *  Created on : Mar 22, 2012 , 9:51:53 AM
+ *  Created on : Mar 22, 2012 , 7:31:35 PM
  *  Author     : princehaku
  */
+
+
 package net.techest.railgun.action;
 
 import net.techest.railgun.system.Shell;
-import net.techest.util.Log4j;
 import org.dom4j.Element;
 
 /**
  *
  * @author baizhongwei.pt
  */
-public class ActionNodeFactory {
+class StoreActionNode implements ActionNode {
 
-    public static ActionNode getNodeAction(String name) {
-        ActionNode n = null;
-        switch (name) {
-            case "shell":
-                n = new RootActionNode();
-                break;
-            case "fetch":
-                n = new FetchActionNode();
-                break;
-            case "parse":
-                n = new ParseActionNode();
-                break;
-            case "store":
-                n = new StoreActionNode();
-                break;
-        }
-        return n;
+    public StoreActionNode() {
     }
 
-    public static void executeAction(ActionNode action, Element eone, Shell shell) {
-        action.execute(eone, shell);
+    @Override
+    public void execute(Element node, Shell bullet) {
+        System.out.println(bullet.getResource().size());
     }
+
 }

@@ -34,7 +34,7 @@ public class Shell implements Cloneable{
     // 连接器 (枪  要有枪才能发子弹撒~)
     Client client;
     // 资源类
-    LinkedList<Resource> resource;
+    Resource resource;
 
     public String getBaseUrl() {
         return baseUrl;
@@ -68,18 +68,12 @@ public class Shell implements Cloneable{
         this.client = client;
     }
 
-    public LinkedList<Resource> getResource() {
+    public Resource getResource() {
         return resource;
     }
 
-    public void setResource(LinkedList<Resource> resource) {
+    public void setResource(Resource resource) {
         this.resource = resource;
-    }
-    
-    public void setResource(Resource res) {
-        this.resource = new LinkedList<>();
-        this.resource.add(res);
-            System.out.println(res.toString());
     }
     
     @Override
