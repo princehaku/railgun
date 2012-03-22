@@ -17,20 +17,18 @@
  */
 package net.techest.railgun.net;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
-import net.techest.util.Log4j;
 
 /**
- * 参数类 方便把参数组合成字符串 不会经过urlencode
- *
+ * 请求参数类 方便把参数组合成字符串
+ * 不会经过urlencode
+ * 
  * @author princehaku
  *
  */
-public class QueryParam extends HashMap<String, String> {
+public class QuestParams extends HashMap<String, String> {
 
     @Override
     public java.lang.String toString() {

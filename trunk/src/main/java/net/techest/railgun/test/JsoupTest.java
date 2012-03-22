@@ -16,7 +16,7 @@
  *  Created on : Mar 20, 2012 , 10:35:44 AM
  *  Author     : princehaku
  */
-package net.techest.railgun;
+package net.techest.railgun.test;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -35,7 +35,7 @@ public class JsoupTest {
     public static void main(String[] argvs) throws IOException {
 //        Document doc = Jsoup.parse(new URL("http://www.zhaokunyao.com/"),3000);
 //        Elements d = doc.select("#content div");
-          HttpClient hc = new HttpClient("http://www.baidu.com");
+          HttpClient hc = new HttpClient("http://blog.nosqlfan.com/");
 
             long sttime = System.currentTimeMillis();
             try {

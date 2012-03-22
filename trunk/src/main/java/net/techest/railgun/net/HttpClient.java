@@ -50,8 +50,8 @@ public class HttpClient implements Cloneable {
     private Map<String, List<String>> responseHeader;
     private String responseMessage;
     Cookies cookies = new Cookies();
-    QueryParam requestParam = new QueryParam();
-    QueryParam postParams = new QueryParam();
+    QuestParams requestParam = new QuestParams();
+    QuestParams postParams = new QuestParams();
     private int responseTimerOut = 30000;
 
     public URL getUrl() {

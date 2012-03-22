@@ -15,20 +15,17 @@
  *  Created on : 2011-9-5, 下午12:57:06
  *  Author     : princehaku
  */
-
 package net.techest.railgun.net;
 
 import net.sf.json.JSONObject;
+
 /**
- * @deprecated
- * @author princehaku
  *
  */
-public class HttpJsonClient extends HttpClient implements Cloneable{
-	
+public class HttpJsonClient extends HttpClient implements Cloneable {
 
-		public JSONObject getJson() throws Exception{
-			String res=new String(this.exec(),"utf8");
-			return JSONObject.fromObject(res);
-		}
+    public JSONObject getJson() throws Exception {
+        String res = this.get();
+        return JSONObject.fromObject(res);
+    }
 }

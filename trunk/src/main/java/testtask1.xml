@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bullet>
+    <name>wordpress</name>
+    <description>common rules for wordpress blog</description>
+    <baseurl>*</baseurl>
+    <fetch>
+        <url>http://www.baidu.com/</url>
+        <cookie>enable</cookie>
+        <encoding>utf8</encoding>
+        <param>
+            <key>User-Agent</key>
+            <value>Mozilla/5.0 (Windows NT 6.1; WOW64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1</value>
+        </param>
+        <cookies>
+            <key>a</key>
+            <value>b</value>
+        </cookies>
+    </fetch>
+    <filter>net.techest.testFilter</filter>    
+    <parse method="dom" rule="#content div" filter="net.techest.testFilter">
+        <parse method="dom" clone="true" rule=".posttitle a">
+            <store>APP_ROOT/tmp/DATA TIME</store>
+        </parse>
+        <parse method="regxp" clone="true" rule="img.*src=[&apos;&quot;](.*?)[&apos;&quot;]">
+            <fetch>
+                <url>$1</url>
+            </fetch>
+            <store>APP_ROOT/tmp/DATA TIME</store>
+        </parse>
+    </parse>
+    <store>APP_ROOT/tmp/DATA TIME</store>
+</bullet>
