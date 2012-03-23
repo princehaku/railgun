@@ -309,7 +309,7 @@ public class HttpClient implements Client {
 
             Log4j.getInstance().debug("Page Encode : " + charset);
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             if (httpConn != null) {
                 httpConn.disconnect();
             }

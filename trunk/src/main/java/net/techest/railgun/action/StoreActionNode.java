@@ -18,9 +18,14 @@
  */
 package net.techest.railgun.action;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
+import net.techest.util.MD5;
 import org.dom4j.Element;
 
 /**
@@ -34,9 +39,21 @@ class StoreActionNode implements ActionNode {
 
     @Override
     public void execute(Element node, Shell bullet) {
-        for (Iterator i = bullet.getResource().iterator(); i.hasNext();) {
-            Resource res = (Resource) i.next();
-            System.out.println(res.toString());
+        for (Iterator i = bullet.getResources().iterator(); i.hasNext();) {
+            FileOutputStream fw = null;
+            try {
+                Resource res = (Resource) i.next();
+                fw = new FileOutputStream("cache/"+MD5.getMD5(res.getBytes()) + ".txt");
+                fw.write(res.getBytes());
+            } catch (IOException ex) {
+                Logger.getLogger(StoreActionNode.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    fw.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(StoreActionNode.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
 
     }

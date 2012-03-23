@@ -19,6 +19,7 @@
 package net.techest.railgun.action;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import net.techest.railgun.net.HttpClient;
 import net.techest.railgun.system.PatternHelper;
@@ -55,6 +56,7 @@ public class FetchActionNode implements ActionNode {
         if (node.element("timeout") != null) {
             int timemillons = Integer.parseInt(node.element("timeout").getData().toString());
             client.setResponseTimeOut(timemillons);
+            client.setConnectTimeOut(timemillons);
             node.element("timeout").detach();
         }
         // 是否启用cookie
@@ -97,11 +99,12 @@ public class FetchActionNode implements ActionNode {
         bullet.setClient(client);
 
 
-        Resource resnew = new Resource();
-        if (bullet.getResource() == null) {
+        LinkedList<Resource> resnew = new LinkedList<Resource>();
+        // 没有资源节点只连接一次
+        if (bullet.getResources() == null) {
             try {
                 String newurl = url;
-                newurl = PatternHelper.convertAll(newurl, bullet.getResource().getRegxpResult());
+                newurl = PatternHelper.convertAll(newurl, null);
                 client.setUrl(newurl);
                 byte[] result = client.exec();
                 resnew.add(new Resource(result, client.getCharset()));
@@ -109,7 +112,7 @@ public class FetchActionNode implements ActionNode {
                 Log4j.getInstance().error("Fetch Error " + ex.getMessage());
             }
         } else {
-            for (Iterator i = bullet.getResource().iterator(); i.hasNext();) {
+            for (Iterator i = bullet.getResources().iterator(); i.hasNext();) {
                 Resource res = (Resource) i.next();
                 try {
                     String newurl = url;
@@ -122,6 +125,6 @@ public class FetchActionNode implements ActionNode {
                 }
             }
         }
-        bullet.setResource(resnew);
+        bullet.setResources(resnew);
     }
 }

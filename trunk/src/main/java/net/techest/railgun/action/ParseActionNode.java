@@ -18,7 +18,13 @@
  */
 package net.techest.railgun.action;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.techest.railgun.system.Resource;
@@ -48,19 +54,23 @@ class ParseActionNode implements ActionNode {
         }
         String rule = node.attribute("rule").getData().toString();
 
-        System.out.println("当前资源节点内有" + bullet.getResource().size());
-        Resource resnew = new Resource();
-        for (Iterator i = bullet.getResource().iterator(); i.hasNext();) {
+        System.out.println("当前资源节点内有" + bullet.getResources().size());
+        LinkedList<Resource> resnew = new LinkedList<Resource>();
+        for (Iterator i = bullet.getResources().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
             if (node.attribute("method").getData().toString().equals("dom")) {
-                // dom搜索 使用jsoup
-                Document doc = Jsoup.parse(res.toString());
-                Elements els = doc.select(rule);
-                //循环els存放为新的r节点
-                for (Iterator ri = els.iterator(); ri.hasNext();) {
-                    org.jsoup.nodes.Element el = (org.jsoup.nodes.Element) ri.next();
-                    Resource r = new Resource(el.outerHtml().getBytes(), res.getCharset());
-                    resnew.add(r);
+                try {
+                    // dom搜索 使用jsoup
+                    Document doc = Jsoup.parse(new ByteArrayInputStream(res.getBytes()), res.getCharset(), "");
+                    Elements els = doc.select(rule);
+                    //循环els存放为新的r节点
+                    for (Iterator ri = els.iterator(); ri.hasNext();) {
+                        org.jsoup.nodes.Element el = (org.jsoup.nodes.Element) ri.next();
+                        Resource r = new Resource(el.outerHtml().getBytes(res.getCharset()), res.getCharset());
+                        resnew.add(r);
+                    }
+                } catch (IOException ex) {
+                    Log4j.getInstance().error("dom方式解析失败 " + ex.getMessage() + res.getCharset());
                 }
             }
             if (node.attribute("method").getData().toString().equals("regxp")) {
@@ -68,14 +78,18 @@ class ParseActionNode implements ActionNode {
                 Pattern ptn = Pattern.compile(rule);
                 Matcher m = ptn.matcher(res.toString());
                 if (m.find()) {
-                    Resource r = new Resource(m.group(0).getBytes(), res.getCharset());
-                    r.setRegxpResult(m);
-                    resnew.add(r);
+                    try {
+                        Resource r = new Resource(m.group(0).getBytes(res.getCharset()), res.getCharset());
+                        r.setRegxpResult(m);
+                        resnew.add(r);
+                    } catch (UnsupportedEncodingException ex) {
+                        Log4j.getInstance().error("不支持的编码 " + ex.getMessage() + res.getCharset());
+                    }
                 }
             }
         }
 
         System.out.println("处理后节点内有" + resnew.size());
-        bullet.setResource(resnew);
+        bullet.setResources(resnew);
     }
 }

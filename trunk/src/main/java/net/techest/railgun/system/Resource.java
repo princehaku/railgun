@@ -28,7 +28,7 @@ import net.techest.util.Log4j;
  *
  * @author baizhongwei.pt
  */
-public class Resource extends LinkedList<Resource> implements Cloneable {
+public class Resource implements Cloneable {
 
     private byte[] bytes;
     private String charset = "";

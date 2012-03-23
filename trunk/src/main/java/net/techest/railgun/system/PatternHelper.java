@@ -33,7 +33,6 @@ public class PatternHelper {
                 input = input.replaceAll("\\$" + regxpu, m.group(regxpu));
             }
         }
-
         return input;
     }
 }
