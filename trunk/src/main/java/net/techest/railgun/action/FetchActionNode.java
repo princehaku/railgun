@@ -18,11 +18,12 @@
  */
 package net.techest.railgun.action;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import net.techest.railgun.net.HttpClient;
-import net.techest.railgun.system.PatternHelper;
+import net.techest.util.PatternHelper;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import net.techest.util.Log4j;
@@ -104,10 +105,13 @@ public class FetchActionNode implements ActionNode {
         if (bullet.getResources() == null) {
             try {
                 String newurl = url;
-                newurl = PatternHelper.convertAll(newurl, null);
-                client.setUrl(newurl);
-                byte[] result = client.exec();
-                resnew.add(new Resource(result, client.getCharset()));
+                ArrayList<String> strings = PatternHelper.convertAll(newurl, null);
+                for (Iterator si = strings.iterator(); si.hasNext();) {
+                    newurl = (String) si.next();
+                    client.setUrl(newurl);
+                    byte[] result = client.exec();
+                    resnew.add(new Resource(result, client.getCharset()));
+                }
             } catch (Exception ex) {
                 Log4j.getInstance().error("Fetch Error " + ex.getMessage());
             }
@@ -116,10 +120,13 @@ public class FetchActionNode implements ActionNode {
                 Resource res = (Resource) i.next();
                 try {
                     String newurl = url;
-                    newurl = PatternHelper.convertAll(newurl, res.getRegxpResult());
-                    client.setUrl(newurl);
-                    byte[] result = client.exec();
-                    resnew.add(new Resource(result, client.getCharset()));
+                    ArrayList<String> strings = PatternHelper.convertAll(newurl, res.getRegxpResult());
+                    for (Iterator si = strings.iterator(); si.hasNext();) {
+                        newurl = (String) si.next();
+                        client.setUrl(newurl);
+                        byte[] result = client.exec();
+                        resnew.add(new Resource(result, client.getCharset()));
+                    }
                 } catch (Exception ex) {
                     Log4j.getInstance().error("Fetch Error " + ex.getMessage());
                 }
