@@ -35,5 +35,5 @@
             <store>APP_ROOT/tmp/DATA TIME</store>
         </parse>
     </parse>
-    <store>APP_ROOT/tmp/DATA TIME</store>
+    <!--<store>APP_ROOT/tmp/DATA TIME</store>-->
 </shell>

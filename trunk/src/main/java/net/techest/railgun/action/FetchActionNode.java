@@ -21,6 +21,7 @@ package net.techest.railgun.action;
 import java.util.Iterator;
 import java.util.List;
 import net.techest.railgun.net.HttpClient;
+import net.techest.railgun.system.PatternHelper;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import net.techest.util.Log4j;
@@ -41,7 +42,8 @@ public class FetchActionNode implements ActionNode {
             Log4j.getInstance().error("FetchNode Need An Url Parameter");
             return;
         }
-        client.setUrl(node.element("url").getData().toString());
+        String url = node.element("url").getData().toString();
+        client.setUrl(url);
         node.element("url").detach();
         // 编码定制
         if (node.element("charset") != null) {
@@ -98,14 +100,21 @@ public class FetchActionNode implements ActionNode {
         Resource resnew = new Resource();
         if (bullet.getResource() == null) {
             try {
+                String newurl = url;
+                newurl = PatternHelper.convertAll(newurl, bullet.getResource().getRegxpResult());
+                client.setUrl(newurl);
                 byte[] result = client.exec();
                 resnew.add(new Resource(result, client.getCharset()));
             } catch (Exception ex) {
                 Log4j.getInstance().error("Fetch Error " + ex.getMessage());
             }
         } else {
-            for (Iterator i = bullet.getResource().iterator(); i.hasNext();i.next()) {
+            for (Iterator i = bullet.getResource().iterator(); i.hasNext();) {
+                Resource res = (Resource) i.next();
                 try {
+                    String newurl = url;
+                    newurl = PatternHelper.convertAll(newurl, res.getRegxpResult());
+                    client.setUrl(newurl);
                     byte[] result = client.exec();
                     resnew.add(new Resource(result, client.getCharset()));
                 } catch (Exception ex) {
