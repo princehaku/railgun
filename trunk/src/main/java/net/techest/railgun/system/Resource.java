@@ -20,6 +20,7 @@ package net.techest.railgun.system;
 
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
 import net.techest.util.Log4j;
 
 /**
@@ -31,6 +32,7 @@ public class Resource extends LinkedList<Resource> implements Cloneable {
 
     private byte[] bytes;
     private String charset = "";
+    private Matcher regxpResult = null;
 
     public Resource(byte[] bytes, String charset) {
         this.bytes = bytes;
@@ -52,6 +54,15 @@ public class Resource extends LinkedList<Resource> implements Cloneable {
     public void setCharset(String charset) {
         this.charset = charset;
     }
+
+    public Matcher getRegxpResult() {
+        return regxpResult;
+    }
+
+    public void setRegxpResult(Matcher regxpResult) {
+        this.regxpResult = regxpResult;
+    }
+    
     public Resource() {
          this.bytes=new byte[1];
     }
@@ -66,6 +77,7 @@ public class Resource extends LinkedList<Resource> implements Cloneable {
         }
         return result;
     }
+    
     @Override
     public Object clone() {
         try {

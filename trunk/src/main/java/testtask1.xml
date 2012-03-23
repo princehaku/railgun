@@ -25,10 +25,10 @@
         </cookies>
     </fetch>
     <parse method="dom" rule="#content div" filter="net.techest.testFilter">
-        <parse method="dom" fork="true" rule="a">
+        <parse method="dom" fork="true" rule="#main div">
             <store>APP_ROOT/tmp/DATA TIME</store>
         </parse>
-        <parse method="regxp" fork="true" rule="img.*src=[&apos;&quot;](.*?)[&apos;&quot;]">
+        <parse method="regxp" fork="true" rule="img src=&quot;([\s\S]*?)&quot;">
             <fetch>
                 <url>$1</url>
             </fetch>

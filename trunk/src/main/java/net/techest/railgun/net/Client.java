@@ -52,8 +52,17 @@ public interface Client extends Cloneable {
      */
     void setCharset(String charset);
 
-    void setResponseTimeOut(int i);
-
+    /**设置响应超时时间
+     * 默认30000毫秒
+     * @param timemillons
+     */
+    void setResponseTimeOut(int timemillons);
+    
+    /**设置连接超时时间
+     * 默认10000毫秒
+     * @param timemillons
+     */
+    void setConnectTimeOut(int timemillons);
     /**
      * 设置请求的url
      *

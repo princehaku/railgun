@@ -16,10 +16,10 @@
  *  Created on : Mar 22, 2012 , 7:31:35 PM
  *  Author     : princehaku
  */
-
-
 package net.techest.railgun.action;
 
+import java.util.Iterator;
+import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import org.dom4j.Element;
 
@@ -34,7 +34,10 @@ class StoreActionNode implements ActionNode {
 
     @Override
     public void execute(Element node, Shell bullet) {
-        System.out.println(bullet.getResource().size());
-    }
+        for (Iterator i = bullet.getResource().iterator(); i.hasNext();) {
+            Resource res = (Resource) i.next();
+            System.out.println(res.toString());
+        }
 
+    }
 }

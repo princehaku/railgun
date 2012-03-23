@@ -16,11 +16,11 @@
  *  Created on : Mar 22, 2012 , 4:47:06 PM
  *  Author     : princehaku
  */
-
-
 package net.techest.railgun.action;
 
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import net.techest.railgun.test.JsoupTest;
@@ -30,14 +30,14 @@ import org.jsoup.nodes.Document;
 import org.dom4j.Element;
 import org.jsoup.select.Elements;
 
-/**parse节点处理类
+/**
+ * parse节点处理类
  *
  * @author baizhongwei.pt
  */
 class ParseActionNode implements ActionNode {
 
     public ParseActionNode() {
-        
     }
 
     @Override
@@ -47,17 +47,17 @@ class ParseActionNode implements ActionNode {
             return;
         }
         String rule = node.attribute("rule").getData().toString();
-        
-        System.out.println("当前资源节点内有"+bullet.getResource().size());
+
+        System.out.println("当前资源节点内有" + bullet.getResource().size());
         Resource resnew = new Resource();
-        for(Iterator i = bullet.getResource().iterator();i.hasNext();) {
+        for (Iterator i = bullet.getResource().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
             if (node.attribute("method").getData().toString().equals("dom")) {
                 // dom搜索 使用jsoup
                 Document doc = Jsoup.parse(res.toString());
                 Elements els = doc.select(rule);
                 //循环els存放为新的r节点
-                for(Iterator ri = els.iterator();ri.hasNext();) {
+                for (Iterator ri = els.iterator(); ri.hasNext();) {
                     org.jsoup.nodes.Element el = (org.jsoup.nodes.Element) ri.next();
                     Resource r = new Resource(el.outerHtml().getBytes(), res.getCharset());
                     resnew.add(r);
@@ -65,12 +65,17 @@ class ParseActionNode implements ActionNode {
             }
             if (node.attribute("method").getData().toString().equals("regxp")) {
                 // 正则搜索
-                
+                Pattern ptn = Pattern.compile(rule);
+                Matcher m = ptn.matcher(res.toString());
+                if (m.find()) {
+                    Resource r = new Resource(m.group(0).getBytes(), res.getCharset());
+                    r.setRegxpResult(m);
+                    resnew.add(r);
+                }
             }
         }
-        
-        System.out.println("处理后节点内有"+resnew.size());
+
+        System.out.println("处理后节点内有" + resnew.size());
         bullet.setResource(resnew);
     }
-
 }

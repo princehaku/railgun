@@ -53,6 +53,7 @@ public class HttpClient implements Client {
     boolean cookieEnable = true;
     QuestParams requestParam = new QuestParams();
     QuestParams postParams = new QuestParams();
+    private int connectTimeOut = 10000;
     private int responseTimerOut = 30000;
     // 页面编码
     String charset = "auto";
@@ -214,7 +215,7 @@ public class HttpClient implements Client {
 
         try {
             httpConn = (HttpURLConnection) turl.openConnection();
-            httpConn.setConnectTimeout(30000);
+            httpConn.setConnectTimeout(this.connectTimeOut);
             httpConn.setReadTimeout(this.responseTimerOut);
             if (getRequestType().equals(REQ_TYPE.GET.toString())) {
                 httpConn.setRequestMethod("GET");
@@ -336,9 +337,20 @@ public class HttpClient implements Client {
             return this;
         }
     }
-
+    /**设置响应超时时间
+     * 默认30000毫秒
+     * @param timemillons
+     */
     @Override
-    public void setResponseTimeOut(int i) {
-        this.responseTimerOut = i;
+    public void setResponseTimeOut(int timemillons) {
+        this.responseTimerOut = timemillons;
+    }
+    /**设置连接超时时间
+     * 默认10000毫秒
+     * @param timemillons
+     */
+    @Override
+    public void setConnectTimeOut(int timemillons) {
+        this.connectTimeOut = timemillons;
     }
 }

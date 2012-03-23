@@ -26,7 +26,8 @@ import net.techest.railgun.system.Shell;
 import net.techest.util.Log4j;
 import org.dom4j.Element;
 
-/**fetch节点处理类
+/**
+ * fetch节点处理类
  *
  * @author baizhongwei.pt
  */
@@ -47,6 +48,12 @@ public class FetchActionNode implements ActionNode {
             String charset = node.element("charset").getData().toString();
             client.setCharset(charset);
             node.element("charset").detach();
+        }
+        // 超时设置
+        if (node.element("timeout") != null) {
+            int timemillons = Integer.parseInt(node.element("timeout").getData().toString());
+            client.setResponseTimeOut(timemillons);
+            node.element("timeout").detach();
         }
         // 是否启用cookie
         if (node.element("cookie") != null) {
@@ -86,13 +93,26 @@ public class FetchActionNode implements ActionNode {
         }
 
         bullet.setClient(client);
-        try {
-            byte[] result = client.exec();
-            Resource res = new Resource();
-            res.add(new Resource(result, client.getCharset()));
-            bullet.setResource(res);
-        } catch (Exception ex) {
-            Log4j.getInstance().error("Fetch Error " + ex.getMessage());
+
+
+        Resource resnew = new Resource();
+        if (bullet.getResource() == null) {
+            try {
+                byte[] result = client.exec();
+                resnew.add(new Resource(result, client.getCharset()));
+            } catch (Exception ex) {
+                Log4j.getInstance().error("Fetch Error " + ex.getMessage());
+            }
+        } else {
+            for (Iterator i = bullet.getResource().iterator(); i.hasNext();i.next()) {
+                try {
+                    byte[] result = client.exec();
+                    resnew.add(new Resource(result, client.getCharset()));
+                } catch (Exception ex) {
+                    Log4j.getInstance().error("Fetch Error " + ex.getMessage());
+                }
+            }
         }
+        bullet.setResource(resnew);
     }
 }
