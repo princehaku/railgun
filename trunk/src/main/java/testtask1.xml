@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shell>
-    <name>wordpress</name>
-    <description>common rules for wordpress blog</description>
+    <name>3haku.net</name>
+    <description>rules for wordpress blog 3haku.net</description>
     <baseurl>*</baseurl>
     <fetch>
-        <url>http://blog.nosqlfan.com/</url>
+        <url>http://3haku.net/</url>
         <cookie>enable</cookie>
         <charset>auto</charset>
         <params>
@@ -26,14 +26,16 @@
         </cookies>
     </fetch>
     <parse method="dom" rule="#content div" filter="net.techest.testFilter">
-        <parse method="dom" fork="true" rule=".postarea .post">
-            <store>APP_ROOT/tmp/DATA TIME</store>
+        <parse method="dom" fork="true" rule=".main">
+            <store ext=".html">cache/html/</store>
         </parse>
-        <parse method="regxp" fork="true" rule="img src=&quot;([\s\S]*?)&quot;">
-            <fetch>
-                <url>$1</url>
-            </fetch>
-            <store>APP_ROOT/tmp/DATA TIME</store>
+        <parse method="regxp" fork="true" rule="&lt;img[\s\S]*?src=&quot;([\s\S]*?)&quot;">
+            <parse method="regxp" rule="src=&quot;(.*)\/(.*?)[&quot;$]">
+                <fetch>
+                    <url>$1/$2</url>
+                </fetch>
+                <store>cache/img/$2</store>
+            </parse>
         </parse>
     </parse>
 </shell>

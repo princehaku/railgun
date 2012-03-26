@@ -21,12 +21,18 @@ package net.techest.util;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
-/**
- *
+/**模式串处理
+ * 将一个带有特殊标记的字符串处理为系统标准字符串
+ * 比如DATE转换为2012-03-02这样的
  * @author baizhongwei.pt
  */
 public class PatternHelper {
-
+    /**根据既有规则进行字符串转换
+     * 注意得到的结果是个数组,哪怕只有一个值返回
+     * @param input
+     * @param m
+     * @return 
+     */
     public static ArrayList<String> convertAll(String input, Matcher m) {
         ArrayList<String> strings = new ArrayList<>();
         if (m != null) {

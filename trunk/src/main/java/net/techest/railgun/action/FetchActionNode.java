@@ -44,9 +44,6 @@ public class FetchActionNode implements ActionNode {
             Log4j.getInstance().error("FetchNode Need An Url Parameter");
             return;
         }
-        String url = node.element("url").getData().toString();
-        client.setUrl(url);
-        node.element("url").detach();
         // 编码定制
         if (node.element("charset") != null) {
             String charset = node.element("charset").getData().toString();
@@ -101,6 +98,10 @@ public class FetchActionNode implements ActionNode {
 
 
         LinkedList<Resource> resnew = new LinkedList<Resource>();
+        // url格式转换
+        String url = node.element("url").getData().toString();
+        Log4j.getInstance().debug("Source Url : " + url);
+        node.element("url").detach();
         // 没有资源节点只连接一次
         if (bullet.getResources() == null) {
             try {
@@ -125,7 +126,11 @@ public class FetchActionNode implements ActionNode {
                         newurl = (String) si.next();
                         client.setUrl(newurl);
                         byte[] result = client.exec();
-                        resnew.add(new Resource(result, client.getCharset()));
+                        Resource newResNode = new Resource(result, client.getCharset());
+                        if (res.getRegxpResult() != null) {
+                            newResNode.setRegxpResult(res.getRegxpResult());
+                        }
+                        resnew.add(newResNode);
                     }
                 } catch (Exception ex) {
                     Log4j.getInstance().error("Fetch Error " + ex.getMessage());
