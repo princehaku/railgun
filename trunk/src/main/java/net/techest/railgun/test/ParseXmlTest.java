@@ -53,43 +53,43 @@ public class ParseXmlTest {
         ActionNode action = ActionNodeFactory.getNodeAction(e.getName());
         if (action == null) {
             Log4j.getInstance().error("No Such Action " + e.getName());
-            //return;
-        } else {
-            Log4j.getInstance().debug("Execute Action " + e.getName());
-            // 进行资源节点克隆
-            if (e.attribute("fork") != null && e.attribute("fork").getData().toString().equals("true")) {
-                Log4j.getInstance().info("Shell Cloned");
-                Shell newshell = (Shell) shell.clone();
-                shell = newshell;
-            }
-            if (e.attribute("filter-before") != null) {
-                try {
-                    Filter filter = (Filter) Class.forName(e.attribute("filter-before").getValue()).newInstance();
-                    Log4j.getInstance().info("Apply Filter " + e.attribute("filter-before").getValue());
-                    for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
-                        Resource res = (Resource) i.next();
-                        filter.filter(res);
-                    }
-                } catch (Exception ex) {
-                    Log4j.getInstance().error(ex.getMessage());
+            return;
+        }
+        Log4j.getInstance().debug("Execute Action " + e.getName());
+        // 进行资源节点克隆
+        if (e.attribute("fork") != null && e.attribute("fork").getData().toString().equals("true")) {
+            Log4j.getInstance().info("Shell Cloned");
+            Shell newshell = (Shell) shell.clone();
+            shell = newshell;
+        }
+        if (e.attribute("filter-before") != null) {
+            try {
+                Filter filter = (Filter) Class.forName(e.attribute("filter-before").getValue()).newInstance();
+                Log4j.getInstance().info("Apply Filter " + e.attribute("filter-before").getValue());
+                for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
+                    Resource res = (Resource) i.next();
+                    filter.filter(res);
                 }
-            }
-            // 执行前置过滤器
-            ActionNodeFactory.executeAction(action, e, shell);
-            // 执行后置过滤器
-            if (e.attribute("filter-after") != null) {
-                try {
-                    Filter filter = (Filter) Class.forName(e.attribute("filter-after").getValue()).newInstance();
-                    Log4j.getInstance().info("Apply Filter " + e.attribute("filter-before").getValue());
-                    for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
-                        Resource res = (Resource) i.next();
-                        filter.filter(res);
-                    }
-                } catch (Exception ex) {
-                    Log4j.getInstance().error(ex.getMessage());
-                }
+            } catch (Exception ex) {
+                Log4j.getInstance().error(ex.getMessage());
             }
         }
+        // 执行前置过滤器
+        ActionNodeFactory.executeAction(action, e, shell);
+        // 执行后置过滤器
+        if (e.attribute("filter-after") != null) {
+            try {
+                Filter filter = (Filter) Class.forName(e.attribute("filter-after").getValue()).newInstance();
+                Log4j.getInstance().info("Apply Filter " + e.attribute("filter-before").getValue());
+                for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
+                    Resource res = (Resource) i.next();
+                    filter.filter(res);
+                }
+            } catch (Exception ex) {
+                Log4j.getInstance().error(ex.getMessage());
+            }
+        }
+
         for (Iterator i = e.elementIterator(); i.hasNext();) {
             Element childe = (Element) i.next();
             // 处理子节点 递归
