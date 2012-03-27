@@ -96,47 +96,31 @@ public class FetchActionNode implements ActionNode {
 
         bullet.setClient(client);
 
-
-        LinkedList<Resource> resnew = new LinkedList<Resource>();
+        LinkedList<Resource> resnew = new LinkedList<>();
         // url格式转换
         String url = node.element("url").getData().toString();
         Log4j.getInstance().debug("Source Url : " + url);
         node.element("url").detach();
-        // 没有资源节点只连接一次
-        if (bullet.getResources() == null) {
+        for (Iterator i = bullet.getResources().iterator(); i.hasNext();) {
+            Resource res = (Resource) i.next();
             try {
                 String newurl = url;
-                ArrayList<String> strings = PatternHelper.convertAll(newurl, null);
+                ArrayList<String> strings = PatternHelper.convertAll(newurl, res.getRegxpResult());
                 for (Iterator si = strings.iterator(); si.hasNext();) {
                     newurl = (String) si.next();
                     client.setUrl(newurl);
                     byte[] result = client.exec();
-                    resnew.add(new Resource(result, client.getCharset()));
+                    Resource newResNode = new Resource(result, client.getCharset());
+                    if (res.getRegxpResult() != null) {
+                        newResNode.setRegxpResult(res.getRegxpResult());
+                    }
+                    resnew.add(newResNode);
                 }
             } catch (Exception ex) {
                 Log4j.getInstance().error("Fetch Error " + ex.getMessage());
             }
-        } else {
-            for (Iterator i = bullet.getResources().iterator(); i.hasNext();) {
-                Resource res = (Resource) i.next();
-                try {
-                    String newurl = url;
-                    ArrayList<String> strings = PatternHelper.convertAll(newurl, res.getRegxpResult());
-                    for (Iterator si = strings.iterator(); si.hasNext();) {
-                        newurl = (String) si.next();
-                        client.setUrl(newurl);
-                        byte[] result = client.exec();
-                        Resource newResNode = new Resource(result, client.getCharset());
-                        if (res.getRegxpResult() != null) {
-                            newResNode.setRegxpResult(res.getRegxpResult());
-                        }
-                        resnew.add(newResNode);
-                    }
-                } catch (Exception ex) {
-                    Log4j.getInstance().error("Fetch Error " + ex.getMessage());
-                }
-            }
         }
+
         bullet.setResources(resnew);
     }
 }

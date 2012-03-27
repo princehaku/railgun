@@ -47,16 +47,16 @@ class ParseActionNode implements ActionNode {
     }
 
     @Override
-    public void execute(Element node, Shell bullet) {
+    public void execute(Element node, Shell shell) {
         if (node.attribute("method") == null || node.attribute("rule") == null) {
             Log4j.getInstance().error("ParseNode Need method and rule param to work");
             return;
         }
         String rule = node.attribute("rule").getData().toString();
 
-        System.out.println("当前资源节点内有" + bullet.getResources().size());
+        Log4j.getInstance().debug("当前资源节点内有" + shell.getResources().size());
         LinkedList<Resource> resnew = new LinkedList<Resource>();
-        for (Iterator i = bullet.getResources().iterator(); i.hasNext();) {
+        for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
             if (node.attribute("method").getData().toString().equals("dom")) {
                 try {
@@ -89,7 +89,7 @@ class ParseActionNode implements ActionNode {
             }
         }
 
-        System.out.println("处理后节点内有" + resnew.size());
-        bullet.setResources(resnew);
+        Log4j.getInstance().debug("处理后节点内有" + resnew.size());
+        shell.setResources(resnew);
     }
 }

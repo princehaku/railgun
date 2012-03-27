@@ -67,6 +67,10 @@ public class Resource implements Cloneable {
          this.bytes=new byte[1];
     }
     
+    /**根据资源设定的字符集转换成字符串
+     * 
+     * @return 
+     */
     @Override
     public String toString(){
         String result = "";

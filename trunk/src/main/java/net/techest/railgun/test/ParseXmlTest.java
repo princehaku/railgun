@@ -20,9 +20,13 @@ package net.techest.railgun.test;
 
 import java.io.File;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.techest.util.Log4j;
 import net.techest.railgun.action.ActionNodeFactory;
 import net.techest.railgun.action.ActionNode;
+import net.techest.railgun.system.Filter;
+import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -58,7 +62,33 @@ public class ParseXmlTest {
                 Shell newshell = (Shell) shell.clone();
                 shell = newshell;
             }
+            if (e.attribute("filter-before") != null) {
+                try {
+                    Filter filter = (Filter) Class.forName(e.attribute("filter-before").getValue()).newInstance();
+                    Log4j.getInstance().info("Apply Filter " + e.attribute("filter-before").getValue());
+                    for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
+                        Resource res = (Resource) i.next();
+                        filter.filter(res);
+                    }
+                } catch (Exception ex) {
+                    Log4j.getInstance().error(ex.getMessage());
+                }
+            }
+            // 执行前置过滤器
             ActionNodeFactory.executeAction(action, e, shell);
+            // 执行后置过滤器
+            if (e.attribute("filter-after") != null) {
+                try {
+                    Filter filter = (Filter) Class.forName(e.attribute("filter-after").getValue()).newInstance();
+                    Log4j.getInstance().info("Apply Filter " + e.attribute("filter-before").getValue());
+                    for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
+                        Resource res = (Resource) i.next();
+                        filter.filter(res);
+                    }
+                } catch (Exception ex) {
+                    Log4j.getInstance().error(ex.getMessage());
+                }
+            }
         }
         for (Iterator i = e.elementIterator(); i.hasNext();) {
             Element childe = (Element) i.next();

@@ -18,14 +18,17 @@
  */
 package net.techest.railgun.action;
 
+import java.util.LinkedList;
 import net.techest.railgun.net.Client;
 import net.techest.railgun.net.HttpClient;
+import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import net.techest.util.Log4j;
 import org.dom4j.Element;
 
-/**根节点处理类
- * 进行炮弹的初始化
+/**
+ * 根节点处理类 进行炮弹的初始化
+ *
  * @author baizhongwei.pt
  */
 public class RootActionNode implements ActionNode {
@@ -58,5 +61,8 @@ public class RootActionNode implements ActionNode {
             //Log4j.getInstance().info("Your Shell Has No Gun To Lauther");
         }
         shell.setClient(hc);
+        LinkedList<Resource> res = new LinkedList<>();
+        res.add(new Resource());
+        shell.setResources(res);
     }
 }

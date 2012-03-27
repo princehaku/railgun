@@ -25,9 +25,9 @@
             </cookie>
         </cookies>
     </fetch>
-    <parse method="dom" rule="#content div" filter="net.techest.testFilter">
+    <parse method="dom" rule="#content div">
         <parse method="dom" fork="true" rule=".main">
-            <store ext=".html">cache/html/</store>
+            <store ext=".html" filter-after="net.techest.railgun.test.TestFilter">cache/html/</store>
         </parse>
         <parse method="regxp" fork="true" rule="&lt;img[\s\S]*?src=&quot;([\s\S]*?)&quot;">
             <parse method="regxp" rule="src=&quot;(.*)\/(.*?)[&quot;$]">

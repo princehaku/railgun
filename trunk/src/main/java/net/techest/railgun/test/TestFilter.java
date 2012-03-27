@@ -20,12 +20,19 @@
 
 package net.techest.railgun.test;
 
+import java.util.LinkedList;
 import net.techest.railgun.system.Filter;
+import net.techest.railgun.system.Resource;
 
 /**
  *
  * @author baizhongwei.pt
  */
 public class TestFilter implements Filter{
+
+    @Override
+    public void filter(Resource resource) {
+        System.out.print(resource.toString());
+    }
 
 }

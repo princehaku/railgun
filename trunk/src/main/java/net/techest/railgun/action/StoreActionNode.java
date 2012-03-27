@@ -23,8 +23,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import net.techest.util.Log4j;
@@ -52,9 +50,9 @@ class StoreActionNode implements ActionNode {
                 savePath = (String) si.next();
                 try {
                     File saveTo = new File(savePath);
-                    // 如果字符串最后一个是/而且没有存在这个目录 创建目录
-                    if (savePath.substring(savePath.length() - 1, savePath.length()).equals("/")
-                            && !saveTo.exists()) {
+                    // 如果字符串最后一个是/或者path是一个目录 并且没有存在这个目录 创建目录
+                    if ((savePath.substring(savePath.length() - 1, savePath.length()).equals("/")
+                            || saveTo.isDirectory()) && !saveTo.exists()) {
                         if (!saveTo.mkdirs()) {
                             Log4j.getInstance().error("Create Dir Failed [path] " + savePath);
                         }
@@ -68,15 +66,16 @@ class StoreActionNode implements ActionNode {
                     }
                     fw = new FileOutputStream(savePath);
                     fw.write(res.getBytes());
+                    Log4j.getInstance().debug("Store Success To " + savePath);
                 } catch (IOException ex) {
-                    Logger.getLogger(StoreActionNode.class.getName()).log(Level.SEVERE, null, ex);
+                    Log4j.getInstance().error("Store Error " + ex.getMessage());
                 } finally {
                     try {
                         if (fw != null) {
                             fw.close();
                         }
                     } catch (IOException ex) {
-                        Logger.getLogger(StoreActionNode.class.getName()).log(Level.SEVERE, null, ex);
+                        Log4j.getInstance().error("Store Error " + ex.getMessage());
                     }
                 }
             }

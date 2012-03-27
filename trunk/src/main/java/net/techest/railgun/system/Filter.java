@@ -20,10 +20,14 @@
 
 package net.techest.railgun.system;
 
-/**
- *
+import java.util.LinkedList;
+
+/**过滤器
+ * 可以对资源节点进行操作
  * @author baizhongwei.pt
  */
 public interface Filter {
+
+    public void filter(Resource resource);
 
 }
