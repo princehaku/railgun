@@ -23,7 +23,7 @@ package net.techest.railgun.system;
 import java.util.LinkedList;
 import net.techest.railgun.net.Client;
 
-/**
+/**炮弹类 定义一次抓取任务
  *
  * @author baizhongwei.pt
  */
@@ -31,7 +31,7 @@ public class Shell implements Cloneable{
     String name;
     String description;
     String baseUrl;
-    // 连接器 (枪  要有枪才能发子弹撒~)
+    // 连接器
     Client client;
     // 资源类
     LinkedList<Resource> resources;

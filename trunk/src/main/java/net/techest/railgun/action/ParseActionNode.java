@@ -29,7 +29,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
-import net.techest.railgun.test.JsoupTest;
 import net.techest.util.Log4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
