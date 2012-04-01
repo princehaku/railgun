@@ -13,26 +13,37 @@
  *  limitations under the License.
  *
  *  Project Name : railgun
- *  Created on : Mar 23, 2012 , 8:14:30 PM
+ *  Created on : Mar 22, 2012 , 7:31:35 PM
  *  Author     : princehaku
  */
+package net.techest.railgun.action;
 
-
-package net.techest.railgun.test;
-
-import java.util.LinkedList;
-import net.techest.railgun.system.Filter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import net.techest.railgun.system.Resource;
+import net.techest.railgun.system.Shell;
+import net.techest.util.Log4j;
+import net.techest.util.MD5;
+import net.techest.util.PatternHelper;
+import org.dom4j.Element;
 
 /**
  *
  * @author baizhongwei.pt
  */
-public class TestFilter implements Filter{
+class PrintActionNode implements ActionNode {
 
-    @Override
-    public void filter(Resource resource) {
-        resource.putParam("2", "http://baidu.com");
+    public PrintActionNode() {
     }
 
+    @Override
+    public void execute(Element node, Shell bullet) {
+        for (Iterator i = bullet.getResources().iterator(); i.hasNext();) {
+            Resource res = (Resource) i.next();
+            System.out.println(res.toString());
+        }
+    }
 }

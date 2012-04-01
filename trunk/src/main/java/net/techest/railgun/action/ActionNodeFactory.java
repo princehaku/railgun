@@ -18,6 +18,8 @@
  */
 package net.techest.railgun.action;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.techest.railgun.system.Shell;
 import net.techest.util.Log4j;
 import org.dom4j.Element;
@@ -29,20 +31,12 @@ import org.dom4j.Element;
 public class ActionNodeFactory {
 
     public static ActionNode getNodeAction(String name) {
+        name = name.substring(0, 1).toUpperCase() + name.substring(1, name.length()).toLowerCase();
         ActionNode n = null;
-        switch (name) {
-            case "shell":
-                n = new RootActionNode();
-                break;
-            case "fetch":
-                n = new FetchActionNode();
-                break;
-            case "parse":
-                n = new ParseActionNode();
-                break;
-            case "store":
-                n = new StoreActionNode();
-                break;
+        try {
+            n = (ActionNode) Class.forName("net.techest.railgun.action." + name + "ActionNode").newInstance();
+        } catch (Exception ex) {
+            Log4j.getInstance().warn(ex.getMessage());
         }
         return n;
     }

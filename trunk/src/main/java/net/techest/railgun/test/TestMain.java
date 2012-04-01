@@ -13,26 +13,29 @@
  *  limitations under the License.
  *
  *  Project Name : railgun
- *  Created on : Mar 23, 2012 , 8:14:30 PM
+ *  Created on : Apr 1, 2012 , 2:37:37 PM
  *  Author     : princehaku
  */
-
-
 package net.techest.railgun.test;
 
-import java.util.LinkedList;
-import net.techest.railgun.system.Filter;
-import net.techest.railgun.system.Resource;
+import net.techest.railgun.RailGun;
+import org.dom4j.DocumentException;
 
 /**
  *
  * @author baizhongwei.pt
  */
-public class TestFilter implements Filter{
+public class TestMain {
 
-    @Override
-    public void filter(Resource resource) {
-        resource.putParam("2", "http://baidu.com");
+    public static void main(String[] argvs) {
+        try {
+            System.out.println("loadShellXml");
+            String xmlpath = "src/main/java/testtask1.xml";
+            RailGun instance = new RailGun();
+            instance.loadShellXml(xmlpath);
+            instance.fire();
+        } catch (DocumentException ex) {
+            ex.printStackTrace();
+        }
     }
-
 }

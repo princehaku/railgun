@@ -130,6 +130,10 @@ public class HttpClient implements Client {
     public void setCookie(String key, String value) {
         cookies.put(key, value);
     }
+    
+    public void setCookie(Cookies cookies) {
+        this.cookies = cookies;
+    }
 
     public String getCookieString() {
         return cookies.toString();

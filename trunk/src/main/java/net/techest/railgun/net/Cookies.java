@@ -18,10 +18,13 @@
 package net.techest.railgun.net;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.techest.util.Log4j;
 
 /**
@@ -39,14 +42,13 @@ public class Cookies extends HashMap<String, String> {
         while (ir.hasNext()) {
             try {
                 Entry<String, String> obj = ir.next();
-                sb.append(obj.getKey());
+                sb.append(URLEncoder.encode(obj.getKey().trim(), "utf8"));
                 sb.append("=");
-                sb.append(URLEncoder.encode(obj.getValue(), "utf8"));
+                sb.append(URLEncoder.encode(obj.getValue().trim(), "utf8"));
                 if (ir.hasNext()) {
                     sb.append(";");
                 }
-            }
-            catch (UnsupportedEncodingException ex) {
+            } catch (UnsupportedEncodingException ex) {
                 // 指定了utf8编码 但是有的linux居然还是不支持的 = =
                 Log4j.getInstance().error(ex.getMessage());
                 sb = new StringBuilder("");
@@ -57,5 +59,30 @@ public class Cookies extends HashMap<String, String> {
 
     public Iterator<Entry<String, String>> getIterator() {
         return this.entrySet().iterator();
+    }
+
+    /**
+     * 从cookie字符串解析
+     *
+     * cna=DlvsBzUz4gICAXEdAHlIDV5l; l=princehaku::1333174802501::01; ;
+     *
+     * @param cookieString
+     */
+    public void fromString(String cookieString) {
+        String[] cookies = cookieString.split(";");
+        for (int i = 0, size = cookies.length; i < size; i++) {
+            try {
+                String[] cookieenty = cookies[i].split("=");
+                if (cookieenty.length != 2) {
+                    Log4j.getInstance().error("CookieString Error " + cookies[i]);
+                    continue;
+                }
+                String key = URLDecoder.decode(cookieenty[0], "utf8");
+                String value = URLDecoder.decode(cookieenty[1], "utf8");
+                this.put(key.trim(), value.trim());
+            } catch (UnsupportedEncodingException ex) {
+                Log4j.getInstance().error(ex.getMessage());
+            }
+        }
     }
 }

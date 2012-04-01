@@ -19,6 +19,7 @@
 package net.techest.railgun.system;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import net.techest.util.Log4j;
@@ -29,14 +30,27 @@ import net.techest.util.Log4j;
  * @author baizhongwei.pt
  */
 public class Resource implements Cloneable {
+    // 字节流
 
     private byte[] bytes;
-    private String charset = "";
-    private Matcher regxpResult = null;
+    // 字节流的编码方式
+    private String charset = null;
+    // 当前资源来源url
+    private String url;
+    // 参数组,用于参数替换
+    private HashMap<String, String> params = new HashMap<String, String>();
 
     public Resource(byte[] bytes, String charset) {
         this.bytes = bytes;
         this.charset = charset;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public byte[] getBytes() {
@@ -55,33 +69,66 @@ public class Resource implements Cloneable {
         this.charset = charset;
     }
 
-    public Matcher getRegxpResult() {
-        return regxpResult;
+    /**
+     * 得到设置的参数
+     *
+     * @param key
+     * @return
+     */
+    public String getParam(String key) {
+        String value = this.params.get(key);
+        if (value == null) {
+            value = "";
+        }
+        return value;
     }
 
+    /**
+     * 设置参数 之后xml中的值可以通过${key}变量进行获取
+     *
+     * @param key
+     * @return
+     */
+    public void putParam(String key, String value) {
+        this.params.put(key, value);
+    }
+
+    /**
+     * 把正则后的结果集计入到param中 对应关系 group_id => result
+     *
+     * @param regxpResult
+     */
     public void setRegxpResult(Matcher regxpResult) {
-        this.regxpResult = regxpResult;
+        if (regxpResult == null) {
+            return;
+        }
+        for (int regxpu = 0, regsize = regxpResult.groupCount();
+                regxpu <= regsize; regxpu++) {
+            this.putParam(regxpu + "", regxpResult.group(regxpu));
+        }
     }
-    
+
     public Resource() {
-         this.bytes=new byte[1];
+        this.bytes = new byte[1];
+        this.charset = "utf8";
     }
-    
-    /**根据资源设定的字符集转换成字符串
-     * 
-     * @return 
+
+    /**
+     * 根据资源设定的字符集转换成字符串
+     *
+     * @return
      */
     @Override
-    public String toString(){
+    public String toString() {
         String result = "";
         try {
-            result =  new String(this.bytes, this.charset);
+            result = new String(this.bytes, this.charset);
         } catch (UnsupportedEncodingException ex) {
-           Log4j.getInstance().error("Resource " + ex.getMessage());
+            Log4j.getInstance().error("Resource " + ex.getMessage());
         }
         return result;
     }
-    
+
     @Override
     public Object clone() {
         try {

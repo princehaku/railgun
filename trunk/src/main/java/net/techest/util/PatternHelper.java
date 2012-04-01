@@ -18,33 +18,51 @@
  */
 package net.techest.util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import net.techest.railgun.system.Resource;
+import net.techest.railgun.system.Shell;
 
-/**模式串处理
- * 将一个带有特殊标记的字符串处理为系统标准字符串
- * 比如DATE转换为2012-03-02这样的
+/**
+ * 模式串处理 将一个带有特殊标记的字符串处理为系统标准字符串 比如DATE转换为2012-03-02这样的
+ *
  * @author baizhongwei.pt
  */
 public class PatternHelper {
-    /**根据既有规则进行字符串转换
-     * 注意得到的结果是个数组,哪怕只有一个值返回
+
+    /**
+     * 根据既有规则进行字符串转换 注意得到的结果是个数组,哪怕只有一个值返回 支持的字段说明 $result 当前res的内容 $date
+     * yyyy-MM-dd $time HH:mm:ss 范围数字$[number,number] 预存的资源${key}
+     * 上一步正则返回值${group_id}
+     *
      * @param input
      * @param m
-     * @return 
+     * @return
      */
-    public static ArrayList<String> convertAll(String input, Matcher m) {
-        ArrayList<String> strings = new ArrayList<>();
-        if (m != null) {
-            for (int regxpu = 0, regsize = m.groupCount();
-                    regxpu <= regsize; regxpu++) {
-                input = input.replaceAll("\\$" + regxpu, m.group(regxpu));
-            }
+    public static ArrayList<String> convertAll(String input, Resource res, Shell shell) {
+        ArrayList<String> strings = new ArrayList();
+        Pattern p = Pattern.compile("\\$\\{(.*?)\\}");
+        Matcher m = p.matcher(input);
+        while (m.find()) {
+            String key = m.group(1);
+            input = input.replaceFirst("\\$\\{" + key + "\\}", res.getParam(key));
+            m = p.matcher(input);
         }
-        // 取字符串内的{}标记 进行替换后插入到strings数组内
+
+        input = input.replaceAll("\\$result", res.toString());
+        SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+        input = input.replaceAll("\\$date", sd.format(new Date()));
+        sd = new SimpleDateFormat("HH:mm:ss");
+        input = input.replaceAll("\\$time", sd.format(new Date()));
+        // 取字符串内的$[xx,xx]标记 进行替换后插入到strings数组内
         // 如果没有的话 就只把input放入到数组内
         strings.add(input);
-        
+
         return strings;
     }
 }

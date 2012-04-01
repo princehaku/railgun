@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.techest.railgun.system.Resource;
@@ -47,11 +45,12 @@ class ParseActionNode implements ActionNode {
 
     @Override
     public void execute(Element node, Shell shell) {
-        if (node.attribute("method") == null || node.attribute("rule") == null) {
+        if (node.attribute("method") == null || node.element("rule") == null) {
             Log4j.getInstance().error("ParseNode Need method and rule param to work");
             return;
         }
-        String rule = node.attribute("rule").getData().toString();
+        String rule = node.element("rule").getData().toString().trim();
+        node.element("rule").detach();
 
         Log4j.getInstance().debug("当前资源节点内有" + shell.getResources().size());
         LinkedList<Resource> resnew = new LinkedList<Resource>();
@@ -84,6 +83,8 @@ class ParseActionNode implements ActionNode {
                     } catch (UnsupportedEncodingException ex) {
                         Log4j.getInstance().error("不支持的编码 " + ex.getMessage() + res.getCharset());
                     }
+                } else {
+                    Log4j.getInstance().warn("regxp方式解析失败 规则" + rule + "没有被匹配");
                 }
             }
         }

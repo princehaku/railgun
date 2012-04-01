@@ -1,41 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE shell SYSTEM "shell.dtd">
 <shell>
     <name>3haku.net</name>
     <description>rules for wordpress blog 3haku.net</description>
-    <baseurl>*</baseurl>
+    <baseurl>3haku</baseurl>
     <fetch>
         <url>http://3haku.net/</url>
-        <cookie>enable</cookie>
         <charset>auto</charset>
         <params>
             <param>
                 <key>User-Agent</key>
-                <value>Mozilla/5.0 (Windows NT 6.1; WOW64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1</value>
-            </param>
-            <param>
-                <key>By</key>
-                <value>princehaku</value>
+                <value>railgun</value>
             </param>
         </params>
         <timeout>10000</timeout>
-        <cookies>
-            <cookie>
-                <key>a</key>
-                <value>b</value>
-            </cookie>
-        </cookies>
     </fetch>
-    <parse method="dom" rule="#content div">
-        <parse method="dom" fork="true" rule=".main">
-            <store ext=".html" filter-after="net.techest.railgun.test.TestFilter">cache/html/</store>
-        </parse>
-        <parse method="regxp" fork="true" rule="&lt;img[\s\S]*?src=&quot;([\s\S]*?)&quot;">
-            <parse method="regxp" rule="src=&quot;(.*)\/(.*?)[&quot;$]">
-                <fetch>
-                    <url>$1/$2</url>
-                </fetch>
-                <store>cache/img/$2</store>
-            </parse>
-        </parse>
+    <parse method="dom">
+        <rule>a</rule>
     </parse>
+    <parse fork="true" method="regxp">
+        <rule><![CDATA[href="(.*?)"]]>
+        </rule>
+        <store ext=".html">cache/html/</store>
+    </parse>
+    <fetch filter-after="net.techest.railgun.test.TestFilter">
+        <url>${1}</url>
+    </fetch>
+    <store ext=".html">cache/html/${1}</store>
 </shell>

@@ -31,7 +31,7 @@ import org.dom4j.Element;
  *
  * @author baizhongwei.pt
  */
-public class RootActionNode implements ActionNode {
+public class ShellActionNode implements ActionNode {
 
     @Override
     public void execute(Element node, Shell shell) {
@@ -61,7 +61,7 @@ public class RootActionNode implements ActionNode {
             //Log4j.getInstance().info("Your Shell Has No Gun To Lauther");
         }
         shell.setClient(hc);
-        LinkedList<Resource> res = new LinkedList<>();
+        LinkedList<Resource> res = new LinkedList();
         res.add(new Resource());
         shell.setResources(res);
     }

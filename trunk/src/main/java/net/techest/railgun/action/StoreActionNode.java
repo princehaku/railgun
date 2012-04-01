@@ -40,12 +40,12 @@ class StoreActionNode implements ActionNode {
     }
 
     @Override
-    public void execute(Element node, Shell bullet) {
-        for (Iterator i = bullet.getResources().iterator(); i.hasNext();) {
+    public void execute(Element node, Shell shell) {
+        for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
             FileOutputStream fw = null;
             String savePath = node.getData().toString();
-            ArrayList<String> strings = PatternHelper.convertAll(savePath, res.getRegxpResult());
+            ArrayList<String> strings = PatternHelper.convertAll(savePath, res,shell);
             for (Iterator si = strings.iterator(); si.hasNext();) {
                 savePath = (String) si.next();
                 try {
