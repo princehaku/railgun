@@ -19,8 +19,7 @@
         <rule>a</rule>
     </parse>
     <parse fork="true" method="regxp">
-        <rule><![CDATA[href="(.*?)"]]>
-        </rule>
+        <rule><![CDATA[href="(.*?)"]]></rule>
         <store ext=".html">cache/html/</store>
     </parse>
     <fetch filter-after="net.techest.railgun.test.TestFilter">

@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.techest.railgun.net.Cookies;
 import net.techest.railgun.net.HttpClient;
 import net.techest.util.PatternHelper;
@@ -141,7 +139,8 @@ public class FetchActionNode implements ActionNode {
                             continue;
                         }
                     } catch (MalformedURLException ex) {
-                        Log4j.getInstance().warn("URI " + ex.getMessage());
+                        Log4j.getInstance().warn("URI" + newurl + "格式错误 " + ex.getMessage());
+                        continue;
                     }
                     client.setUrl(newurl);
                     byte[] result = client.exec();
