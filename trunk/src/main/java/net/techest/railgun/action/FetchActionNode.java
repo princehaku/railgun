@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.techest.railgun.net.Cookies;
 import net.techest.railgun.net.HttpClient;
 import net.techest.util.PatternHelper;
@@ -137,7 +135,7 @@ public class FetchActionNode implements ActionNode {
                         uri = new URL(newurl);
                         // 如果不在baseUrl范围内 不抓取
                         if (!(shell.getBaseUrl().equals("*") || newurl.indexOf(shell.getBaseUrl()) != -1)) {
-                            Log4j.getInstance().warn("URI " + newurl + " Doesn't Match BaseURL");
+                            Log4j.getInstance().info("URI " + newurl + " 不不配 BaseURL");
                             continue;
                         }
                     } catch (MalformedURLException ex) {

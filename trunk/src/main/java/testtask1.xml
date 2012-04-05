@@ -3,28 +3,20 @@
 <shell>
     <name>3haku.net</name>
     <description>rules for wordpress blog 3haku.net</description>
-    <baseurl>3haku</baseurl>
+    <baseurl>*</baseurl>
     <fetch>
-        <url>http://3haku.net/</url>
-        <charset>auto</charset>
-        <params>
-            <param>
-                <key>User-Agent</key>
-                <value>railgun</value>
-            </param>
-        </params>
+        <url>http://www.taobao.com</url>
         <timeout>10000</timeout>
     </fetch>
     <parse method="dom">
-        <rule>a</rule>
+        <rule>.tr3 h3</rule>
     </parse>
-    <parse fork="true" method="regxp">
-        <rule><![CDATA[href="(.*?)"]]>
-        </rule>
+    <!--<parse method="regxp">
+        <rule><![CDATA[href="(.*?)"]]></rule>
         <store ext=".html">cache/html/</store>
     </parse>
     <fetch filter-after="net.techest.railgun.test.TestFilter">
         <url>${1}</url>
-    </fetch>
+    </fetch>-->
     <store ext=".html">cache/html/${1}</store>
 </shell>

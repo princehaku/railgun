@@ -31,6 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import net.techest.util.Log4j;
+import net.techest.util.StringTools;
 
 /**
  * HTTP连接类 带cookie 可以使用GET和POST 注意: 非线程安全
@@ -130,7 +131,7 @@ public class HttpClient implements Client {
     public void setCookie(String key, String value) {
         cookies.put(key, value);
     }
-    
+
     public void setCookie(Cookies cookies) {
         this.cookies = cookies;
     }
@@ -180,7 +181,7 @@ public class HttpClient implements Client {
     public Cookies getCookies() {
         return cookies;
     }
-    private static final Pattern charsetPattern = Pattern.compile("(?i)\\bcharset=\\s*\"?([^\\s;\"]*)]");
+    private static final Pattern charsetPattern = Pattern.compile("(?i)\\bcharset=\\s*[\"]?([^\\s;\"]*)");
 
     /**
      *
@@ -302,15 +303,26 @@ public class HttpClient implements Client {
 
             // Content-Type: text/html; charset=UTF-8
             if (charset.equals("auto")) {
-                charset = "utf8";
                 if (responseHeader.get("Content-Type") != null) {
-                    Matcher m = charsetPattern.matcher(responseHeader.get("Content-Type").toString());
+                    
+                    Matcher m = charsetPattern.matcher(responseHeader.get("Content-Type").get(0).toString());
                     if (m.find()) {
                         charset = m.group(1).trim().toUpperCase();
                     }
                 }
             }
+            // 从返回值中猜测编码
+            if (charset.equals("auto")) {
+                String headArea = StringTools.subMinStr(content.toString("utf8"), 0, 1024).toLowerCase();
+                Matcher m = charsetPattern.matcher(headArea);
+                if (m.find()) {
+                    charset = m.group(1).trim().toUpperCase();
+                }
+            }
 
+            if (charset.equals("auto")) {
+                charset = "utf8";
+            }
             Log4j.getInstance().debug("Page Encode : " + charset);
         } catch (Exception e) {
             if (httpConn != null) {
@@ -340,16 +352,20 @@ public class HttpClient implements Client {
             return this;
         }
     }
-    /**设置响应超时时间
-     * 默认30000毫秒
+
+    /**
+     * 设置响应超时时间 默认30000毫秒
+     *
      * @param timemillons
      */
     @Override
     public void setResponseTimeOut(int timemillons) {
         this.responseTimerOut = timemillons;
     }
-    /**设置连接超时时间
-     * 默认10000毫秒
+
+    /**
+     * 设置连接超时时间 默认10000毫秒
+     *
      * @param timemillons
      */
     @Override
