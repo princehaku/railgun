@@ -27,7 +27,7 @@ import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import net.techest.util.Log4j;
 import net.techest.util.MD5;
-import net.techest.util.PatternHelper;
+import net.techest.railgun.util.PatternHelper;
 import org.dom4j.Element;
 
 /**

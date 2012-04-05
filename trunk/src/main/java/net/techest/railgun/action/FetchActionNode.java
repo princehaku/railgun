@@ -26,9 +26,9 @@ import java.util.LinkedList;
 import java.util.List;
 import net.techest.railgun.net.Cookies;
 import net.techest.railgun.net.HttpClient;
-import net.techest.util.PatternHelper;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
+import net.techest.railgun.util.PatternHelper;
 import net.techest.util.Log4j;
 import org.dom4j.Element;
 
