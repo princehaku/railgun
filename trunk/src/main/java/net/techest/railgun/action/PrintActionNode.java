@@ -18,9 +18,16 @@
  */
 package net.techest.railgun.action;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
+import net.techest.util.Log4j;
+import net.techest.util.MD5;
+import net.techest.util.PatternHelper;
 import org.dom4j.Element;
 
 /**

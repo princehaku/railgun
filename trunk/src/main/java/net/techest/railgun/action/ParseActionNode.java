@@ -84,7 +84,7 @@ class ParseActionNode implements ActionNode {
                         Log4j.getInstance().error("不支持的编码 " + ex.getMessage() + res.getCharset());
                     }
                 } else {
-                    Log4j.getInstance().debug("regxp方式解析失败 规则" + rule + "没有被匹配 源串" + res.toString());
+                    Log4j.getInstance().warn("regxp方式解析失败 规则" + rule + "没有被匹配");
                 }
             }
         }
