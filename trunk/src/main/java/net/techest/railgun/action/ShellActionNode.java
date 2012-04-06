@@ -18,6 +18,7 @@
  */
 package net.techest.railgun.action;
 
+import net.techest.railgun.system.ActionException;
 import java.util.LinkedList;
 import net.techest.railgun.net.Client;
 import net.techest.railgun.net.HttpClient;
@@ -34,11 +35,11 @@ import org.dom4j.Element;
 public class ShellActionNode implements ActionNode {
 
     @Override
-    public void execute(Element node, Shell shell) {
+    public void execute(Element node, Shell shell) throws Exception{
         // name字段是必须的
         if (node.element("name") == null) {
             Log4j.getInstance().error("Your Bullet Need A Name");
-            return;
+            throw new ActionException("Your Bullet Need A Name");
         }
         Element nameNode = node.element("name");
         shell.setName(nameNode.getData().toString());
@@ -48,6 +49,12 @@ public class ShellActionNode implements ActionNode {
             Element despNode = node.element("description");
             shell.setDescription(despNode.getData().toString());
             despNode.detach();
+        }
+        // reloadtime字段不是必须的
+        if (node.element("reloadtime") != null) {
+            Element reloadNode = node.element("reloadtime");
+            shell.setReloadTime(Long.parseLong(reloadNode.getData().toString()));
+            reloadNode.detach();
         }
         // baseurl字段不是必须的
         if (node.element("baseurl") != null) {

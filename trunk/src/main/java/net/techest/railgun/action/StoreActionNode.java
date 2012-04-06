@@ -27,7 +27,7 @@ import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import net.techest.util.Log4j;
 import net.techest.util.MD5;
-import net.techest.railgun.util.PatternHelper;
+import net.techest.util.PatternHelper;
 import org.dom4j.Element;
 
 /**
@@ -40,7 +40,7 @@ class StoreActionNode implements ActionNode {
     }
 
     @Override
-    public void execute(Element node, Shell shell) {
+    public void execute(Element node, Shell shell)  throws Exception{
         for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
             FileOutputStream fw = null;

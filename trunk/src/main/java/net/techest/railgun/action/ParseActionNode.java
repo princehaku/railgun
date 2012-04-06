@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.techest.railgun.system.ActionException;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import net.techest.util.Log4j;
@@ -44,10 +45,10 @@ class ParseActionNode implements ActionNode {
     }
 
     @Override
-    public void execute(Element node, Shell shell) {
+    public void execute(Element node, Shell shell)  throws Exception{
         if (node.attribute("method") == null || node.element("rule") == null) {
             Log4j.getInstance().error("ParseNode Need method and rule param to work");
-            return;
+            throw new ActionException("ParseNode Need method and rule param to work");
         }
         String rule = node.element("rule").getData().toString().trim();
         node.element("rule").detach();

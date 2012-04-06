@@ -7,7 +7,7 @@ package net.techest.railgun.test;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import junit.framework.TestCase;
-import net.techest.railgun.RailGun;
+import net.techest.railgun.RailGunThread;
 import org.dom4j.DocumentException;
 /**
  *
@@ -29,16 +29,16 @@ public class RailGunTest extends TestCase {
         super.tearDown();
     }
     /**
-     * Test of fire method, of class RailGun.
+     * Test of fire method, of class RailGunThread.
      */
     public void testFire() {
         try {
             System.out.println("loadShellXml");
             String xmlpath = "src/main/java/testtask1.xml";
-            RailGun instance = new RailGun();
-            instance.loadShellXml(xmlpath);
-            instance.fire();
-        } catch (DocumentException ex) {
+            RailGunThread instance = new RailGunThread();
+            instance.addShellXml(xmlpath);
+            instance.start();
+        } catch (Exception ex) {
             ex.printStackTrace();
             fail(""+ex.getMessage());
         }

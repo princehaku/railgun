@@ -13,22 +13,20 @@
  *  limitations under the License.
  *
  *  Project Name : railgun
- *  Created on : Mar 22, 2012 , 9:47:55 AM
+ *  Created on : Apr 6, 2012 , 4:27:59 PM
  *  Author     : princehaku
  */
 
 
-package net.techest.railgun.action;
-
-import net.techest.railgun.system.Shell;
-import org.dom4j.Element;
+package net.techest.railgun.system;
 
 /**
  *
  * @author baizhongwei.pt
  */
-public interface ActionNode {
+public class AddShellException extends Exception {
 
-    public void execute(Element node, Shell bullet) throws Exception;
+    public AddShellException(Exception ex) {
+    }
 
 }

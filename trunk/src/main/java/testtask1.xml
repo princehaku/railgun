@@ -2,21 +2,18 @@
 <!DOCTYPE shell SYSTEM "shell.dtd">
 <shell>
     <name>3haku.net</name>
-    <description>rules for wordpress blog 3haku.net</description>
+    <description>无极电影抓取</description>
     <baseurl>*</baseurl>
+    <reloadtime>10000</reloadtime>
     <fetch>
-        <url>http://bbs.btwuji.com/thread.php?fid-8-search--page-$[1,20].html</url>
+        <url>http://3haku.net/</url>
+        <charset>auto</charset>
+        <params>
+            <param>
+                <key>User-Agent</key>
+                <value>railgun</value>
+            </param>
+        </params>
         <timeout>10000</timeout>
     </fetch>
-    <parse method="dom">
-        <rule>.tr3 h3</rule>
-    </parse>
-    <!--<parse method="regxp">
-        <rule><![CDATA[href="(.*?)"]]></rule>
-        <store ext=".html">cache/html/</store>
-    </parse>
-    <fetch filter-after="net.techest.railgun.test.TestFilter">
-        <url>${1}</url>
-    </fetch>-->
-    <store ext=".html">cache/html/${1}</store>
 </shell>

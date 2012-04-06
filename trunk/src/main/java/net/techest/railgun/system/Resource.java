@@ -20,6 +20,7 @@ package net.techest.railgun.system;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 import net.techest.util.Log4j;
 

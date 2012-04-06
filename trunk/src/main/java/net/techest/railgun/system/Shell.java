@@ -16,21 +16,25 @@
  *  Created on : Mar 22, 2012 , 1:48:34 PM
  *  Author     : princehaku
  */
-
-
 package net.techest.railgun.system;
 
 import java.util.LinkedList;
 import net.techest.railgun.net.Client;
 
-/**炮弹类 定义一次抓取任务
+/**
+ * 炮弹类 定义一次抓取任务
  *
  * @author baizhongwei.pt
  */
-public class Shell implements Cloneable{
+public class Shell implements Cloneable {
+
     String name;
     String description;
     String baseUrl;
+    // 再次被运行的时间间隔,如果是-1,只运行一次
+    long reloadTime = -1;
+    // 最大运行次数
+    int maxReloadTime = -1;
     // 连接器
     Client client;
     // 资源类
@@ -42,6 +46,22 @@ public class Shell implements Cloneable{
 
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
+    }
+
+    public int getMaxReloadTime() {
+        return maxReloadTime;
+    }
+
+    public void setMaxReloadTime(int maxReloadTime) {
+        this.maxReloadTime = maxReloadTime;
+    }
+
+    public long getReloadTime() {
+        return reloadTime;
+    }
+
+    public void setReloadTime(long reloadTime) {
+        this.reloadTime = reloadTime;
     }
 
     public String getDescription() {
@@ -75,7 +95,7 @@ public class Shell implements Cloneable{
     public void setResources(LinkedList<Resource> resources) {
         this.resources = resources;
     }
-    
+
     @Override
     public Object clone() {
         try {

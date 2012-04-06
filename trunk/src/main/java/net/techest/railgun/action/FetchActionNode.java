@@ -26,9 +26,10 @@ import java.util.LinkedList;
 import java.util.List;
 import net.techest.railgun.net.Cookies;
 import net.techest.railgun.net.HttpClient;
+import net.techest.railgun.system.ActionException;
+import net.techest.util.PatternHelper;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
-import net.techest.railgun.util.PatternHelper;
 import net.techest.util.Log4j;
 import org.dom4j.Element;
 
@@ -40,12 +41,12 @@ import org.dom4j.Element;
 public class FetchActionNode implements ActionNode {
 
     @Override
-    public void execute(Element node, Shell shell) {
+    public void execute(Element node, Shell shell)  throws Exception{
         HttpClient client = (HttpClient) shell.getClient();
         // url字段是必须的
         if (node.element("url") == null) {
             Log4j.getInstance().error("FetchNode Need An Url Parameter");
-            return;
+            throw new ActionException("FetchNode Need An Url Parameter");
         }
         // Method设置
         if (node.element("method") != null) {
@@ -135,7 +136,7 @@ public class FetchActionNode implements ActionNode {
                         uri = new URL(newurl);
                         // 如果不在baseUrl范围内 不抓取
                         if (!(shell.getBaseUrl().equals("*") || newurl.indexOf(shell.getBaseUrl()) != -1)) {
-                            Log4j.getInstance().info("URI " + newurl + " 不不配 BaseURL");
+                            Log4j.getInstance().warn("URI " + newurl + " Doesn't Match BaseURL");
                             continue;
                         }
                     } catch (MalformedURLException ex) {

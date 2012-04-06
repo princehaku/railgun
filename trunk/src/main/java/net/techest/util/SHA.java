@@ -13,22 +13,27 @@
  *  limitations under the License.
  *
  *  Project Name : railgun
- *  Created on : Mar 22, 2012 , 9:47:55 AM
+ *  Created on : Apr 6, 2012 , 3:48:47 PM
  *  Author     : princehaku
  */
-
-
-package net.techest.railgun.action;
-
-import net.techest.railgun.system.Shell;
-import org.dom4j.Element;
+package net.techest.util;
 
 /**
  *
  * @author baizhongwei.pt
  */
-public interface ActionNode {
+public class SHA {
 
-    public void execute(Element node, Shell bullet) throws Exception;
-
+    public static String getSHA1(byte[] source) {
+        String s = null;
+        try {
+            java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-1");
+            md.update(source);
+            byte tmp[] = md.digest();
+            s = StringTools.bin2hex(tmp);
+        } catch (Exception e) {
+            
+        }
+        return s;
+    }
 }

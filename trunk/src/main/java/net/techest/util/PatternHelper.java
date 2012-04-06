@@ -16,7 +16,7 @@
  *  Created on : Mar 23, 2012 , 10:03:48 AM
  *  Author     : princehaku
  */
-package net.techest.railgun.util;
+package net.techest.util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import net.techest.railgun.system.Shell;
 public class PatternHelper {
 
     /**
-     * 根据既有规则进行字符串转换 注意得到的结果是个数组,哪怕只有一个值返回 支持的字段 $result 当前res的内容 $date
+     * 根据既有规则进行字符串转换 注意得到的结果是个数组,哪怕只有一个值返回 支持的字段说明 $result 当前res的内容 $date
      * yyyy-MM-dd $time HH:mm:ss 范围数字$[number,number] 预存的资源${key}
      * 上一步正则返回值${group_id}
      *
@@ -58,24 +58,9 @@ public class PatternHelper {
         sd = new SimpleDateFormat("HH:mm:ss");
         input = input.replaceAll("\\$time", sd.format(new Date()));
         // 取字符串内的$[xx,xx]标记 进行替换后插入到strings数组内
-        p = Pattern.compile("\\$\\[(.*?)\\]");
-        m = p.matcher(input);
-        boolean spilted = false;
-        if (m.find()) {
-            String key = m.group(1);
-            String[] range = key.split(",");
-            if (range.length != 2) {
-            }
-            int range_min = Integer.parseInt(range[0]);
-            int range_max = Integer.parseInt(range[1]);
-            for (int pos = range_min; pos < range_max; pos++) {
-                String inputw = input.replaceFirst("\\$\\[" + key + "\\]", pos + "");
-                strings.add(inputw);
-                spilted = true;
-            }
-        } else {
-            strings.add(input);
-        }
+        // 如果没有的话 就只把input放入到数组内
+        strings.add(input);
+
         return strings;
     }
 }
