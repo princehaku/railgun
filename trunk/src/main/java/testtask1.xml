@@ -6,14 +6,16 @@
     <baseurl>*</baseurl>
     <reloadtime>10000</reloadtime>
     <fetch>
-        <url>http://3haku.net/</url>
+        <url>http://202.115.139.16/login.php</url>
+        <method>post</method>
         <charset>auto</charset>
-        <params>
-            <param>
-                <key>User-Agent</key>
-                <value>railgun</value>
-            </param>
-        </params>
         <timeout>10000</timeout>
+        <content><![CDATA[uname=200805030326&upwd=icyfire&]]></content>
     </fetch>
+    <print/>
+    <fetch>
+        <url>http://127.0.0.1:8888</url>
+        
+    </fetch>
+    <print/>
 </shell>

@@ -34,7 +34,7 @@
 <!ELEMENT print (#PCDATA)>
 
 <!--- Put your DTDDoc comment here. -->
-<!ELEMENT fetch (cookies|timeout|params|charset|cookie|url)*>
+<!ELEMENT fetch (cookies|timeout|params|charset|cookie|content|url)*>
 <!ATTLIST fetch
     filter-after CDATA #IMPLIED
   >
@@ -47,6 +47,8 @@
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT charset (#PCDATA)>
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT content (#PCDATA)>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT params (param)*>

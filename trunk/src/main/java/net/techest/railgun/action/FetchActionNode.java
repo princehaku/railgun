@@ -27,9 +27,9 @@ import java.util.List;
 import net.techest.railgun.net.Cookies;
 import net.techest.railgun.net.HttpClient;
 import net.techest.railgun.system.ActionException;
-import net.techest.util.PatternHelper;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
+import net.techest.railgun.util.PatternHelper;
 import net.techest.util.Log4j;
 import org.dom4j.Element;
 
@@ -41,7 +41,7 @@ import org.dom4j.Element;
 public class FetchActionNode implements ActionNode {
 
     @Override
-    public void execute(Element node, Shell shell)  throws Exception{
+    public void execute(Element node, Shell shell) throws Exception {
         HttpClient client = (HttpClient) shell.getClient();
         // url字段是必须的
         if (node.element("url") == null) {
@@ -51,12 +51,14 @@ public class FetchActionNode implements ActionNode {
         // Method设置
         if (node.element("method") != null) {
             String requestMethod = node.element("method").getData().toString();
+            Log4j.getInstance().info("RequestMethod " + requestMethod);
             if (requestMethod.toLowerCase().equals("post")) {
                 client.setRequestType(HttpClient.REQ_TYPE.POST);
                 // 获取并设置body节点内容
                 if (node.element("content") != null) {
                     String content = node.element("content").getData().toString();
-                    client.setPostString(content);
+                    client.setPostString(content.trim());
+                    node.element("content").detach();
                 }
             }
             node.element("method").detach();
