@@ -1,71 +1,44 @@
 <?xml version='1.0' encoding='UTF-8'?>
-
 <!--
     TODO define vocabulary identification
     PUBLIC ID: -//vendor//vocabulary//EN
     SYSTEM ID: http://server/path/shell.dtd
 
 -->
+<!ELEMENT shell (track|reloadtime|baseurl|description|name)*>
 
-<!--
-    An example how to use this DTD from your XML document:
-
-    <?xml version="1.0"?>
-
-    <!DOCTYPE shell SYSTEM "shell.dtd">
-
-    <shell>
-    ...
-    </shell>
--->
-
-<!--- Put your DTDDoc comment here. -->
-<!ELEMENT shell (parse|fetch|baseurl|description|name)*>
-
-<!--- Put your DTDDoc comment here. -->
-<!ELEMENT name (#PCDATA)>
-
-<!--- Put your DTDDoc comment here. -->
-<!ELEMENT description (#PCDATA)>
-
-<!--- Put your DTDDoc comment here. -->
-<!ELEMENT baseurl (#PCDATA)>
-
-<!ELEMENT print (#PCDATA)>
-
-<!--- Put your DTDDoc comment here. -->
-<!ELEMENT fetch (cookies|timeout|params|charset|cookie|content|url)*>
-<!ATTLIST fetch
+<!ELEMENT track (track|parse|fetch|print|store)*>
+<!ATTLIST track
+    fork CDATA #IMPLIED
+    filter-before CDATA #IMPLIED
     filter-after CDATA #IMPLIED
   >
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT baseurl (#PCDATA)>
+<!ELEMENT print (#PCDATA)>
+<!ELEMENT reloadtime (#PCDATA)>
 
 <!--- Put your DTDDoc comment here. -->
+<!ELEMENT fetch (url+,content*)>
+<!ATTLIST fetch
+    fork CDATA #IMPLIED
+    filter-before CDATA #IMPLIED
+    filter-after CDATA #IMPLIED
+  >
+<!ELEMENT method (#PCDATA)>
 <!ELEMENT url (#PCDATA)>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT cookie (#PCDATA)>
-
-<!--- Put your DTDDoc comment here. -->
 <!ELEMENT charset (#PCDATA)>
-<!--- Put your DTDDoc comment here. -->
 <!ELEMENT content (#PCDATA)>
-
-<!--- Put your DTDDoc comment here. -->
 <!ELEMENT params (param)*>
-
-<!--- Put your DTDDoc comment here. -->
 <!ELEMENT param (value|key)*>
-
-<!--- Put your DTDDoc comment here. -->
 <!ELEMENT key (#PCDATA)>
-
-<!--- Put your DTDDoc comment here. -->
 <!ELEMENT value (#PCDATA)>
-
-<!--- Put your DTDDoc comment here. -->
 <!ELEMENT timeout (#PCDATA)>
-
-<!--- Put your DTDDoc comment here. -->
 <!ELEMENT cookies (#PCDATA)>
 
 <!--- Put your DTDDoc comment here. -->
@@ -73,7 +46,9 @@
 <!ATTLIST parse
     fork CDATA #IMPLIED
     rule CDATA #IMPLIED
-    method CDATA #IMPLIED
+    method (regxp|dom) #REQUIRED
+    filter-before CDATA #IMPLIED
+    filter-after CDATA #IMPLIED
   >
 
 <!--- Put your DTDDoc comment here. -->

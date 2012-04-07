@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE shell SYSTEM "shell.dtd">
-<shell>
+<shell xmlns="http://railgun.techest.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://railgun.techest.net shell.xsd">
     <name>3haku.net</name>
     <description>无极电影抓取</description>
     <baseurl>*</baseurl>
     <reloadtime>10000</reloadtime>
-    <fetch>
-        <url>http://202.115.139.16/login.php</url>
-        <method>post</method>
-        <charset>auto</charset>
-        <timeout>10000</timeout>
-        <content><![CDATA[uname=200805030326&upwd=icyfire&]]></content>
-    </fetch>
-    <print/>
-    <fetch>
-        <url>http://127.0.0.1:8888</url>
-        
-    </fetch>
-    <print/>
+    <stair>
+        <fetch>
+            <url>http://202.115.139.16/login.php</url>
+            <content><![CDATA[uname=200805030326&upwd=icyfire&]]></content>
+        </fetch>
+        <print/>
+        <fetch>
+            <url>http://202.115.139.16/sys_xj_byszgsc_xs/sys_xj_byszgsc_xs.php</url>
+        </fetch>
+        <print/>
+        <parse method="regxp">
+            
+            
+        </parse>
+    </stair>
 </shell>

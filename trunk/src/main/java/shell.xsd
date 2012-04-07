@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified" xmlns="http://railgun.techest.net" targetNamespace="http://railgun.techest.net">
+    <xs:element name="shell">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string" />
+                <xs:element name="description"  type="xs:string" />
+                <xs:element name="baseurl" type="xs:string" minOccurs="0"/>
+                <xs:element name="reloadtime" type="xs:integer" minOccurs="0"/>
+                <xs:element name="stair" type="stair"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="stair">
+        <xs:sequence>
+            <xs:element name="fetch" type="fetch"/>
+            <xs:element name="stair" type="stair" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="fetch">
+        <xs:sequence>
+            <xs:element name="url" type="xs:string"/>
+            <xs:element name="method" minOccurs="0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="post"/>
+                        <xs:enumeration value="get"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="charset" type="xs:string" minOccurs="0"/>
+            <xs:element name="timeout" type="xs:integer" minOccurs="0"/>
+            <xs:element name="cookie" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="content" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+</xs:schema>
