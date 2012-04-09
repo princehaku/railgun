@@ -16,22 +16,38 @@
  *  Created on : Apr 9, 2012 , 10:39:11 AM
  *  Author     : princehaku
  */
-
-
 package net.techest.railgun.action;
 
+import java.util.LinkedList;
+import net.techest.railgun.net.HttpClient;
+import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
+import net.techest.util.Log4j;
 import org.dom4j.Element;
 
-/**这个节点用于定义一系列操作，基本无实际作用
+/**
+ * 这个节点用于定义一系列操作，可以进行操作初始化
  *
  * @author baizhongwei.pt
  */
-public class StairActionNode implements ActionNode{
+public class StairActionNode implements ActionNode {
 
     @Override
-    public void execute(Element node, Shell bullet) throws Exception {
-        
-    }
+    public void execute(Element node, Shell shell) throws Exception {
+        // stair可以进行资源节点克隆
+        if (node.attribute("fork") != null && node.attribute("fork").getData().toString().equals("true")) {
+            Log4j.getInstance().info("Shell Cloned");
+            Shell newshell = (Shell) shell.clone();
+            shell = newshell;
+        }
+        // 是否进行资源清理
+        if (node.attribute("reset") != null && node.attribute("reset").getData().toString().equals("true")) {
+            Log4j.getInstance().info("Stair Reset");
+            LinkedList<Resource> res = new LinkedList();
+            res.add(new Resource());
+            shell.setResources(res);
+            shell.setClient(new HttpClient());
+        }
 
+    }
 }

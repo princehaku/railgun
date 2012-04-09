@@ -1,26 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shell xmlns="http://railgun.techest.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://railgun.techest.net shell.xsd">
-    <name>3haku.net</name>
+    <name>oabt</name>
     <description>无极电影抓取</description>
     <baseurl>*</baseurl>
     <reloadtime>10000</reloadtime>
     <stair>
         <fetch>
-            <url>http://202.115.139.16/login.php</url>
-            <content><![CDATA[uname=200805030326&upwd=icyfire&]]>
-            </content>
+            <url>http://oabt.org/?page=$[1,20]</url>
         </fetch>
-        <handler>net.techest.railgun.test.TestFilter</handler>
-        <stair>
-            <fetch>
-                <url>http://202.115.139.16/sys_xj_byszgsc_xs/sys_xj_byszgsc_xs.php</url>
-            </fetch>
-            <print/>
-            <store ext=".html">cache/</store>
-        </stair>
         <parse method="dom">
-            <rule>tr</rule>
+            <rule>.toplist tbody</rule>
         </parse>
-        <print/>
+        <handler>net.techest.railgun.test.TestFilter</handler>
     </stair>
 </shell>

@@ -33,6 +33,12 @@ and open the template in the editor.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute name="reset">
+            <xs:simpleType>
+                <xs:restriction base="xs:boolean">
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:complexType>
 
     <!-- START FOR FETCH-->

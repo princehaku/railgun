@@ -58,15 +58,16 @@ public class FetchActionNode implements ActionNode {
             node.element("method").detach();
         }
         // 获取并设置body节点内容
+        String content = null;
         if (node.element("content") != null) {
-            String content = node.element("content").getData().toString();
-            client.setRequestType(HttpClient.REQ_TYPE.POST);
+            content = node.element("content").getData().toString();
             client.setPostString(content.trim());
             node.element("content").detach();
         }
+        String charset = "auto";
         // 编码定制
         if (node.element("charset") != null) {
-            String charset = node.element("charset").getData().toString();
+            charset = node.element("charset").getData().toString();
             client.setCharset(charset);
             node.element("charset").detach();
         }
@@ -131,8 +132,8 @@ public class FetchActionNode implements ActionNode {
             Resource res = (Resource) i.next();
             try {
                 String newurl = url;
-                ArrayList<String> strings = PatternHelper.convertAll(newurl, res, shell);
-                for (Iterator si = strings.iterator(); si.hasNext();) {
+                ArrayList<String> url_patterns = PatternHelper.convertAll(newurl, res, shell);
+                for (Iterator si = url_patterns.iterator(); si.hasNext();) {
                     newurl = (String) si.next();
                     URL uri;
                     try {
@@ -146,16 +147,30 @@ public class FetchActionNode implements ActionNode {
                         Log4j.getInstance().warn("URI " + ex.getMessage());
                     }
                     client.setUrl(newurl);
-                    byte[] result = client.exec();
-                    Resource newResNode = new Resource(result, client.getCharset());
-                    newResNode.setUrl(newurl);
-                    resnew.add(newResNode);
+                    ArrayList<String> content_patterns = new ArrayList<String>();
+                    // 如果设置了POST方式.使用patternHelp对content进行处理
+                    if (client.getRequestType().toString().equals(HttpClient.REQ_TYPE.POST.toString()) && content != null) {
+                        content_patterns = PatternHelper.convertAll(content.trim(), res, shell);
+                    } else {
+                        content_patterns.add("");
+                    }
+                    for (Iterator sc = content_patterns.iterator(); sc.hasNext();) {
+                        String postcontent = (String) sc.next();
+                        if (!postcontent.equals("")) {
+                            client.setPostString(postcontent);
+                        }
+                        // 重设编码
+                        client.setCharset(charset);
+                        byte[] result = client.exec();
+                        Resource newResNode = new Resource(result, client.getCharset());
+                        newResNode.setUrl(newurl);
+                        resnew.add(newResNode);
+                    }
                 }
             } catch (Exception ex) {
                 Log4j.getInstance().error("Fetch Error " + ex.getMessage());
             }
         }
-
         shell.setResources(resnew);
     }
 }

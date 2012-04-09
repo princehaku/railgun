@@ -22,8 +22,6 @@ import java.io.File;
 import java.util.Iterator;
 import net.techest.railgun.action.ActionNode;
 import net.techest.railgun.action.ActionNodeFactory;
-import net.techest.railgun.system.Filter;
-import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import net.techest.util.Log4j;
 import org.dom4j.Document;
@@ -95,12 +93,6 @@ public class RailGun {
             throw new Exception("Action 不存在");
         }
         Log4j.getInstance().info("Execute Action " + e.getName());
-        // 进行资源节点克隆
-        if (e.attribute("fork") != null && e.attribute("fork").getData().toString().equals("true")) {
-            Log4j.getInstance().info("Shell Cloned");
-            Shell newshell = (Shell) shell.clone();
-            shell = newshell;
-        }
         // 执行
         ActionNodeFactory.executeAction(action, e, shell);
 

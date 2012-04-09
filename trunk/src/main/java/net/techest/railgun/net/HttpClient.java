@@ -41,9 +41,9 @@ import net.techest.util.StringTools;
 public class HttpClient implements Client {
 
     public enum REQ_TYPE {
-
         POST, GET
     };
+    
     private HttpURLConnection httpConn = null;
     private URL turl;
     private REQ_TYPE requestType;
@@ -304,19 +304,20 @@ public class HttpClient implements Client {
             // Content-Type: text/html; charset=UTF-8
             if (charset.equals("auto")) {
                 if (responseHeader.get("Content-Type") != null) {
-                    
                     Matcher m = charsetPattern.matcher(responseHeader.get("Content-Type").get(0).toString());
                     if (m.find()) {
                         charset = m.group(1).trim().toUpperCase();
+                        Log4j.getInstance().debug("Get Page Encode From Response");
                     }
                 }
             }
             // 从返回值中猜测编码
             if (charset.equals("auto")) {
-                String headArea = StringTools.subMinStr(content.toString("utf8"), 0, 1024).toLowerCase();
+                String headArea = StringTools.subMinStr(content.toString("utf8"), 0, 2048).toLowerCase();
                 Matcher m = charsetPattern.matcher(headArea);
                 if (m.find()) {
                     charset = m.group(1).trim().toUpperCase();
+                        Log4j.getInstance().debug("Get Page Encode From Meta");
                 }
             }
 
