@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!--
+<!-- 
 To change this template, choose Tools | Templates
 and open the template in the editor.
 -->
@@ -13,20 +13,31 @@ and open the template in the editor.
                 <xs:element name="description"  type="xs:string" />
                 <xs:element name="baseurl" type="xs:string" minOccurs="0"/>
                 <xs:element name="reloadtime" type="xs:integer" minOccurs="0"/>
-                <xs:element name="stair" type="stair"/>
+                <xs:element name="stair" type="stair" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:complexType name="stair">
-        <xs:sequence>
-            <xs:element name="fetch" type="fetch"/>
+    <xs:complexType name="stair">    
+        <xs:all>
+            <xs:element name="fetch" type="fetch" minOccurs="0"/>
             <xs:element name="stair" type="stair" minOccurs="0"/>
-        </xs:sequence>
+            <xs:element name="print" minOccurs="0"/>
+            <xs:element name="handler" minOccurs="0"/>
+            <xs:element name="parse" type="parse" minOccurs="0" />
+            <xs:element name="store" type="store" minOccurs="0" />
+        </xs:all>
+        <xs:attribute name="fork">
+            <xs:simpleType>
+                <xs:restriction base="xs:boolean">
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:complexType>
 
+    <!-- START FOR FETCH-->
     <xs:complexType name="fetch">
-        <xs:sequence>
+        <xs:all>
             <xs:element name="url" type="xs:string"/>
             <xs:element name="method" minOccurs="0">
                 <xs:simpleType>
@@ -38,9 +49,70 @@ and open the template in the editor.
             </xs:element>
             <xs:element name="charset" type="xs:string" minOccurs="0"/>
             <xs:element name="timeout" type="xs:integer" minOccurs="0"/>
+            <xs:element name="params" type="params" minOccurs="0"/>
             <xs:element name="cookie" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="cookies" type="cookies" minOccurs="0"/>
             <xs:element name="content" type="xs:string" minOccurs="0"/>
+        </xs:all>
+    </xs:complexType>
+    
+    <xs:complexType name="params">
+        <xs:sequence>
+            <xs:element name="param" type="param" minOccurs="1"  maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
     
+    <xs:complexType name="param">
+        <xs:sequence>
+            <xs:element name="key" type="xs:string"/>
+            <xs:element name="value" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="cookies">
+        <xs:sequence>
+            <xs:element name="cookie" type="cookie" minOccurs="1"  maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="cookie">
+        <xs:sequence>
+            <xs:element name="key" type="xs:string"/>
+            <xs:element name="value" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!-- END FOR FETCH-->
+    
+    
+    <!-- START FOR PARSE-->
+    <xs:complexType name="parse">
+        <xs:all>
+            <xs:element name="rule" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:all>
+        <xs:attribute name="method">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="regxp"/>
+                    <xs:enumeration value="dom"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <!-- END FOR PARSE-->
+    
+    <!-- START FOR STORE-->
+    <xs:complexType name="store">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="ext">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string" />
+                    </xs:simpleType>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <!-- END FOR STORE-->
+    
 </xs:schema>
+

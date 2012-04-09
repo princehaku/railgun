@@ -54,14 +54,15 @@ public class FetchActionNode implements ActionNode {
             Log4j.getInstance().info("RequestMethod " + requestMethod);
             if (requestMethod.toLowerCase().equals("post")) {
                 client.setRequestType(HttpClient.REQ_TYPE.POST);
-                // 获取并设置body节点内容
-                if (node.element("content") != null) {
-                    String content = node.element("content").getData().toString();
-                    client.setPostString(content.trim());
-                    node.element("content").detach();
-                }
             }
             node.element("method").detach();
+        }
+        // 获取并设置body节点内容
+        if (node.element("content") != null) {
+            String content = node.element("content").getData().toString();
+            client.setRequestType(HttpClient.REQ_TYPE.POST);
+            client.setPostString(content.trim());
+            node.element("content").detach();
         }
         // 编码定制
         if (node.element("charset") != null) {

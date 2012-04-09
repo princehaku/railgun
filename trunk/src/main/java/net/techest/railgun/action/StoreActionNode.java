@@ -28,6 +28,7 @@ import net.techest.railgun.system.Shell;
 import net.techest.railgun.util.PatternHelper;
 import net.techest.util.Log4j;
 import net.techest.util.MD5;
+import net.techest.util.SHA;
 import org.dom4j.Element;
 
 /**
@@ -35,17 +36,17 @@ import org.dom4j.Element;
  * @author baizhongwei.pt
  */
 class StoreActionNode implements ActionNode {
-
+    
     public StoreActionNode() {
     }
-
+    
     @Override
-    public void execute(Element node, Shell shell)  throws Exception{
+    public void execute(Element node, Shell shell) throws Exception {
         for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
             FileOutputStream fw = null;
             String savePath = node.getData().toString();
-            ArrayList<String> strings = PatternHelper.convertAll(savePath, res,shell);
+            ArrayList<String> strings = PatternHelper.convertAll(savePath, res, shell);
             for (Iterator si = strings.iterator(); si.hasNext();) {
                 savePath = (String) si.next();
                 try {
@@ -62,7 +63,7 @@ class StoreActionNode implements ActionNode {
                         if (node.attribute("ext") != null) {
                             ext = node.attribute("ext").getData().toString();
                         }
-                        savePath = savePath + "/" + MD5.getMD5((System.nanoTime() + "").getBytes()) + ext;
+                        savePath = savePath + "/" + MD5.getMD5(res.getBytes()) + SHA.getSHA1(res.getBytes()) + ext;
                     }
                     fw = new FileOutputStream(savePath);
                     fw.write(res.getBytes());
@@ -79,7 +80,7 @@ class StoreActionNode implements ActionNode {
                     }
                 }
             }
-
+            
         }
     }
 }

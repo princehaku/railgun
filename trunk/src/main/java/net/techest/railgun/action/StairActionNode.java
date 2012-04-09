@@ -13,7 +13,7 @@
  *  limitations under the License.
  *
  *  Project Name : railgun
- *  Created on : Mar 22, 2012 , 9:47:55 AM
+ *  Created on : Apr 9, 2012 , 10:39:11 AM
  *  Author     : princehaku
  */
 
@@ -23,12 +23,15 @@ package net.techest.railgun.action;
 import net.techest.railgun.system.Shell;
 import org.dom4j.Element;
 
-/**
+/**这个节点用于定义一系列操作，基本无实际作用
  *
  * @author baizhongwei.pt
  */
-public interface ActionNode {
+public class StairActionNode implements ActionNode{
 
-    public void execute(Element node, Shell shell) throws Exception;
+    @Override
+    public void execute(Element node, Shell bullet) throws Exception {
+        
+    }
 
 }
