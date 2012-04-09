@@ -45,7 +45,7 @@ class ParseActionNode implements ActionNode {
     }
 
     @Override
-    public void execute(Element node, Shell shell)  throws Exception{
+    public void execute(Element node, Shell shell) throws Exception {
         if (node.attribute("method") == null || node.element("rule") == null) {
             Log4j.getInstance().error("ParseNode Need method and rule param to work");
             throw new ActionException("ParseNode Need method and rule param to work");

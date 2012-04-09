@@ -18,13 +18,11 @@
  */
 package net.techest.railgun.action;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.techest.railgun.system.Shell;
 import net.techest.util.Log4j;
 import org.dom4j.Element;
 
-/**
+/**ActionNode自动装载工厂
  *
  * @author baizhongwei.pt
  */

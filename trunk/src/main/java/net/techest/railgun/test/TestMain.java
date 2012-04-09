@@ -20,7 +20,6 @@ package net.techest.railgun.test;
 
 import net.techest.railgun.RailGunThread;
 import net.techest.railgun.system.AddShellException;
-import org.dom4j.DocumentException;
 
 /**
  *
@@ -29,10 +28,7 @@ import org.dom4j.DocumentException;
 public class TestMain {
 
     public static void main(String[] argvs) throws AddShellException {
-            System.out.println("loadShellXml");
-            String xmlpath = "src/main/java/testtask1.xml";
-            RailGunThread instance = new RailGunThread();
-            instance.addShellXml(xmlpath);
-            instance.start();
+        String xmlpath = "src/main/java/testtask1.xml";
+        RailGunThread.getInstance().addShellXml(xmlpath);
     }
 }

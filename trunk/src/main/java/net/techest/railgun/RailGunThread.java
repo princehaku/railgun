@@ -31,6 +31,18 @@ import net.techest.util.Log4j;
  */
 public class RailGunThread extends Thread {
 
+    /**
+     * 单例模式
+     *
+     */
+    private static class holder {
+
+        static RailGunThread instance = new RailGunThread();
+    }
+
+    public static RailGunThread getInstance() {
+        return holder.instance;
+    }
     private ArrayList<RailGun> railguns = new ArrayList();
 
     /**
@@ -39,19 +51,14 @@ public class RailGunThread extends Thread {
      * @param xmlpath
      *
      */
-    public void addShellXml(String xmlpath) throws AddShellException {
+    public synchronized void addShellXml(String xmlpath) throws AddShellException {
         try {
             File inputXml = new File(xmlpath);
             Shell shell = new Shell();
             RailGun railgun = new RailGun(inputXml, shell);
-            Log4j.getInstance().info("运行 新到来的 RailGun");
-            railgun.fire();
-            Log4j.getInstance().info("完成 RailGun " + railgun.getShell().getName());
-            if (railgun.getShell().getReloadTime() != -1) {
-                railgun.setLastRunTime(System.currentTimeMillis());
-                railgun.setNextRunTime(System.currentTimeMillis() + railgun.getShell().getReloadTime());
-                Log4j.getInstance().info("RailGun " + railgun.getShell().getName()+" 被添加到队列");
-                railguns.add(railgun);
+            railguns.add(railgun);
+            if (this.getState().equals(Thread.State.NEW)) {
+                this.start();
             }
         } catch (Exception ex) {
             // 出错了.不把shell添加到节点域
@@ -64,7 +71,7 @@ public class RailGunThread extends Thread {
      * 执行所有装载的炮弹
      *
      */
-    public void execAll() {
+    private void execAll() {
         RailGun railgun = null;
         for (Iterator<RailGun> t = railguns.iterator(); t.hasNext();) {
             try {
