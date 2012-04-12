@@ -29,6 +29,6 @@ public class TestMain {
 
     public static void main(String[] argvs) throws AddShellException {
         String xmlpath = "src/main/java/testtask1.xml";
-        RailGunThread.getInstance().addShellXml(xmlpath);
+        RailGunThread.getInstance().start();
     }
 }

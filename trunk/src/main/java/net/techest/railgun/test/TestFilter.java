@@ -21,17 +21,17 @@
 package net.techest.railgun.test;
 
 import java.util.LinkedList;
-import net.techest.railgun.system.Filter;
+import net.techest.railgun.system.Handler;
 import net.techest.railgun.system.Resource;
 
 /**
  *
  * @author baizhongwei.pt
  */
-public class TestFilter implements Filter{
+public class TestFilter implements Handler{
 
     @Override
-    public void filter(Resource resource) {
+    public void process(Resource resource) {
         resource.putParam("2", "http://baidu.com");
     }
 

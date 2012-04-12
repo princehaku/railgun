@@ -21,7 +21,7 @@
 package net.techest.railgun.action;
 
 import java.util.Iterator;
-import net.techest.railgun.system.Filter;
+import net.techest.railgun.system.Handler;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import net.techest.util.Log4j;
@@ -39,11 +39,11 @@ public class HandlerActionNode  implements ActionNode {
         // 执行过滤器
         if (node.getData() != null) {
             try {
-                Filter filter = (Filter) Class.forName(node.getData().toString()).newInstance();
+                Handler filter = (Handler) Class.forName(node.getData().toString()).newInstance();
                 Log4j.getInstance().info("Apply Handler " + node.getData().toString());
                 for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
                     Resource res = (Resource) i.next();
-                    filter.filter(res);
+                    filter.process(res);
                 }
             } catch (Exception ex) {
                 Log4j.getInstance().error(ex.getMessage());
