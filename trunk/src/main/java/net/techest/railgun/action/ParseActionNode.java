@@ -65,7 +65,8 @@ class ParseActionNode implements ActionNode {
                     //循环els存放为新的r节点
                     for (Iterator ri = els.iterator(); ri.hasNext();) {
                         org.jsoup.nodes.Element el = (org.jsoup.nodes.Element) ri.next();
-                        Resource r = new Resource(el.outerHtml().getBytes(res.getCharset()), res.getCharset());
+                        Resource r = (Resource) res.clone();
+                        r.setBytes(el.outerHtml().getBytes(res.getCharset()));
                         resnew.add(r);
                     }
                 } catch (IOException ex) {
@@ -78,7 +79,8 @@ class ParseActionNode implements ActionNode {
                 Matcher m = ptn.matcher(res.toString());
                 if (m.find()) {
                     try {
-                        Resource r = new Resource(m.group(0).getBytes(res.getCharset()), res.getCharset());
+                        Resource r = (Resource) res.clone();
+                        r.setBytes(m.group(0).getBytes(res.getCharset()));
                         r.setRegxpResult(m);
                         resnew.add(r);
                     } catch (UnsupportedEncodingException ex) {

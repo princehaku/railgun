@@ -17,10 +17,7 @@
  */
 package net.techest.util;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Properties;
 
 /**配置文件读取和写入类
@@ -35,15 +32,26 @@ public class Configure {
 
     private static ClassLoader getClassLoader() {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        
+
         if (loader == null) {
             loader = Configure.class.getClassLoader();
         }
         return loader;
     }
 
+    /**
+     * 单例模式
+     *
+     */
+    private static class holder {
+        static Configure instance = new Configure("system.propertie");
+    }
+
+    public static Configure getSystemConfig() {
+        return Configure.holder.instance;
+    }
     /**默认构造函数
-     * 需要指定文件路径
+     * 需要优先读取jar包内配置文件
      * @param filePath
      * @throws FileNotFoundException
      * @throws IOException
@@ -58,17 +66,20 @@ public class Configure {
             inputFile = getClassLoader().getResourceAsStream(filePath);
 
             if (inputFile == null) {
-                throw new FileNotFoundException(filePath);
+                inputFile = new FileInputStream(filePath);
+                if (inputFile == null) {
+                    throw new FileNotFoundException(filePath);
+                }
             }
             propertie.load(inputFile);
 
             this.filePath = filePath;
 
         } catch (FileNotFoundException ex) {
-            Log4j.getInstance().error(this.getClass().getName()+"配置文件" + filePath + "不存在 " + ex.getMessage());
+            Log4j.getInstance().error(this.getClass().getName() + "配置文件" + filePath + "不存在 " + ex.getMessage());
             return;
         } catch (IOException ex) {
-            Log4j.getInstance().error(this.getClass().getName()+"配置文件" + filePath + "读取失败 " + ex.getMessage());
+            Log4j.getInstance().error(this.getClass().getName() + "配置文件" + filePath + "读取失败 " + ex.getMessage());
             return;
 
         }
@@ -80,11 +91,11 @@ public class Configure {
      * @return String
      */
     public String getString(String key) {
-        String res=propertie.getProperty(key);
-        if(res==null){
-            Log4j.getInstance().error(this.getClass().getName()+"属性"+key+"获取失败，请检查配置文件");
+        String res = propertie.getProperty(key);
+        if (res == null) {
+            Log4j.getInstance().error(this.getClass().getName() + "属性" + key + "获取失败，请检查配置文件");
         }
-         return res;
+        return res;
     }
 
     /**得到整型值
@@ -94,8 +105,8 @@ public class Configure {
      */
     public int getInt(String key) {
         int r = Integer.parseInt(propertie.getProperty(key));
-        if(propertie.getProperty(key)==null){
-            Log4j.getInstance().error(this.getClass().getName()+"属性"+key+"获取失败，请检查配置文件");
+        if (propertie.getProperty(key) == null) {
+            Log4j.getInstance().error(this.getClass().getName() + "属性" + key + "获取失败，请检查配置文件");
         }
         return r;
     }
@@ -116,17 +127,16 @@ public class Configure {
      */
     public void saveFile(String filePath) {
         try {
-            if(filePath==null||filePath.equals("")){
-                filePath=this.filePath;
+            if (filePath == null || filePath.equals("")) {
+                filePath = this.filePath;
             }
             FileOutputStream outputFile = new FileOutputStream(filePath);
             propertie.store(outputFile, "Configure File");
             outputFile.close();
         } catch (FileNotFoundException ex) {
-            Log4j.getInstance().error(this.getClass().getName()+ "配置文件保存失败" + ex.getMessage());
+            Log4j.getInstance().error(this.getClass().getName() + "配置文件保存失败" + ex.getMessage());
         } catch (IOException ex) {
-            Log4j.getInstance().error(this.getClass().getName()+"配置文件保存失败" + ex.getMessage());
+            Log4j.getInstance().error(this.getClass().getName() + "配置文件保存失败" + ex.getMessage());
         }
     }
-
 }

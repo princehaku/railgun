@@ -21,20 +21,21 @@ package net.techest.railgun.util;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 
 /**
- * 模式串处理 将一个带有特殊标记的字符串处理为系统标准字符串 比如DATE转换为2012-03-02这样的
+ * 模式串处理 
+ * 将一个带有特殊标记的字符串处理为系统标准字符串 
+ * 比如DATE转换为2012-03-02这样的
  * 支持范围定义
  * @author baizhongwei.pt
  */
 public class PatternHelper {
-    
-    private static ArrayList<String> convertDeep(String input,ArrayList<String> strings) {
+
+    private static ArrayList<String> convertDeep(String input, ArrayList<String> strings) {
         // 取字符串内的$[xx,xx]标记 进行替换后插入到strings数组内
         Pattern p = Pattern.compile("\\$\\[(.*?)\\]");
         Matcher m = p.matcher(input);
@@ -54,6 +55,7 @@ public class PatternHelper {
         }
         return strings;
     }
+
     /**
      * 根据既有规则进行字符串转换 注意得到的结果是个数组,哪怕只有一个值返回 支持的字段 $result 当前res的内容 $date
      * yyyy-MM-dd $time HH:mm:ss 范围数字$[number,number] 预存的资源${key}
@@ -64,7 +66,7 @@ public class PatternHelper {
      * @return
      */
     public static ArrayList<String> convertAll(String input, Resource res, Shell shell) {
-        
+
         Pattern p = Pattern.compile("\\$\\{(.*?)\\}");
         Matcher m = p.matcher(input);
         while (m.find()) {
@@ -79,7 +81,7 @@ public class PatternHelper {
         sd = new SimpleDateFormat("HH:mm:ss");
         input = input.replaceAll("\\$time", sd.format(new Date()));
         ArrayList<String> strings = new ArrayList();
-        PatternHelper.convertDeep(input,strings);
+        PatternHelper.convertDeep(input, strings);
         return strings;
     }
 }

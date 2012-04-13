@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 import net.techest.railgun.system.Shell;
+import net.techest.util.Configure;
 import net.techest.util.Log4j;
 import net.techest.util.MD5;
 
@@ -44,10 +45,6 @@ public class RailGunThread extends TimerTask {
      */
     private static class holder {
 
-        @Override
-        protected void finalize() throws Throwable {
-            super.finalize();
-        }
         static Timer timer = new Timer();
         static RailGunThread instance = new RailGunThread();
     }
@@ -63,14 +60,16 @@ public class RailGunThread extends TimerTask {
      *
      */
     public synchronized void addShellXml(String xmlpath) throws AddShellException {
+        RailGun railgun = null;
         try {
             File inputXml = new File(xmlpath);
             Shell shell = new Shell();
-            RailGun railgun = new RailGun(inputXml, shell);
+            railgun = new RailGun(inputXml, shell);
             railguns.add(railgun);
         } catch (Exception ex) {
             // 出错了.不把shell添加到节点域
             Log4j.getInstance().error("AddShell Failed Ex: " + ex.getMessage());
+            railguns.remove(railgun);
             throw new AddShellException(ex);
         }
     }
@@ -90,6 +89,7 @@ public class RailGunThread extends TimerTask {
      */
     private void execAll() {
         RailGun railgun = null;
+        Log4j.getInstance().debug("RailGun 总量"+railguns.size());
         for (Iterator<RailGun> t = railguns.iterator(); t.hasNext();) {
             try {
                 railgun = (RailGun) t.next();
@@ -102,15 +102,17 @@ public class RailGunThread extends TimerTask {
                 }
             } catch (Exception ex) {
                 // 执行失败移除该单个railgun
-                Log4j.getInstance().error("RailGun " + railgun.getShell().getName() + " 发生致命错误，强行终止");
                 t.remove();
+                ex.printStackTrace();
+                Log4j.getInstance().error("RailGun " + railgun.getShell().getName() + " 发生致命错误，强行终止");
             }
         }
     }
 
     public void checkAndAdd() {
         // 提取目录hash
-        File f = new File("sites");
+        String sitesDir = Configure.getSystemConfig().getString("XML_DIR");
+        File f = new File(sitesDir);
         if (!f.exists()) {
             f.mkdirs();
         }
@@ -122,10 +124,10 @@ public class RailGunThread extends TimerTask {
                 String newHash = MD5.getMD5((file.getName() + file.length()).getBytes());
                 if (fileHashs.get(file.getName()) == null || !fileHashs.get(file.getName()).equals(newHash)) {
                     try {
+                        Log4j.getInstance().info(file.getName() + "加入");
                         fileHashs.put(file.getName(), newHash);
                         this.addShellXml(file.getAbsolutePath());
                     } catch (AddShellException ex) {
-                        
                     }
                 }
             }

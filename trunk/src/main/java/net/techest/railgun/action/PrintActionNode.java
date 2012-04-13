@@ -28,15 +28,20 @@ import org.dom4j.Element;
  * @author baizhongwei.pt
  */
 class PrintActionNode implements ActionNode {
-
+    
     public PrintActionNode() {
     }
-
+    
     @Override
-    public void execute(Element node, Shell bullet)  throws Exception{
+    public void execute(Element node, Shell bullet) throws Exception {
         for (Iterator i = bullet.getResources().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
-            System.out.println(res.toString());
+            System.out.println("[url]" + res.getUrl());
+            for (String key : res.getParams().keySet()) {
+                System.out.println("[key]" + key);
+                System.out.println("[value]" + res.getParams().get(key));
+            }
+            System.out.println("[content]" + res.toString());
         }
     }
 }

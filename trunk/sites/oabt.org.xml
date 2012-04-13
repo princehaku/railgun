@@ -11,6 +11,8 @@
         <parse method="dom">
             <rule>.toplist tbody</rule>
         </parse>
-        <handler>net.techest.railgun.test.TestFilter</handler>
+        <parse method="regxp">
+            <rule>href="(.*?)"</rule>
+        </parse>
     </stair>
 </shell>

@@ -69,7 +69,7 @@ public class RailGun {
     }
 
     /**
-     * 执行所有装载的炮弹
+     * 执行
      *
      */
     public void fire() throws Exception {

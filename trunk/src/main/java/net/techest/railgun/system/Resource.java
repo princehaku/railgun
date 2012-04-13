@@ -84,6 +84,15 @@ public class Resource implements Cloneable {
     }
 
     /**
+     * 得到设置的参数组
+     *
+     * @param key
+     * @return
+     */
+    public HashMap<String, String> getParams() {
+        return this.params;
+    }
+    /**
      * 设置参数 之后xml中的值可以通过${key}变量进行获取
      *
      * @param key
