@@ -58,18 +58,18 @@ public class DbstoreActionNode implements ActionNode {
             Log4j.getInstance().warn("连接数据库失败 " + ex.getMessage() + d.toString());
             return;
         }
-        Iterator forms = node.elements("form").iterator();
-        while (forms.hasNext()) {
-            Element form = (Element) forms.next();
-            String formName = form.attributeValue("name");
+        Iterator mappings = node.elements("mapping").iterator();
+        while (mappings.hasNext()) {
+            Element mapping = (Element) mappings.next();
+            String formName = mapping.attributeValue("form");
             ArrayList<String> colsName = new ArrayList<String>();
             ArrayList<String> colsValue = new ArrayList<String>();
             // 遍历form里面的mapping 拿到cols的名字和对应值
-            if (form.element("mapping") == null || form.element("mapping").elements("enty") == null) {
+            if (mapping.elements("enty") == null) {
                 Log4j.getInstance().warn("form 标签内没有mapping规则");
                 continue;
             }
-            Iterator enties = form.element("mapping").elements("enty").iterator();
+            Iterator enties = mapping.elements("enty").iterator();
             while (enties.hasNext()) {
                 Element entry = (Element) enties.next();
                 colsName.add(entry.elementTextTrim("name").replaceAll("\'", "\\\'").replaceAll("\"", "\\\""));
@@ -96,7 +96,7 @@ public class DbstoreActionNode implements ActionNode {
                 }
             }
 
-            form.detach();
+            mapping.detach();
             Log4j.getInstance().info("表" + formName + "存储完毕");
         }
     }

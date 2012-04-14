@@ -120,7 +120,7 @@ and open the template in the editor.
     <xs:complexType name="dbstore">
         <xs:sequence>
             <xs:element name="resource" type="resource" minOccurs="1"/>
-            <xs:element name="form" type="form" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="mapping" type="mapping" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
     
@@ -133,6 +133,21 @@ and open the template in the editor.
         <xs:attribute name="maxWait" type="xs:integer"/>
         <xs:attribute name="maxIdle" type="xs:integer"/>
     </xs:complexType>
+    
+    <xs:complexType name="mapping">
+        <xs:sequence>
+            <xs:element name="enty" type="enty" minOccurs="1"  maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="form" type="xs:string" use="required"/>
+    </xs:complexType>
+    
+    <xs:complexType name="enty">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string" minOccurs="1" />
+            <xs:element name="content" type="xs:string" minOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    
     <!-- END FOR DBSTORE-->
     
 </xs:schema>
