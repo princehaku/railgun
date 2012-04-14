@@ -24,7 +24,7 @@ import net.techest.railgun.net.Client;
 import net.techest.railgun.net.HttpClient;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
-import net.techest.util.Log4j;
+import net.techest.railgun.util.Log4j;
 import org.dom4j.Element;
 
 /**

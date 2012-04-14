@@ -1,8 +1,2 @@
 [SITES]
 XML_DIR = sites
-
-[DB]
-HOST = localhost
-PORT = 3306
-USER = root
-PASSWORD = zxcasdqwe

@@ -15,7 +15,7 @@
  *  Created on : 2010-12-21, 16:19:30
  *  Author     : princehaku
  */
-package net.techest.util;
+package net.techest.railgun.util;
 
 import java.io.*;
 import java.util.Properties;

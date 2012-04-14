@@ -17,6 +17,7 @@
  */
 package net.techest.util;
 
+import net.techest.railgun.util.Log4j;
 import java.io.*;
 
 /**

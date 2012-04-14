@@ -23,7 +23,7 @@ import java.util.Iterator;
 import net.techest.railgun.action.ActionNode;
 import net.techest.railgun.action.ActionNodeFactory;
 import net.techest.railgun.system.Shell;
-import net.techest.util.Log4j;
+import net.techest.railgun.util.Log4j;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -90,7 +90,7 @@ public class RailGun {
         ActionNode action = ActionNodeFactory.getNodeAction(e.getName());
         if (action == null) {
             Log4j.getInstance().error("No Such Action " + e.getName());
-            throw new Exception("Action 不存在");
+            throw new Exception("节点名 " + e.getName() + " 非法");
         }
         Log4j.getInstance().info("Execute Action " + e.getName());
         // 执行

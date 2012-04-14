@@ -16,7 +16,7 @@
  *  Author     : princehaku
  */
 
-package net.techest.util;
+package net.techest.railgun.util;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;

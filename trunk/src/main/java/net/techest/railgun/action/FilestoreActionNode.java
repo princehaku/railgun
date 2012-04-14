@@ -13,7 +13,7 @@
  *  limitations under the License.
  *
  *  Project Name : railgun
- *  Created on : Mar 22, 2012 , 7:31:35 PM
+ *  Created on : Apr 14, 2012 , 2:18:10 PM
  *  Author     : princehaku
  */
 package net.techest.railgun.action;
@@ -26,47 +26,41 @@ import java.util.Iterator;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import net.techest.railgun.util.PatternHelper;
-import net.techest.util.Log4j;
-import net.techest.util.MD5;
-import net.techest.util.SHA;
+import net.techest.railgun.util.Log4j;
 import org.dom4j.Element;
 
 /**
  *
  * @author baizhongwei.pt
  */
-class StoreActionNode implements ActionNode {
-    
-    public StoreActionNode() {
-    }
-    
+public class FilestoreActionNode implements ActionNode {
+
     @Override
     public void execute(Element node, Shell shell) throws Exception {
+        // 参数path是必须的
+        if (node.element("path") == null) {
+            Log4j.getInstance().error("FetchNode Need An Url Parameter");
+            throw new net.techest.railgun.system.ActionException("FilestoreNode 需要参数 path");
+        }
+
         for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
             FileOutputStream fw = null;
-            String savePath = node.getData().toString();
+            String savePath = node.element("path").getData().toString();
+            byte[] data = res.getBytes();
+            // 如果数据节点存在，替换数据节点
+            if (node.element("data") != null) {
+                ArrayList<String> content = PatternHelper.convertAll(node.element("data").getData().toString(), res, shell);
+                data = content.get(0).getBytes();
+            }
+
             ArrayList<String> strings = PatternHelper.convertAll(savePath, res, shell);
             for (Iterator si = strings.iterator(); si.hasNext();) {
                 savePath = (String) si.next();
                 try {
                     File saveTo = new File(savePath);
-                    // 如果字符串最后一个是/或者path是一个目录 并且没有存在这个目录 创建目录
-                    if ((savePath.substring(savePath.length() - 1, savePath.length()).equals("/")
-                            || saveTo.isDirectory()) && !saveTo.exists()) {
-                        if (!saveTo.mkdirs()) {
-                            Log4j.getInstance().error("Create Dir Failed [path] " + savePath);
-                        }
-                    }
-                    if (saveTo.isDirectory()) {
-                        String ext = "";
-                        if (node.attribute("ext") != null) {
-                            ext = node.attribute("ext").getData().toString();
-                        }
-                        savePath = savePath + "/" + MD5.getMD5(res.getBytes()) + SHA.getSHA1(res.getBytes()) + ext;
-                    }
                     fw = new FileOutputStream(savePath);
-                    fw.write(res.getBytes());
+                    fw.write(data);
                     Log4j.getInstance().debug("Store Success To " + savePath);
                 } catch (IOException ex) {
                     Log4j.getInstance().error("Store Error " + ex.getMessage());
@@ -80,7 +74,14 @@ class StoreActionNode implements ActionNode {
                     }
                 }
             }
-            
+
+        }
+        // 解除节点关联
+        if (node.element("path") != null) {
+            node.element("path").detach();
+        }
+        if (node.element("data") != null) {
+            node.element("data").detach();
         }
     }
 }

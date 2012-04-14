@@ -26,8 +26,8 @@ import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 import net.techest.railgun.system.Shell;
-import net.techest.util.Configure;
-import net.techest.util.Log4j;
+import net.techest.railgun.util.Configure;
+import net.techest.railgun.util.Log4j;
 import net.techest.util.MD5;
 
 /**
@@ -37,7 +37,7 @@ import net.techest.util.MD5;
 public class RailGunThread extends TimerTask {
 
     private ArrayList<RailGun> railguns = new ArrayList();
-    private HashMap<String, String> fileHashs = new HashMap();
+    private HashMap<String, String> fileHashes = new HashMap();
 
     /**
      * 单例模式
@@ -66,7 +66,8 @@ public class RailGunThread extends TimerTask {
             Shell shell = new Shell();
             railgun = new RailGun(inputXml, shell);
             railguns.add(railgun);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             // 出错了.不把shell添加到节点域
             Log4j.getInstance().error("AddShell Failed Ex: " + ex.getMessage());
             railguns.remove(railgun);
@@ -89,7 +90,7 @@ public class RailGunThread extends TimerTask {
      */
     private void execAll() {
         RailGun railgun = null;
-        Log4j.getInstance().debug("RailGun 总量"+railguns.size());
+        Log4j.getInstance().debug("SITE XML 总量" + railguns.size());
         for (Iterator<RailGun> t = railguns.iterator(); t.hasNext();) {
             try {
                 railgun = (RailGun) t.next();
@@ -100,7 +101,8 @@ public class RailGunThread extends TimerTask {
                     railgun.setLastRunTime(System.currentTimeMillis());
                     railgun.setNextRunTime(System.currentTimeMillis() + railgun.getShell().getReloadTime());
                 }
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 // 执行失败移除该单个railgun
                 t.remove();
                 ex.printStackTrace();
@@ -108,9 +110,11 @@ public class RailGunThread extends TimerTask {
             }
         }
     }
-
+    /**检测目录中xml文件状态并添加到队列中
+     * 
+     */
     public void checkAndAdd() {
-        // 提取目录hash
+        // 提取目录文件hash
         String sitesDir = Configure.getSystemConfig().getString("XML_DIR");
         File f = new File(sitesDir);
         if (!f.exists()) {
@@ -121,13 +125,17 @@ public class RailGunThread extends TimerTask {
             File file = files[i];
             String prefix = file.getName().substring(file.getName().lastIndexOf(".") + 1);
             if (prefix.toLowerCase().equals("xml")) {
-                String newHash = MD5.getMD5((file.getName() + file.length()).getBytes());
-                if (fileHashs.get(file.getName()) == null || !fileHashs.get(file.getName()).equals(newHash)) {
+                String newHash = MD5.getMD5(( file.getName() + file.length() + file.lastModified() ).getBytes());
+                if (fileHashes.get(file.getName()) == null || !fileHashes.get(file.getName()).equals(newHash)) {
                     try {
-                        Log4j.getInstance().info(file.getName() + "加入");
-                        fileHashs.put(file.getName(), newHash);
-                        this.addShellXml(file.getAbsolutePath());
-                    } catch (AddShellException ex) {
+                        Log4j.getInstance().info(file.getName() + " 更新");
+                        // 如果hashes里面已经存在 不重复添加到xmls
+                        if (!fileHashes.containsKey(file.getName())) {
+                            this.addShellXml(file.getAbsolutePath());
+                        }
+                        fileHashes.put(file.getName(), newHash);
+                    }
+                    catch (AddShellException ex) {
                     }
                 }
             }
@@ -136,7 +144,7 @@ public class RailGunThread extends TimerTask {
 
     @Override
     public void run() {
-
+        // 检测目录
         this.checkAndAdd();
         // 执行所有
         this.execAll();

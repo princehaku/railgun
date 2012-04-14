@@ -30,7 +30,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
-import net.techest.util.Log4j;
+import net.techest.railgun.util.Log4j;
 import net.techest.util.StringTools;
 
 /**

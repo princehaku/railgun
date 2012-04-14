@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 import net.techest.railgun.system.ActionException;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
-import net.techest.util.Log4j;
+import net.techest.railgun.util.Log4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.dom4j.Element;

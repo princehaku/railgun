@@ -22,7 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
-import net.techest.util.Log4j;
+import net.techest.railgun.util.Log4j;
 
 /**
  * 资源类 表示节点处理类 基本的数据类型是byte[] 附加byte[]数据的charset 所以可以转换成字符串或者作二进制操作

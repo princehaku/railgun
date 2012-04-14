@@ -19,7 +19,7 @@
 package net.techest.railgun.action;
 
 import net.techest.railgun.system.Shell;
-import net.techest.util.Log4j;
+import net.techest.railgun.util.Log4j;
 import org.dom4j.Element;
 
 /**ActionNode自动装载工厂

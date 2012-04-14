@@ -25,7 +25,8 @@ and open the template in the editor.
             <xs:element name="print" minOccurs="0"/>
             <xs:element name="handler" minOccurs="0"/>
             <xs:element name="parse" type="parse" minOccurs="0" />
-            <xs:element name="store" type="store" minOccurs="0" />
+            <xs:element name="filestore" type="filestore" minOccurs="0" />
+            <xs:element name="dbstore" type="dbstore" minOccurs="0" />
         </xs:all>
         <xs:attribute name="fork">
             <xs:simpleType>
@@ -106,19 +107,33 @@ and open the template in the editor.
     </xs:complexType>
     <!-- END FOR PARSE-->
     
-    <!-- START FOR STORE-->
-    <xs:complexType name="store">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute name="ext">
-                    <xs:simpleType>
-                        <xs:restriction base="xs:string" />
-                    </xs:simpleType>
-                </xs:attribute>
-            </xs:extension>
-        </xs:simpleContent>
+    <!-- START FOR FILESTORE-->
+    <xs:complexType name="filestore">
+        <xs:all>
+            <xs:element name="path" type="xs:string" minOccurs="1"/>
+            <xs:element name="data" type="xs:string" minOccurs="0"/>
+        </xs:all>
     </xs:complexType>
-    <!-- END FOR STORE-->
+    <!-- END FOR FILESTORE-->
+    
+    <!-- START FOR DBSTORE-->
+    <xs:complexType name="dbstore">
+        <xs:sequence>
+            <xs:element name="resource" type="resource" minOccurs="1"/>
+            <xs:element name="form" type="form" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="resource">
+        <xs:attribute name="url" type="xs:string" use="required"/>
+        <xs:attribute name="driverClassName" type="xs:string" use="required"/>
+        <xs:attribute name="username " type="xs:string" use="required"/>
+        <xs:attribute name="password" type="xs:string" use="required"/>
+        <xs:attribute name="maxActive" type="xs:integer"/>
+        <xs:attribute name="maxWait" type="xs:integer"/>
+        <xs:attribute name="maxIdle" type="xs:integer"/>
+    </xs:complexType>
+    <!-- END FOR DBSTORE-->
     
 </xs:schema>
 

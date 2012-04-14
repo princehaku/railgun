@@ -25,12 +25,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
+import net.techest.util.MD5;
+import net.techest.util.SHA;
 
 /**
- * 模式串处理 
- * 将一个带有特殊标记的字符串处理为系统标准字符串 
- * 比如DATE转换为2012-03-02这样的
- * 支持范围定义
+ * 模式串处理 将一个带有特殊标记的字符串处理为系统标准字符串 比如DATE转换为2012-03-02这样的 支持范围定义
+ *
  * @author baizhongwei.pt
  */
 public class PatternHelper {
@@ -58,8 +58,8 @@ public class PatternHelper {
 
     /**
      * 根据既有规则进行字符串转换 注意得到的结果是个数组,哪怕只有一个值返回 支持的字段 $result 当前res的内容 $date
-     * yyyy-MM-dd $time HH:mm:ss 范围数字$[number,number] 预存的资源${key}
-     * 上一步正则返回值${group_id}
+     * yyyy-MM-dd $time HH:mm:ss $[number,number] 范围数字 $hash 资源hash值 ${key}
+     * 预存的资源 上一步正则返回值${group_id}
      *
      * @param input
      * @param m
@@ -74,14 +74,22 @@ public class PatternHelper {
             input = input.replaceFirst("\\$\\{" + key + "\\}", res.getParam(key));
             m = p.matcher(input);
         }
+        if (res.getUrl() != null) {
+            input = input.replaceAll("\\$url", res.getUrl().replaceAll("\\$", "\\\\\\$"));
+        }
+        input = input.replaceAll("\\$result", res.toString().replaceAll("\\$", "\\\\\\$"));
+        input = input.replaceAll("\\$hash", MD5.getMD5(res.getBytes()) + SHA.getSHA1(res.getBytes()));
+        input = baseConvert(input);
+        ArrayList<String> strings = new ArrayList();
+        PatternHelper.convertDeep(input, strings);
+        return strings;
+    }
 
-        input = input.replaceAll("\\$result", res.toString());
+    public static String baseConvert(String input) {
         SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
         input = input.replaceAll("\\$date", sd.format(new Date()));
         sd = new SimpleDateFormat("HH:mm:ss");
         input = input.replaceAll("\\$time", sd.format(new Date()));
-        ArrayList<String> strings = new ArrayList();
-        PatternHelper.convertDeep(input, strings);
-        return strings;
+        return input;
     }
 }

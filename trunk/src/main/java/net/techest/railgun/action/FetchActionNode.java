@@ -30,7 +30,7 @@ import net.techest.railgun.system.ActionException;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import net.techest.railgun.util.PatternHelper;
-import net.techest.util.Log4j;
+import net.techest.railgun.util.Log4j;
 import org.dom4j.Element;
 
 /**
@@ -43,11 +43,13 @@ public class FetchActionNode implements ActionNode {
     @Override
     public void execute(Element node, Shell shell) throws Exception {
         HttpClient client = (HttpClient) shell.getClient();
+        shell.setClient(client);
         // url字段是必须的
         if (node.element("url") == null) {
             Log4j.getInstance().error("FetchNode Need An Url Parameter");
             throw new ActionException("FetchNode Need An Url Parameter");
         }
+        String url = node.element("url").getData().toString().trim();
         // Method设置
         if (node.element("method") != null) {
             String requestMethod = node.element("method").getData().toString();
@@ -121,19 +123,17 @@ public class FetchActionNode implements ActionNode {
             Log4j.getInstance().debug("Cookie Setted " + cookie.toString());
             node.element("cookies").detach();
         }
-        shell.setClient(client);
 
         LinkedList<Resource> resnew = new LinkedList();
         // url格式转换
-        String url = node.element("url").getData().toString().trim();
         Log4j.getInstance().debug("Source Url : " + url);
         node.element("url").detach();
         for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
             try {
                 String newurl = url;
-                ArrayList<String> url_patterns = PatternHelper.convertAll(newurl, res, shell);
-                for (Iterator si = url_patterns.iterator(); si.hasNext();) {
+                ArrayList<String> urlPatterns = PatternHelper.convertAll(newurl, res, shell);
+                for (Iterator si = urlPatterns.iterator(); si.hasNext();) {
                     newurl = (String) si.next();
                     URL uri;
                     try {
@@ -147,14 +147,14 @@ public class FetchActionNode implements ActionNode {
                         Log4j.getInstance().warn("URI " + ex.getMessage());
                     }
                     client.setUrl(newurl);
-                    ArrayList<String> content_patterns = new ArrayList<String>();
+                    ArrayList<String> contentPatterns = new ArrayList<String>();
                     // 如果设置了POST方式.使用patternHelp对content进行处理
                     if (client.getRequestType().toString().equals(HttpClient.REQ_TYPE.POST.toString()) && content != null) {
-                        content_patterns = PatternHelper.convertAll(content.trim(), res, shell);
+                        contentPatterns = PatternHelper.convertAll(content.trim(), res, shell);
                     } else {
-                        content_patterns.add("");
+                        contentPatterns.add("");
                     }
-                    for (Iterator sc = content_patterns.iterator(); sc.hasNext();) {
+                    for (Iterator sc = contentPatterns.iterator(); sc.hasNext();) {
                         String postcontent = (String) sc.next();
                         if (!postcontent.equals("")) {
                             client.setPostString(postcontent);
@@ -168,6 +168,7 @@ public class FetchActionNode implements ActionNode {
                     }
                 }
             } catch (Exception ex) {
+                ex.printStackTrace();
                 Log4j.getInstance().error("Fetch Error " + ex.getMessage());
             }
         }

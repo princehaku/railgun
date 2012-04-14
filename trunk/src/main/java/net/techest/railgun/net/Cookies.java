@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.techest.util.Log4j;
+import net.techest.railgun.util.Log4j;
 
 /**
  * Cookie类 方便把cookie组合成字符串
