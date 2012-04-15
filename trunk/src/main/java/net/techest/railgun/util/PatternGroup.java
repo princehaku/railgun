@@ -37,6 +37,12 @@ public class PatternGroup {
     private HashMap<String, ArrayList<String>> patterns = new HashMap<String, ArrayList<String>>();
     private ArrayList<HashMap<String, String>> converted = new ArrayList<HashMap<String, String>>();
 
+    /**添加新字符组到HashMap中
+     * 
+     * @param keyName
+     * @param input
+     * @param convert 
+     */
     public void addNewString(String keyName, String input, boolean convert) {
         ArrayList<String> convertAll = new ArrayList<String>();
 
@@ -48,14 +54,22 @@ public class PatternGroup {
 
         this.patterns.put(keyName, convertAll);
     }
-
+    /**得到转换后的结果
+     * 
+     * @return ArrayList<HashMap<String, String>>
+     */
     public ArrayList<HashMap<String, String>> convert() {
         converted = new ArrayList<HashMap<String, String>>();
         ArrayList<String[]> vr = new ArrayList<String[]>();
         this.convertDeep(patterns, null, vr);
         return converted;
     }
-
+    /**递归处理
+     * 
+     * @param patterns
+     * @param keyName
+     * @param vr 
+     */
     private void convertDeep(HashMap<String, ArrayList<String>> patterns, String keyName, ArrayList<String[]> vr) {
         Iterator pi = patterns.keySet().iterator();
         if (!pi.hasNext()) {
