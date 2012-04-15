@@ -13,140 +13,38 @@
  *  limitations under the License.
  *
  *  Project Name : railgun
- *  Created on : Mar 30, 2012 , 4:01:05 PM
+ *  Created on : Apr 15, 2012 , 4:13:07 PM
  *  Author     : princehaku
  */
 package net.techest.railgun;
-
-import net.techest.railgun.system.AddShellException;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Timer;
-import java.util.TimerTask;
-import net.techest.railgun.system.Shell;
-import net.techest.railgun.util.Configure;
-import net.techest.railgun.util.Log4j;
-import net.techest.util.MD5;
 
 /**
  *
  * @author baizhongwei.pt
  */
-public class RailGunThread extends TimerTask {
+public class RailGunThread extends Thread {
 
-    private ArrayList<RailGun> railguns = new ArrayList();
-    private HashMap<String, String> fileHashes = new HashMap();
+    RailGun railgun;
+    RailGunRunningHandler handler;
 
-    /**
-     * 单例模式
-     *
-     */
-    private static class holder {
-
-        static Timer timer = new Timer();
-        static RailGunThread instance = new RailGunThread();
-    }
-
-    public static RailGunThread getInstance() {
-        return holder.instance;
-    }
-
-    /**
-     * 通过xml装载一个炮弹
-     *
-     * @param xmlpath
-     *
-     */
-    public synchronized void addShellXml(String xmlpath) throws AddShellException {
-        RailGun railgun = null;
-        try {
-            File inputXml = new File(xmlpath);
-            Shell shell = new Shell();
-            railgun = new RailGun(inputXml, shell);
-            railguns.add(railgun);
-        }
-        catch (Exception ex) {
-            // 出错了.不把shell添加到节点域
-            Log4j.getInstance().error("AddShell Failed Ex: " + ex.getMessage());
-            railguns.remove(railgun);
-            throw new AddShellException(ex);
-        }
-    }
-
-    public void start() {
-        Log4j.getInstance().info("RailGun开始运行...");
-        holder.timer.schedule(this, 500, 500);
-    }
-
-    public void stop() {
-        holder.timer.cancel();
-    }
-
-    /**
-     * 执行所有装载的炮弹
-     *
-     */
-    private void execAll() {
-        RailGun railgun = null;
-        Log4j.getInstance().debug("SITE XML 总量" + railguns.size());
-        for (Iterator<RailGun> t = railguns.iterator(); t.hasNext();) {
-            try {
-                railgun = (RailGun) t.next();
-                if (railgun.getNextRunTime() <= System.currentTimeMillis()) {
-                    Log4j.getInstance().info("运行 RailGun " + railgun.getShell().getName());
-                    railgun.fire();
-                    Log4j.getInstance().info("完成 RailGun " + railgun.getShell().getName());
-                    railgun.setLastRunTime(System.currentTimeMillis());
-                    railgun.setNextRunTime(System.currentTimeMillis() + railgun.getShell().getReloadTime());
-                }
-            }
-            catch (Exception ex) {
-                // 执行失败移除该单个railgun
-                t.remove();
-                ex.printStackTrace();
-                Log4j.getInstance().error("RailGun " + railgun.getShell().getName() + " 发生致命错误，强行终止");
-            }
-        }
-    }
-    /**检测目录中xml文件状态并添加到队列中
-     * 
-     */
-    public void checkAndAdd() {
-        // 提取目录文件hash
-        String sitesDir = Configure.getSystemConfig().getString("XML_DIR");
-        File f = new File(sitesDir);
-        if (!f.exists()) {
-            f.mkdirs();
-        }
-        File[] files = f.listFiles();
-        for (int i = 0, size = files.length; i < size; i++) {
-            File file = files[i];
-            String prefix = file.getName().substring(file.getName().lastIndexOf(".") + 1);
-            if (prefix.toLowerCase().equals("xml")) {
-                String newHash = MD5.getMD5(( file.getName() + file.length() + file.lastModified() ).getBytes());
-                if (fileHashes.get(file.getName()) == null || !fileHashes.get(file.getName()).equals(newHash)) {
-                    try {
-                        Log4j.getInstance().info(file.getName() + " 更新");
-                        // 如果hashes里面已经存在 不重复添加到xmls
-                        if (!fileHashes.containsKey(file.getName())) {
-                            this.addShellXml(file.getAbsolutePath());
-                        }
-                        fileHashes.put(file.getName(), newHash);
-                    }
-                    catch (AddShellException ex) {
-                    }
-                }
-            }
-        }
+    public RailGunThread(RailGun railgun, RailGunRunningHandler handler) {
+        this.railgun = railgun;
+        this.handler = handler;
     }
 
     @Override
     public void run() {
-        // 检测目录
-        this.checkAndAdd();
-        // 执行所有
-        this.execAll();
+        try {
+            this.railgun.fire();
+            if (this.handler != null) {
+                this.handler.onComplete(this.railgun);
+            }
+        }
+        catch (Exception ex) {
+            //ex.printStackTrace();
+            if (this.handler != null) {
+                this.handler.onError(this.railgun);
+            }
+        }
     }
 }

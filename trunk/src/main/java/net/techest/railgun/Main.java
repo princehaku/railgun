@@ -16,16 +16,15 @@
  *  Created on : Apr 1, 2012 , 2:37:37 PM
  *  Author     : princehaku
  */
-package net.techest.railgun.test;
+package net.techest.railgun;
 
-import net.techest.railgun.RailGunThreadPool;
 import net.techest.railgun.system.AddShellException;
 
 /**
  *
  * @author baizhongwei.pt
  */
-public class TestMain {
+public class Main {
 
     public static void main(String[] argvs) throws AddShellException {
         RailGunThreadPool.getInstance().start();

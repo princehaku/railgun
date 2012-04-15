@@ -3,10 +3,10 @@
     <name>oabt</name>
     <description>test</description>
     <baseurl>*</baseurl>
-    <reloadtime>3600000</reloadtime>
+    <reloadtime>5000</reloadtime>
     <stair>
         <fetch>
-            <url>http://localhost:8888/$[100,300]</url>
+            <url>http://localhost:8888/123</url>
             <cookies>
                 <cookie-string>time=$time</cookie-string>
              </cookies>

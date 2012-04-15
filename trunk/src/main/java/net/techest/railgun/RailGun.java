@@ -34,16 +34,21 @@ import org.dom4j.io.SAXReader;
  */
 public class RailGun {
 
-    File doc;
-    Shell shell;
-    private long lastRunTime;
-    private long nextRunTime;
+    private File doc;
+    private Shell shell;
+    private long lastRunTime = 0;
+    private long nextRunTime = 0;
+    private RailGunRunningHandler handler;
+
+    public String getFileName() {
+        return doc.getName();
+    }
 
     public RailGun(File doc, Shell shell) {
         this.doc = doc;
         this.shell = shell;
     }
-
+    
     public long getLastRunTime() {
         return lastRunTime;
     }
@@ -101,5 +106,9 @@ public class RailGun {
             // 处理子节点 递归
             applyAction(childe, shell);
         }
+    }
+
+    void setHandler(RailGunRunningHandler handler) {
+        this.handler = handler;
     }
 }
