@@ -26,7 +26,7 @@ package net.techest.railgun.action;
  */
 class ActionException extends Exception {
 
-    public ActionException(String your_Bullet_Need_A_Name) {
+    public ActionException(String messge) {
     }
 
 }

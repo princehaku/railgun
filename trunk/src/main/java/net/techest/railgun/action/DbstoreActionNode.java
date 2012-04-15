@@ -38,7 +38,7 @@ import org.dom4j.Element;
  *
  * @author baizhongwei.pt
  */
-public class DbstoreActionNode implements ActionNode {
+public class DbstoreActionNode extends ActionNode {
 
     @Override
     public void execute(Element node, Shell shell) throws Exception {

@@ -78,6 +78,7 @@ and open the template in the editor.
     
     <xs:complexType name="cookies">
         <xs:sequence>
+            <xs:element name="cookie-string" type="xs:string" minOccurs="0"  maxOccurs="1"/>
             <xs:element name="cookie" type="cookie" minOccurs="1"  maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>

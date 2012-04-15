@@ -32,7 +32,7 @@ import org.dom4j.Element;
  *
  * @author baizhongwei.pt
  */
-public class ShellActionNode implements ActionNode {
+public class ShellActionNode extends ActionNode {
 
     @Override
     public void execute(Element node, Shell shell) throws Exception{

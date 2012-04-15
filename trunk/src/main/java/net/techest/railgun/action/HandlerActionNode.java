@@ -31,7 +31,7 @@ import org.dom4j.Element;
  *
  * @author baizhongwei.pt
  */
-public class HandlerActionNode  implements ActionNode {
+public class HandlerActionNode  extends ActionNode {
 
     @Override
     public void execute(Element node, Shell shell) throws Exception {

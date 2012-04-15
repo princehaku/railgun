@@ -33,7 +33,7 @@ import org.dom4j.Element;
  *
  * @author baizhongwei.pt
  */
-public class FilestoreActionNode implements ActionNode {
+public class FilestoreActionNode extends ActionNode {
 
     @Override
     public void execute(Element node, Shell shell) throws Exception {
@@ -74,6 +74,7 @@ public class FilestoreActionNode implements ActionNode {
                     }
                 }
             }
+            res.putParam("savePath", savePath);
 
         }
         // 解除节点关联

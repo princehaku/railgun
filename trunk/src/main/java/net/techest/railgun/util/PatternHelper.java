@@ -74,9 +74,6 @@ public class PatternHelper {
             input = input.replaceFirst("\\$\\{" + key + "\\}", res.getParam(key));
             m = p.matcher(input);
         }
-        if (res.getUrl() != null) {
-            input = input.replaceAll("\\$url", res.getUrl().replaceAll("\\$", "\\\\\\$"));
-        }
         input = input.replaceAll("\\$result", res.toString().replaceAll("\\$", "\\\\\\$"));
         input = input.replaceAll("\\$hash", MD5.getMD5(res.getBytes()) + SHA.getSHA1(res.getBytes()));
         input = baseConvert(input);
@@ -92,4 +89,6 @@ public class PatternHelper {
         input = input.replaceAll("\\$time", sd.format(new Date()));
         return input;
     }
+    
+    
 }

@@ -16,15 +16,12 @@
  *  Created on : Apr 9, 2012 , 6:51:44 PM
  *  Author     : princehaku
  */
-
-
 package net.techest.railgun.test;
 
-import net.techest.railgun.RailGunThread;
+import java.util.ArrayList;
+import java.util.HashMap;
 import net.techest.railgun.system.AddShellException;
-import net.techest.railgun.system.Resource;
-import net.techest.railgun.system.Shell;
-import net.techest.railgun.util.PatternHelper;
+import net.techest.railgun.util.PatternGroup;
 
 /**
  *
@@ -32,8 +29,19 @@ import net.techest.railgun.util.PatternHelper;
  */
 public class TestPattern {
 
-
     public static void main(String[] argvs) throws AddShellException {
-            PatternHelper.convertAll("http://3haku.net/$[1,20]-$[2,30]", new Resource(), new Shell());
+        PatternGroup pg = new PatternGroup();
+        pg.addNewString("url", "uu$[1,2]", true);
+        pg.addNewString("cookie", "aa$[3,4]", true);
+        pg.addNewString("set", "ss$[5,6]", true);
+        ArrayList<HashMap<String, String>> ss = pg.convert();
+        for (int i = 0, size = ss.size(); i < size; i++) {
+            HashMap<String, String> hash = ss.get(i);
+            System.out.println("================");
+            System.out.println(hash.get("url"));
+            System.out.println(hash.get("cookie"));
+            System.out.println(hash.get("set"));
+            System.out.println("================");
+        }
     }
 }

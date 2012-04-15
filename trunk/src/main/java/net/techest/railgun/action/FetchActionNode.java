@@ -20,10 +20,7 @@ package net.techest.railgun.action;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import net.techest.railgun.net.Cookies;
 import net.techest.railgun.net.HttpClient;
 import net.techest.railgun.system.ActionException;
@@ -31,6 +28,7 @@ import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import net.techest.railgun.util.PatternHelper;
 import net.techest.railgun.util.Log4j;
+import net.techest.railgun.util.PatternGroup;
 import org.dom4j.Element;
 
 /**
@@ -38,7 +36,7 @@ import org.dom4j.Element;
  *
  * @author baizhongwei.pt
  */
-public class FetchActionNode implements ActionNode {
+public class FetchActionNode extends ActionNode {
 
     @Override
     public void execute(Element node, Shell shell) throws Exception {
@@ -49,7 +47,9 @@ public class FetchActionNode implements ActionNode {
             Log4j.getInstance().error("FetchNode Need An Url Parameter");
             throw new ActionException("FetchNode Need An Url Parameter");
         }
-        String url = node.element("url").getData().toString().trim();
+        PatternGroup pg = new PatternGroup();
+        String url = node.elementTextTrim("url");
+        pg.addNewString("url", url, canPattern(node.element("url")));
         // Method设置
         if (node.element("method") != null) {
             String requestMethod = node.element("method").getData().toString();
@@ -60,18 +60,16 @@ public class FetchActionNode implements ActionNode {
             node.element("method").detach();
         }
         // 获取并设置body节点内容
-        String content = null;
         if (node.element("content") != null) {
-            content = node.element("content").getData().toString();
-            client.setPostString(content.trim());
+            pg.addNewString("content", node.elementTextTrim("content"), canPattern(node.element("content")));
             node.element("content").detach();
         }
-        String charset = "auto";
         // 编码定制
         if (node.element("charset") != null) {
-            charset = node.element("charset").getData().toString();
-            client.setCharset(charset);
+            pg.addNewString("charset", node.elementTextTrim("charset"), canPattern(node.element("charset")));
             node.element("charset").detach();
+        } else {
+            pg.addNewString("charset", "auto", false);
         }
         // 超时设置
         if (node.element("timeout") != null) {
@@ -101,12 +99,13 @@ public class FetchActionNode implements ActionNode {
             }
             node.element("params").detach();
         }
+        Cookies cookie = new Cookies();
         // 组合cookie参数
         if (node.element("cookies") != null) {
-            Cookies cookie = new Cookies();
             // 如果有cookie-string,优先解析
             if (node.element("cookies").element("cookie-string") != null) {
-                cookie.fromString(node.element("cookies").element("cookie-string").getData().toString());
+                pg.addNewString("cookie-string", node.element("cookies").elementTextTrim("cookie-string"), canPattern(node.element("cookies").element("cookie-string")));
+                cookie.fromString(node.element("cookies").elementTextTrim("cookie-string"));
             }
             List params = node.element("cookies").elements("cookie");
             for (Iterator i = params.iterator(); i.hasNext();) {
@@ -128,50 +127,52 @@ public class FetchActionNode implements ActionNode {
         // url格式转换
         Log4j.getInstance().debug("Source Url : " + url);
         node.element("url").detach();
+        // 循环资源节点
         for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
-            try {
-                String newurl = url;
-                ArrayList<String> urlPatterns = PatternHelper.convertAll(newurl, res, shell);
-                for (Iterator si = urlPatterns.iterator(); si.hasNext();) {
-                    newurl = (String) si.next();
-                    URL uri;
-                    try {
-                        uri = new URL(newurl);
-                        // 如果不在baseUrl范围内 不抓取
-                        if (!(shell.getBaseUrl().equals("*") || newurl.indexOf(shell.getBaseUrl()) != -1)) {
-                            Log4j.getInstance().warn("URI " + newurl + " Doesn't Match BaseURL");
-                            continue;
-                        }
-                    } catch (MalformedURLException ex) {
-                        Log4j.getInstance().warn("URI " + ex.getMessage());
-                    }
-                    client.setUrl(newurl);
-                    ArrayList<String> contentPatterns = new ArrayList<String>();
-                    // 如果设置了POST方式.使用patternHelp对content进行处理
-                    if (client.getRequestType().toString().equals(HttpClient.REQ_TYPE.POST.toString()) && content != null) {
-                        contentPatterns = PatternHelper.convertAll(content.trim(), res, shell);
-                    } else {
-                        contentPatterns.add("");
-                    }
-                    for (Iterator sc = contentPatterns.iterator(); sc.hasNext();) {
-                        String postcontent = (String) sc.next();
-                        if (!postcontent.equals("")) {
-                            client.setPostString(postcontent);
-                        }
-                        // 重设编码
-                        client.setCharset(charset);
-                        byte[] result = client.exec();
-                        Resource newResNode = new Resource(result, client.getCharset());
-                        newResNode.setUrl(newurl);
-                        resnew.add(newResNode);
+            String newurl = url;
+            ArrayList<HashMap<String, String>> pgs = pg.convert();
+            // 循环匹配组
+            for (int pgi = 0, pgsize = pgs.size(); pgi < pgsize; pgi++) {
+                HashMap<String, String> hash = pgs.get(pgi);
+                newurl = hash.get("url");
+                // url合法性检测
+                try {
+                    URL uri = new URL(newurl);
+                    // 如果不在baseUrl范围内 不抓取
+                    if (!( shell.getBaseUrl().equals("*") || newurl.indexOf(shell.getBaseUrl()) != -1 )) {
+                        Log4j.getInstance().warn("URI " + newurl + " Doesn't Match BaseURL");
+                        continue;
                     }
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                Log4j.getInstance().error("Fetch Error " + ex.getMessage());
+                catch (MalformedURLException ex) {
+                    Log4j.getInstance().warn("URI " + ex.getMessage());
+                }
+                // 重设字段并发送请求
+                try {
+                    client.setUrl(newurl);
+                    // 如果设置了POST方式,填充content
+                    if (client.getRequestType().toString().equals(HttpClient.REQ_TYPE.POST.toString())) {
+                        client.setPostString(hash.get("content"));
+                    }
+                    // 重设编码
+                    client.setCharset(hash.get("charset"));
+                    // 重设cookie
+                    if (hash.get("cookie-string") != null) {
+                        cookie.fromString(hash.get("cookie-string"));
+                        client.setCookie(cookie);
+                    }
+                    byte[] result = client.exec();
+                    Resource newResNode = new Resource(result, client.getCharset());
+                    newResNode.putParam("url", newurl);
+                    newResNode.putParam("cookie", client.getCookieString());
+                    resnew.add(newResNode);
+                }
+                catch (Exception ex) {
+                    Log4j.getInstance().warn("Fetch Error " + ex.getMessage());
+                }
             }
+            shell.setResources(resnew);
         }
-        shell.setResources(resnew);
     }
 }

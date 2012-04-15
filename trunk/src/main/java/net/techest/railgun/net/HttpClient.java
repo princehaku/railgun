@@ -18,6 +18,7 @@
 package net.techest.railgun.net;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -41,9 +42,9 @@ import net.techest.util.StringTools;
 public class HttpClient implements Client {
 
     public enum REQ_TYPE {
+
         POST, GET
     };
-    
     private HttpURLConnection httpConn = null;
     private URL turl;
     private REQ_TYPE requestType;
@@ -83,7 +84,8 @@ public class HttpClient implements Client {
         try {
             turl = new URL(url);
             Log4j.getInstance().debug("URL SET :" + url);
-        } catch (MalformedURLException e) {
+        }
+        catch (MalformedURLException e) {
             turl = null;
             Log4j.getInstance().error("错误的URL格式" + e.getMessage());
             return;
@@ -94,7 +96,8 @@ public class HttpClient implements Client {
         try {
             turl = new URL(url);
             Log4j.getInstance().debug("URL SET :" + url);
-        } catch (MalformedURLException e) {
+        }
+        catch (MalformedURLException e) {
             Log4j.getInstance().error("错误的URL格式" + e.getMessage());
         }
     }
@@ -239,7 +242,7 @@ public class HttpClient implements Client {
                     "utf8,gbk,GB2312;q=0.7,*;q=0.7");
             // 发送cookie
             String cookieString = cookies.toString();
-            if (!(cookieString.equals(""))) {
+            if (!( cookieString.equals("") )) {
                 httpConn.setRequestProperty("Cookie", cookieString);
             }
             httpConn.setRequestProperty("Keep-Alive", "off");
@@ -264,19 +267,10 @@ public class HttpClient implements Client {
                 out.write(getPostString());
                 out.close();
             }
-
-            int contentLength = httpConn.getContentLength();
-            if (contentLength > 0) {
-                bufferCache = new byte[contentLength];
-            } else {
-                bufferCache = new byte[1024];
+            // 读取响应正文
+            if (httpConn.getResponseCode() != 200) {
+                throw new IOException("响应出错 代码[" + httpConn.getResponseCode() + "]");
             }
-            InputStream uurl = httpConn.getInputStream();
-            // gzip支持
-            if (httpConn.getHeaderField("Content-Encoding") != null && httpConn.getHeaderField("Content-Encoding").equalsIgnoreCase("gzip")) {
-                uurl = new GZIPInputStream(uurl);
-            }
-
             // 放到响应header去
             this.responseHeader = httpConn.getHeaderFields();
             // 放到响应message中
@@ -296,8 +290,21 @@ public class HttpClient implements Client {
                 }
             }
 
+            // 读取响应正文
+            int contentLength = httpConn.getContentLength();
+
+            if (contentLength > 0) {
+                bufferCache = new byte[contentLength];
+            } else {
+                bufferCache = new byte[1024];
+            }
+            InputStream uurl = httpConn.getInputStream();
+            // gzip支持
+            if (httpConn.getHeaderField("Content-Encoding") != null && httpConn.getHeaderField("Content-Encoding").equalsIgnoreCase("gzip")) {
+                uurl = new GZIPInputStream(uurl);
+            }
             int length;
-            while ((length = uurl.read(bufferCache)) > 0) {
+            while (( length = uurl.read(bufferCache) ) > 0) {
                 content.write(bufferCache, 0, length);
             }
 
@@ -317,7 +324,7 @@ public class HttpClient implements Client {
                 Matcher m = charsetPattern.matcher(headArea);
                 if (m.find()) {
                     charset = m.group(1).trim().toUpperCase();
-                        Log4j.getInstance().debug("Get Page Encode From Meta");
+                    Log4j.getInstance().debug("Get Page Encode From Meta");
                 }
             }
 
@@ -325,7 +332,8 @@ public class HttpClient implements Client {
                 charset = "utf8";
             }
             Log4j.getInstance().debug("Page Encode : " + charset);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             if (httpConn != null) {
                 httpConn.disconnect();
             }
@@ -348,7 +356,8 @@ public class HttpClient implements Client {
         try {
             // call clone in Object.
             return super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             System.out.println("Cloning not allowed.");
             return this;
         }

@@ -25,6 +25,10 @@
                       maxActive= "25"/>
             <mapping form="origin">
                 <enty>
+                    <name>url</name>
+                    <content>${url}</content>
+                </enty>
+                <enty>
                     <name>hash</name>
                     <content>$hash</content>
                 </enty>
@@ -35,10 +39,6 @@
                 <enty>
                     <name>fetchtime</name>
                     <content>$date $time</content>
-                </enty>
-                <enty>
-                    <name>url</name>
-                    <content>$url</content>
                 </enty>
             </mapping>
         </dbstore>

@@ -23,11 +23,11 @@ import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import org.dom4j.Element;
 
-/**
+/**打印resource信息
  *
  * @author baizhongwei.pt
  */
-class PrintActionNode implements ActionNode {
+class PrintActionNode extends ActionNode {
     
     public PrintActionNode() {
     }
@@ -36,7 +36,6 @@ class PrintActionNode implements ActionNode {
     public void execute(Element node, Shell bullet) throws Exception {
         for (Iterator i = bullet.getResources().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
-            System.out.println("[url]" + res.getUrl());
             for (String key : res.getParams().keySet()) {
                 System.out.println("[key]" + key);
                 System.out.println("[value]" + res.getParams().get(key));

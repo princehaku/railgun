@@ -30,7 +30,7 @@ import org.dom4j.Element;
  *
  * @author baizhongwei.pt
  */
-public class StairActionNode implements ActionNode {
+public class StairActionNode extends ActionNode {
 
     @Override
     public void execute(Element node, Shell shell) throws Exception {

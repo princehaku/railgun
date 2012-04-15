@@ -39,7 +39,7 @@ import org.jsoup.select.Elements;
  *
  * @author baizhongwei.pt
  */
-class ParseActionNode implements ActionNode {
+class ParseActionNode extends ActionNode {
 
     public ParseActionNode() {
     }

@@ -35,22 +35,12 @@ public class Resource implements Cloneable {
     private byte[] bytes;
     // 字节流的编码方式
     private String charset = null;
-    // 当前资源来源url
-    private String url;
     // 参数组,用于参数替换
     private HashMap<String, String> params = new HashMap<String, String>();
 
     public Resource(byte[] bytes, String charset) {
         this.bytes = bytes;
         this.charset = charset;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public byte[] getBytes() {
