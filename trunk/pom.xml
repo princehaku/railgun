@@ -83,6 +83,12 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>wltea</groupId>
+            <artifactId>IKAnalyzer</artifactId>
+            <version>2012</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.6.1</version>
@@ -101,6 +107,16 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.19</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analyzers</artifactId>
+            <version>3.4.0</version>
         </dependency>
     </dependencies>
     <reporting>

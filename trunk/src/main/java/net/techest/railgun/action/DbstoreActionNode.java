@@ -19,7 +19,9 @@
 package net.techest.railgun.action;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
@@ -48,7 +50,7 @@ public class DbstoreActionNode extends ActionNode {
             p.setProperty(attr.getName(), attr.getValue());
         }
         node.element("resource").detach();
-        DataSource d = ConnectionPool.setupDataSource(p);
+        DataSource d =ConnectionPool.getSystemPool().getFromPool(p);
         // 数据库连接失败的话屏蔽掉异常但是打印错误
         Connection connection = null;
         try {
@@ -88,7 +90,12 @@ public class DbstoreActionNode extends ActionNode {
                 }
                 String sql = "insert into `" + formName + "` (" + ArrayTools.implode(",", "`", colsName) + ") values (" + ArrayTools.implode(",", "'", colsValueConverted) + ")";
                 try {
-                    connection.createStatement().executeUpdate(sql);
+                    Statement statement = connection.createStatement();
+                    statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+                    ResultSet rs = statement.getGeneratedKeys();
+                    if (rs.next()) {
+                        res.putParam("id", rs.getInt(1) + "");
+                    }
                 }
                 catch (SQLException ex) {
                     Log4j.getInstance().debug(" [SQL] " + sql);

@@ -33,8 +33,11 @@ import net.techest.railgun.system.Shell;
 public class PatternGroup {
 
     Resource res = new Resource();
+    
     Shell shell = new Shell();
+    
     private HashMap<String, ArrayList<String>> patterns = new HashMap<String, ArrayList<String>>();
+    
     private ArrayList<HashMap<String, String>> converted = new ArrayList<HashMap<String, String>>();
 
     /**添加新字符组到HashMap中
