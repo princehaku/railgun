@@ -41,7 +41,7 @@ public class RailGunThread extends Thread {
             }
         }
         catch (Exception ex) {
-            //ex.printStackTrace();
+            ex.printStackTrace();
             if (this.handler != null) {
                 this.handler.onError(this.railgun);
             }

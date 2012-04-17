@@ -18,6 +18,7 @@
  */
 package net.techest.railgun.test;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import net.techest.railgun.RailGunThreadPool;
@@ -27,6 +28,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -34,7 +36,8 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
-import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.store.SimpleFSDirectory;
+import org.apache.lucene.store.LockFactory;
 import org.apache.lucene.util.Version;
 import org.wltea.analyzer.core.IKSegmenter;
 import org.wltea.analyzer.core.Lexeme;
@@ -47,30 +50,17 @@ import org.wltea.analyzer.sample.IKAnalyzerDemo;
  */
 public class TestIndex {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        RAMDirectory ramDir = new RAMDirectory();
+        SimpleFSDirectory ramDir = new SimpleFSDirectory(new File("index"));
         IKAnalyzer ika = new IKAnalyzer();
-        
-        
-        IKSegmenter seg = null;
-        String text = "苏轼不是圣人，他最可贵的地方是在痛苦彷徨挣扎中，"
-                + "总能把自己的心灵置于更广阔的天地中，如同《赤壁后赋》中横飞而去的老鹤，"
-                + "戛戛于星空夜月，长河大江之上，澄明清澈，皎然不滓。"
-                + "苏轼是一个善于苦中找乐的人，这种乐观与真趣帮他度过了不少难关。"
-                + "画家陈丹青说鲁迅是一个有趣的人，我想，拿来说苏东坡一样也行。";
-
-        StringReader reader = new StringReader(text);
-        seg = new IKSegmenter(reader, true);
-        Lexeme lex = null;
-        try {
-            while (( lex = seg.next() ) != null) {
-                System.out.print(lex.getLexemeText() + "|");
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_34, ika);
+        iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+        IndexWriter writer = new IndexWriter(ramDir, iwc);
+        Document doc = new Document();
+        Field f= new Field("source", "虽然lucene没有定义一个确定的输入文档格式，但越来越多的人想到使用一个标准的中间格式作为Lucene的数据导入接口，然后其他数据，比如PDF只需要通过解析器转换成标准的中间格式就可以进行数据索引了。", Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES);
+        doc.add(f);
+        writer.addDocument(doc);
+        writer.close();
     }
 }

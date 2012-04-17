@@ -1,2 +1,5 @@
 [SITES]
 XML_DIR = sites
+
+[INDEX]
+INDEX_DIR = indexes

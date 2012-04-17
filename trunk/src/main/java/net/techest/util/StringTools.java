@@ -71,7 +71,8 @@ public class StringTools {
         String returnString = "";
         try {
             returnString = new String(source, encode);
-        } catch (UnsupportedEncodingException ex) {
+        }
+        catch (UnsupportedEncodingException ex) {
             ex.printStackTrace();
         }
         return returnString;
@@ -191,5 +192,20 @@ public class StringTools {
             str[k++] = hexDigits[byte0 & 0xf];            // 取字节中低 4 位的数字转换
         }
         return new String(str);
+    }
+
+    /**
+     * 把字符串中的' " 转换为\' \"
+     *
+     * @param input
+     * @return
+     */
+    public static String addSlashes(String input) {
+        if (input == null) {
+            return null;
+        }
+        String output = input.replaceAll("\"", "\\\\\"");
+        output = output.replaceAll("\'", "\\\\\'");
+        return output;
     }
 }

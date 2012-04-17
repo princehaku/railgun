@@ -18,6 +18,7 @@
  */
 package net.techest.railgun.action;
 
+import com.mysql.jdbc.PreparedStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,6 +33,7 @@ import net.techest.railgun.system.Resource;
 import net.techest.railgun.util.Log4j;
 import net.techest.railgun.util.PatternHelper;
 import net.techest.util.ArrayTools;
+import net.techest.util.StringTools;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
 
@@ -50,7 +52,7 @@ public class DbstoreActionNode extends ActionNode {
             p.setProperty(attr.getName(), attr.getValue());
         }
         node.element("resource").detach();
-        DataSource d =ConnectionPool.getSystemPool().getFromPool(p);
+        DataSource d = ConnectionPool.getSystemPool().getFromPool(p);
         // 数据库连接失败的话屏蔽掉异常但是打印错误
         Connection connection = null;
         try {
@@ -60,21 +62,22 @@ public class DbstoreActionNode extends ActionNode {
             Log4j.getInstance().warn("连接数据库失败 " + ex.getMessage() + d.toString());
             return;
         }
-        Iterator mappings = node.elements("mapping").iterator();
-        while (mappings.hasNext()) {
-            Element mapping = (Element) mappings.next();
-            String formName = mapping.attributeValue("form");
+        Iterator datas = node.elements("data").iterator();
+        while (datas.hasNext()) {
+            Element data = (Element) datas.next();
+            String formName = data.attributeValue("form");
+            String consist = data.attributeValue("consist");
             ArrayList<String> colsName = new ArrayList<String>();
             ArrayList<String> colsValue = new ArrayList<String>();
-            // 遍历form里面的mapping 拿到cols的名字和对应值
-            if (mapping.elements("enty") == null) {
-                Log4j.getInstance().warn("form 标签内没有mapping规则");
+            // 遍历form里面的data 拿到cols的名字和对应值
+            if (data.elements("enty") == null) {
+                Log4j.getInstance().warn("form 标签内没有data规则");
                 continue;
             }
-            Iterator enties = mapping.elements("enty").iterator();
+            Iterator enties = data.elements("enty").iterator();
             while (enties.hasNext()) {
                 Element entry = (Element) enties.next();
-                colsName.add(entry.elementTextTrim("name").replaceAll("\'", "\\\'").replaceAll("\"", "\\\""));
+                colsName.add(StringTools.addSlashes(entry.elementTextTrim("name")));
                 colsValue.add(entry.elementTextTrim("content"));
             }
             // 按资源加入到数据库
@@ -86,9 +89,34 @@ public class DbstoreActionNode extends ActionNode {
                 while (valueIterator.hasNext()) {
                     ArrayList<String> valueConverted = PatternHelper.convertAll(valueIterator.next(), res, shell);
                     // 只加入第一个 忽略$[xx,xx]规则
-                    colsValueConverted.add(valueConverted.get(0).replaceAll("\\\'", "\\\\\'").replaceAll("\\\"", "\\\\\""));
+                    colsValueConverted.add(StringTools.addSlashes(valueConverted.get(0)));
                 }
-                String sql = "insert into `" + formName + "` (" + ArrayTools.implode(",", "`", colsName) + ") values (" + ArrayTools.implode(",", "'", colsValueConverted) + ")";
+                // 如果consist不为空.对数据进行插入效验
+                if (consist != null) {
+                    int pos = colsName.indexOf(consist);
+                    if (pos == -1) {
+                        Log4j.getInstance().error("Consist字段名不存在");
+                    }
+                    String sql = "select * from `" + formName + "` where `" + StringTools.addSlashes(consist)
+                            + "` = '" + colsValueConverted.get(pos) + "' limit 1;";
+                    try {
+                        Statement statement = connection.createStatement();
+                        ResultSet rs = statement.executeQuery(sql);
+                        // 如果存在记录,跳过
+                        if (rs.next()) {
+                            Log4j.getInstance().debug("Consist已存在");
+                            continue;
+                        }
+                    }
+                    catch (SQLException ex) {
+                        Log4j.getInstance().debug(" [SQL] " + sql);
+                        Log4j.getInstance().error("检验Consist失败 " + ex.getMessage());
+                        continue;
+                    }
+                }
+
+                String sql = "insert into `" + formName + "` (" + ArrayTools.implode(",", "`", colsName)
+                        + ") values (" + ArrayTools.implode(",", "'", colsValueConverted) + ")";
                 try {
                     Statement statement = connection.createStatement();
                     statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
@@ -99,11 +127,11 @@ public class DbstoreActionNode extends ActionNode {
                 }
                 catch (SQLException ex) {
                     Log4j.getInstance().debug(" [SQL] " + sql);
-                    Log4j.getInstance().error("SQL执行失败" + ex.getMessage());
+                    Log4j.getInstance().error("DB存储失败 " + ex.getMessage());
                 }
             }
 
-            mapping.detach();
+            data.detach();
             Log4j.getInstance().info("表" + formName + "存储完毕");
         }
     }

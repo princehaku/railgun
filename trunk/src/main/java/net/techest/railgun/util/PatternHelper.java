@@ -76,13 +76,13 @@ public class PatternHelper {
         }
         input = input.replaceAll("\\$result", res.toString().replaceAll("\\$", "\\\\\\$"));
         input = input.replaceAll("\\$hash", MD5.getMD5(res.getBytes()) + SHA.getSHA1(res.getBytes()));
-        input = baseConvert(input);
+        input = convertBase(input);
         ArrayList<String> strings = new ArrayList();
         PatternHelper.convertDeep(input, strings);
         return strings;
     }
 
-    public static String baseConvert(String input) {
+    public static String convertBase(String input) {
         SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
         input = input.replaceAll("\\$date", sd.format(new Date()));
         sd = new SimpleDateFormat("HH:mm:ss");
