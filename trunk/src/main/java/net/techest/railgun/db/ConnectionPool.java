@@ -19,9 +19,11 @@ package net.techest.railgun.db;
 import java.util.HashMap;
 import javax.sql.DataSource;
 import java.util.Properties;
+import net.techest.railgun.util.Configure;
 import net.techest.railgun.util.Log4j;
 import net.techest.util.MD5;
 import org.apache.commons.dbcp.*;
+import org.dom4j.Attribute;
 
 public class ConnectionPool {
 
@@ -39,11 +41,21 @@ public class ConnectionPool {
     }
     private HashMap<String, BasicDataSource> pools = new HashMap<String, BasicDataSource>();
 
-    private BasicDataSource setupDataSource(Properties p) {
+    private BasicDataSource setupDataSource(String dbPoolName) {
         BasicDataSource dataSource = null;
+        Properties p = new Properties();
+        p.setProperty("driverClassName",  Configure.getSystemConfig().getString(dbPoolName+"_DRIVER","com.mysql.jdbc.Driver"));
+        p.setProperty("url", Configure.getSystemConfig().getString(dbPoolName+"_URL"));
+        p.setProperty("username", Configure.getSystemConfig().getString(dbPoolName+"_USERNAME"));
+        p.setProperty("password", Configure.getSystemConfig().getString(dbPoolName+"_PASSWORD"));
+        p.setProperty("maxActive", Configure.getSystemConfig().getString(dbPoolName+"_MAXACTIVE","30"));
+        p.setProperty("maxWait", Configure.getSystemConfig().getString(dbPoolName+"_MAXWAIT","5000"));
+        p.setProperty("maxIdle", Configure.getSystemConfig().getString(dbPoolName+"_MAXIDLE","5"));
+        
         try {
             dataSource = (BasicDataSource) BasicDataSourceFactory.createDataSource(p);
-            pools.put(MD5.getMD5(p.getProperty("url").getBytes()), dataSource);
+            Log4j.getInstance().error("Pool 初始化完成 " + p.toString());
+            pools.put(MD5.getMD5(dbPoolName.getBytes()), dataSource);
         }
         catch (Exception ex) {
             Log4j.getInstance().error("Pool 初始化失败 " + ex.getMessage());
@@ -51,13 +63,13 @@ public class ConnectionPool {
         return dataSource;
     }
 
-    public BasicDataSource getFromPool(Properties p) {
+    public BasicDataSource getFromPool(String dbPoolName) {
         BasicDataSource dataSource = null;
-        String key = MD5.getMD5(p.getProperty("url").getBytes());
+        String key = MD5.getMD5(dbPoolName.getBytes());
         if (pools.containsKey(key)) {
             dataSource = pools.get(key);
         } else {
-            dataSource = this.setupDataSource(p);
+            dataSource = this.setupDataSource(dbPoolName);
         }
         return dataSource;
     }

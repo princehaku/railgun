@@ -18,7 +18,6 @@
  */
 package net.techest.railgun.action;
 
-import com.mysql.jdbc.PreparedStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -46,35 +45,37 @@ public class DbstoreActionNode extends ActionNode {
 
     @Override
     public void execute(Element node, Shell shell) throws Exception {
-        Properties p = new Properties();
-        for (int i = 0, size = node.element("resource").attributeCount(); i < size; i++) {
-            Attribute attr = node.element("resource").attribute(i);
-            p.setProperty(attr.getName(), attr.getValue());
+        if (node.attribute("source") == null) {
+            throw new ActionException("错误的数据库节点标记");
         }
-        node.element("resource").detach();
-        DataSource d = ConnectionPool.getSystemPool().getFromPool(p);
+        String source = node.attributeValue("source").toUpperCase();
+        DataSource d = ConnectionPool.getSystemPool().getFromPool(source);
         // 数据库连接失败的话屏蔽掉异常但是打印错误
         Connection connection = null;
         try {
             connection = d.getConnection();
+            Log4j.getInstance().warn("连接数据库成功 " + source);
         }
         catch (SQLException ex) {
-            Log4j.getInstance().warn("连接数据库失败 " + ex.getMessage() + d.toString());
+            Log4j.getInstance().warn("连接数据库失败 " + ex.getMessage() + source);
+            if (node.element("mapping") != null) {
+                node.element("mapping").detach();
+            }
             return;
         }
-        Iterator datas = node.elements("data").iterator();
-        while (datas.hasNext()) {
-            Element data = (Element) datas.next();
-            String formName = data.attributeValue("form");
-            String consist = data.attributeValue("consist");
+        Iterator mappings = node.elements("mapping").iterator();
+        while (mappings.hasNext()) {
+            Element mapping = (Element) mappings.next();
+            String formName = mapping.attributeValue("form");
+            String consist = mapping.attributeValue("consist");
             ArrayList<String> colsName = new ArrayList<String>();
             ArrayList<String> colsValue = new ArrayList<String>();
-            // 遍历form里面的data 拿到cols的名字和对应值
-            if (data.elements("enty") == null) {
-                Log4j.getInstance().warn("form 标签内没有data规则");
+            // 遍历form里面的mapping 拿到cols的名字和对应值
+            if (mapping.elements("enty") == null) {
+                Log4j.getInstance().warn("form 标签内没有mapping规则");
                 continue;
             }
-            Iterator enties = data.elements("enty").iterator();
+            Iterator enties = mapping.elements("enty").iterator();
             while (enties.hasNext()) {
                 Element entry = (Element) enties.next();
                 colsName.add(StringTools.addSlashes(entry.elementTextTrim("name")));
@@ -131,7 +132,7 @@ public class DbstoreActionNode extends ActionNode {
                 }
             }
 
-            data.detach();
+            mapping.detach();
             Log4j.getInstance().info("表" + formName + "存储完毕");
         }
     }

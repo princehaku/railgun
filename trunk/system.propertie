@@ -3,3 +3,9 @@ XML_DIR = sites
 
 [INDEX]
 INDEX_DIR = indexes
+
+[DB]
+DB1_DRIVER = com.mysql.jdbc.Driver
+DB1_URL = jdbc:mysql://localhost:3306/railgun?autoReconnect=true&characterEncoding=utf8
+DB1_PASSWORD = zxcasdqwe
+DB1_USERNAME = root
