@@ -46,10 +46,10 @@ public class RailGunRunningHandler {
         }
     }
 
-    synchronized void onError(RailGun railgun) {
+    synchronized void onError(RailGun railgun,Exception ex) {
         synchronized (lock) {
             appendingRemoval.add(railgun);
-            Log4j.getInstance().error("RailGun " + railgun.getShell().getName() + " 发生致命错误，强行终止");
+            Log4j.getInstance().error("RailGun " + railgun.getShell().getName() + " 发生致命错误，强行终止 " +ex.getMessage());
         }
     }
 }

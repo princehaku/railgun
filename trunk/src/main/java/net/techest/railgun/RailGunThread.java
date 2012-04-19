@@ -18,6 +18,8 @@
  */
 package net.techest.railgun;
 
+import net.techest.railgun.util.Log4j;
+
 /**
  *
  * @author baizhongwei.pt
@@ -43,7 +45,7 @@ public class RailGunThread extends Thread {
         catch (Exception ex) {
             ex.printStackTrace();
             if (this.handler != null) {
-                this.handler.onError(this.railgun);
+                this.handler.onError(this.railgun, ex);
             }
         }
     }
