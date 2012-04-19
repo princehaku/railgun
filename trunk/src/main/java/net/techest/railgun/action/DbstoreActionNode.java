@@ -18,10 +18,7 @@
  */
 package net.techest.railgun.action;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
@@ -71,6 +68,7 @@ public class DbstoreActionNode extends ActionNode {
             String consist = mapping.attributeValue("consist");
             ArrayList<String> colsName = new ArrayList<String>();
             ArrayList<String> colsValue = new ArrayList<String>();
+            ArrayList<String> colsAll = new ArrayList<String>();
             // 遍历form里面的mapping 拿到cols的名字和对应值
             if (mapping.elements("enty") == null) {
                 Log4j.getInstance().warn("form 标签内没有mapping规则");
@@ -79,8 +77,9 @@ public class DbstoreActionNode extends ActionNode {
             Iterator enties = mapping.elements("enty").iterator();
             while (enties.hasNext()) {
                 Element entry = (Element) enties.next();
-                colsName.add(StringTools.addSlashes(entry.elementTextTrim("name")));
+                colsName.add(entry.elementTextTrim("name"));
                 colsValue.add(entry.elementTextTrim("content"));
+                colsAll.add("?");
             }
             // 按资源加入到数据库
             for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
@@ -91,7 +90,7 @@ public class DbstoreActionNode extends ActionNode {
                 while (valueIterator.hasNext()) {
                     ArrayList<String> valueConverted = PatternHelper.convertAll(valueIterator.next(), res, shell);
                     // 只加入第一个 忽略$[xx,xx]规则
-                    colsValueConverted.add(StringTools.addSlashes(valueConverted.get(0)));
+                    colsValueConverted.add(valueConverted.get(0));
                 }
                 // 如果consist不为空.对数据进行插入效验
                 if (consist != null) {
@@ -99,11 +98,12 @@ public class DbstoreActionNode extends ActionNode {
                     if (pos == -1) {
                         Log4j.getInstance().error("Consist字段名不存在");
                     }
-                    String sql = "select * from `" + formName + "` where `" + StringTools.addSlashes(consist)
-                            + "` = '" + colsValueConverted.get(pos) + "' limit 1;";
+                    String sql = "select * from `" + formName + "` where `" + consist
+                            + "` = ? limit 1;";
                     try {
-                        Statement statement = connection.createStatement();
-                        ResultSet rs = statement.executeQuery(sql);
+                        PreparedStatement statement = connection.prepareStatement(sql);
+                        statement.setString(1, colsValueConverted.get(pos));
+                        ResultSet rs = statement.executeQuery();
                         // 如果存在记录,跳过
                         if (rs.next()) {
                             Log4j.getInstance().debug("DB : Consist已存在 跳过存入");
@@ -111,25 +111,32 @@ public class DbstoreActionNode extends ActionNode {
                         }
                     }
                     catch (SQLException ex) {
-                        Log4j.getInstance().debug(" [SQL] " + sql);
+                        ex.printStackTrace();
+                        Log4j.getInstance().debug("[SQL] " + sql);
                         Log4j.getInstance().error("检验Consist失败 " + ex.getMessage());
                         continue;
                     }
                 }
 
                 String sql = "insert into `" + formName + "` (" + ArrayTools.implode(",", "`", colsName)
-                        + ") values (" + ArrayTools.implode(",", "'", colsValueConverted) + ")";
+                        + ") values (" + ArrayTools.implode(",", "", colsAll) + ")";
                 try {
-                    Statement statement = connection.createStatement();
-                    statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+                    PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                    // 替换index
+                    int idx = 0;
+                    for (int idxParam = idx, size = colsValueConverted.size(); idxParam < size; idxParam++) {
+                        statement.setString(idxParam + 1, colsValueConverted.get(idxParam));
+                    }
+
+                    statement.executeUpdate();
                     ResultSet rs = statement.getGeneratedKeys();
                     if (rs.next()) {
                         res.putParam("id", rs.getInt(1) + "");
                     }
-                    Log4j.getInstance().debug("存入表 " + formName + " 成功");
+                    Log4j.getInstance().debug("[ID] " + rs.getInt(1) + " 存入表 " + formName + " 成功");
                 }
                 catch (SQLException ex) {
-                    Log4j.getInstance().debug(" [SQL] " + sql);
+                    Log4j.getInstance().debug("[SQL] " + sql);
                     Log4j.getInstance().error("DB存储失败 " + ex.getMessage());
                 }
             }
