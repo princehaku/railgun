@@ -28,18 +28,4 @@ public class RailGunTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
     }
-    /**
-     * Test of fire method, of class RailGunThreadPool.
-     */
-    public void testFire() {
-        try {
-            System.out.println("loadShellXml");
-            String xmlpath = "src/main/java/testtask1.xml";
-            RailGunThreadPool instance = new RailGunThreadPool();
-            instance.addShellXml(xmlpath);
-            instance.start();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 }

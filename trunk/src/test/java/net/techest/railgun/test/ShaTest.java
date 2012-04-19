@@ -30,7 +30,6 @@ public class ShaTest extends TestCase {
 
     public void testHello() throws NoSuchAlgorithmException {
         String myinfo = "啊啊啊a1";
-        
         System.out.println("本信息摘要是:" + SHA.getSHA1(myinfo.getBytes()));
     }
 }

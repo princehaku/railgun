@@ -146,6 +146,7 @@ public class FetchActionNode extends ActionNode {
                 catch (MalformedURLException ex) {
                     Log4j.getInstance().warn("URI " + ex.getMessage());
                 }
+                Log4j.getInstance().info("Fetching " + newurl);
                 // 重设字段并发送请求
                 try {
                     client.setUrl(newurl);

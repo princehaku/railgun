@@ -27,6 +27,7 @@ package net.techest.railgun.action;
 class ActionException extends Exception {
 
     public ActionException(String messge) {
+        super(messge);
     }
 
 }
