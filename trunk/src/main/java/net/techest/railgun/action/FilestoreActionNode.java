@@ -40,7 +40,7 @@ public class FilestoreActionNode extends ActionNode {
         // 参数path是必须的
         if (node.element("path") == null) {
             Log4j.getInstance().error("FetchNode Need An Url Parameter");
-            throw new net.techest.railgun.system.ActionException("FilestoreNode 需要参数 path");
+            throw new ActionException("FilestoreNode 需要参数 path");
         }
 
         for (Iterator i = shell.getResources().iterator(); i.hasNext();) {

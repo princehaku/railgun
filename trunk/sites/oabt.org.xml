@@ -35,7 +35,7 @@
                 </enty>
             </mapping>
         </dbstore>
-        <handler>net.techest.railgun.test.TestHandler</handler>
+        <handler>OabtHandler</handler>
         <index>
             <data consist="hash">
                 <enty>

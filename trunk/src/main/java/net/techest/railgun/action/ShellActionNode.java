@@ -18,7 +18,6 @@
  */
 package net.techest.railgun.action;
 
-import net.techest.railgun.system.ActionException;
 import java.util.LinkedList;
 import net.techest.railgun.net.Client;
 import net.techest.railgun.net.HttpClient;

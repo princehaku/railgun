@@ -23,7 +23,6 @@ import java.net.URL;
 import java.util.*;
 import net.techest.railgun.net.Cookies;
 import net.techest.railgun.net.HttpClient;
-import net.techest.railgun.system.ActionException;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import net.techest.railgun.util.Log4j;
