@@ -110,14 +110,21 @@ public class Resource implements Cloneable {
         this.bytes = new byte[1];
         this.charset = "utf8";
     }
+    /**
+     * @see getText()
+     * @return 
+     */
+    @Override
+    public String toString() {
+        return this.getText();
+    }
 
     /**
      * 根据资源设定的字符集转换成字符串
      *
      * @return
      */
-    @Override
-    public String toString() {
+    public String getText() {
         String result = "";
         try {
             result = new String(this.bytes, this.charset);
@@ -126,7 +133,7 @@ public class Resource implements Cloneable {
         }
         return result;
     }
-
+    
     @Override
     public Object clone() {
         try {

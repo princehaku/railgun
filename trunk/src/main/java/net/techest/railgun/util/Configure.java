@@ -38,19 +38,6 @@ public class Configure {
         }
         return loader;
     }
-    /**得到字符串型值，如果不存在，返回defaultValue
-     * 
-     * @param key
-     * @param defaultValue
-     * @return 
-     */
-    public String getString(String key, String defaultValue) {
-        String res = propertie.getProperty(key);
-        if (res == null) {
-            res = defaultValue;
-        }
-        return res;
-    }
 
     /**
      * 单例模式
@@ -131,6 +118,36 @@ public class Configure {
         return r;
     }
 
+
+    /**
+     * 得到字符串型值，如果不存在，返回defaultValue
+     *
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public String getString(String key, String defaultValue) {
+        String res = propertie.getProperty(key);
+        if (res == null) {
+            res = defaultValue;
+        }
+        return res;
+    }
+
+    /**
+     * 得到整型值，如果不存在，返回defaultValue
+     *
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public int getInt(String key, int defaultValue) {
+        int r = Integer.parseInt(propertie.getProperty(key));
+        if (propertie.getProperty(key) == null) {
+            r = defaultValue;
+        }
+        return r;
+    }
     /**
      * 设置值
      *

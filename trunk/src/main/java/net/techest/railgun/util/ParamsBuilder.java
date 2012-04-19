@@ -17,7 +17,6 @@
  */
 package net.techest.railgun.util;
 
-import net.techest.railgun.net.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;

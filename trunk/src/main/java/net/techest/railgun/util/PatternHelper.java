@@ -83,6 +83,7 @@ public class PatternHelper {
     }
 
     public static String convertBase(String input) {
+        input = input.replaceAll("\\$timestamp", System.currentTimeMillis()+"");
         SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
         input = input.replaceAll("\\$date", sd.format(new Date()));
         sd = new SimpleDateFormat("HH:mm:ss");
