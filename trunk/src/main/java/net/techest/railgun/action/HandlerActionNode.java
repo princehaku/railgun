@@ -57,7 +57,7 @@ public class HandlerActionNode extends ActionNode {
         
         String filePath = scriptDir.getAbsolutePath() + "/" + className + ".java";
         File file = new File(filePath);
-        URL[] urls = new URL[]{new URL("file:/" + scriptDir.getAbsolutePath() + "/")};
+        URL[] urls = new URL[]{new URL("file://" + scriptDir.getAbsolutePath() + "/")};
         Log4j.getInstance().info("脚本目录  file:/" + scriptDir.getAbsolutePath() + "/");
         URLClassLoader classLoader = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
         Handler handler = null;
