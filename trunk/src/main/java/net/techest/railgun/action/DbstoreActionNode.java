@@ -25,6 +25,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Random;
 import javax.sql.DataSource;
 import net.techest.railgun.system.Shell;
 import net.techest.railgun.db.ConnectionPool;
@@ -105,7 +106,7 @@ public class DbstoreActionNode extends ActionNode {
                         ResultSet rs = statement.executeQuery(sql);
                         // 如果存在记录,跳过
                         if (rs.next()) {
-                            Log4j.getInstance().debug("Consist已存在");
+                            Log4j.getInstance().debug("DB : Consist已存在 跳过存入");
                             continue;
                         }
                     }
@@ -125,6 +126,7 @@ public class DbstoreActionNode extends ActionNode {
                     if (rs.next()) {
                         res.putParam("id", rs.getInt(1) + "");
                     }
+                    Log4j.getInstance().debug("存入表 " + formName + " 成功");
                 }
                 catch (SQLException ex) {
                     Log4j.getInstance().debug(" [SQL] " + sql);
@@ -133,7 +135,6 @@ public class DbstoreActionNode extends ActionNode {
             }
 
             mapping.detach();
-            Log4j.getInstance().info("表" + formName + "存储完毕");
         }
     }
 }

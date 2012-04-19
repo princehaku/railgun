@@ -88,7 +88,6 @@ public class IndexActionNode extends ActionNode {
         // 按资源加入到数据库
         for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
-
             String consist = data.attributeValue("consist");
             if (hashIndex && consist != null) {
                 int pos = colsName.indexOf(consist);
@@ -102,6 +101,7 @@ public class IndexActionNode extends ActionNode {
                 TopDocs tops = is.search(query, 1);
                 if (tops.scoreDocs.length > 0) {
                     Log4j.getInstance().debug("Index命中 " + tops.scoreDocs.length);
+                    Log4j.getInstance().debug("Index : Consist已存在 跳过存入");
                     continue;
                 }
             }
@@ -123,16 +123,16 @@ public class IndexActionNode extends ActionNode {
                 if (type.equals("fulltext")) {
                     f = new Field(entry.elementTextTrim("name"), content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES);
                 }
-                if (type.equals("text")) {
-                    f = new Field(entry.elementTextTrim("name"), content, Field.Store.YES, Field.Index.NO, Field.TermVector.NO);
-                }
                 if (type.equals("index")) {
                     f = new Field(entry.elementTextTrim("name"), content, Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.NO);
+                }
+                if (type.equals("text")) {
+                    f = new Field(entry.elementTextTrim("name"), content, Field.Store.YES, Field.Index.NO, Field.TermVector.NO);
                 }
                 doc.add(f);
             }
             writer.addDocument(doc);
-            Log4j.getInstance().info("Index 存储完毕");
+            Log4j.getInstance().debug("Index 存入成功");
         }
         writer.close();
         data.detach();

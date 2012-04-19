@@ -99,8 +99,10 @@ public class Shell implements Cloneable {
     @Override
     public Object clone() {
         try {
-            // call clone in Object.
-            return super.clone();
+            Shell s = (Shell) super.clone();
+            s.setClient((Client)this.client.clone());
+            s.setResources((LinkedList<Resource>)this.resources.clone());
+            return s;
         } catch (CloneNotSupportedException e) {
             System.out.println("Cloning not allowed.");
             return this;

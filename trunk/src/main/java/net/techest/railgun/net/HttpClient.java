@@ -24,6 +24,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import net.techest.railgun.util.Log4j;
 import net.techest.util.StringTools;
+import org.apache.commons.collections.map.UnmodifiableMap;
 
 /**
  * HTTP连接类 带cookie 可以使用GET和POST 注意: 非线程安全
@@ -42,7 +44,6 @@ import net.techest.util.StringTools;
 public class HttpClient implements Client {
 
     public enum REQ_TYPE {
-
         POST, GET
     };
     private HttpURLConnection httpConn = null;
@@ -354,8 +355,11 @@ public class HttpClient implements Client {
     @Override
     public Object clone() {
         try {
-            // call clone in Object.
-            return super.clone();
+            HttpClient c= (HttpClient) super.clone();
+            c.setCookie((Cookies)this.cookies.clone());
+            c.postParams = (QuestParams) this.postParams.clone();
+            c.requestParam = (QuestParams) this.requestParam.clone();
+            return c;
         }
         catch (CloneNotSupportedException e) {
             System.out.println("Cloning not allowed.");

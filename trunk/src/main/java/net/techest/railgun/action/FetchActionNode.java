@@ -26,7 +26,6 @@ import net.techest.railgun.net.HttpClient;
 import net.techest.railgun.system.ActionException;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
-import net.techest.railgun.util.PatternHelper;
 import net.techest.railgun.util.Log4j;
 import net.techest.railgun.util.PatternGroup;
 import org.dom4j.Element;
@@ -138,7 +137,7 @@ public class FetchActionNode extends ActionNode {
                 newurl = hash.get("url");
                 // url合法性检测
                 try {
-                    URL uri = new URL(newurl);
+                    new URL(newurl);
                     // 如果不在baseUrl范围内 不抓取
                     if (!( shell.getBaseUrl().equals("*") || newurl.indexOf(shell.getBaseUrl()) != -1 )) {
                         Log4j.getInstance().warn("URI " + newurl + " Doesn't Match BaseURL");

@@ -6,7 +6,7 @@
     <reloadtime>3600000</reloadtime>
     <stair>
         <fetch>
-            <url>http://oabt.org/?page=$[1,1]</url>
+            <url>http://oabt.org/?page=$[1,2]</url>
         </fetch>
         <parse method="dom">
             <rule>.toplist tbody</rule>
@@ -35,8 +35,14 @@
                 </enty>
             </mapping>
         </dbstore>
-        <!--<index>
+        <handler>net.techest.railgun.test.TestHandler</handler>
+        <index>
             <data consist="hash">
+                <enty>
+                    <name>id</name>
+                    <content>${id}</content>
+                    <type>text</type>
+                </enty>
                 <enty>
                     <name>url</name>
                     <content>${url}</content>
@@ -58,6 +64,6 @@
                     <type>text</type>
                 </enty>
             </data>
-        </index>-->
+        </index><!---->
     </stair>
 </shell>

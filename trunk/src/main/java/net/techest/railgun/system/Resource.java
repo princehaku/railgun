@@ -20,7 +20,6 @@ package net.techest.railgun.system;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.regex.Matcher;
 import net.techest.railgun.util.Log4j;
 
@@ -89,7 +88,7 @@ public class Resource implements Cloneable {
      * @return
      */
     public void putParam(String key, String value) {
-        this.params.put(key, value);
+        this.params.put(key.trim(), value.trim());
     }
 
     /**
@@ -131,8 +130,9 @@ public class Resource implements Cloneable {
     @Override
     public Object clone() {
         try {
-            // call clone in Object.
-            return super.clone();
+            Resource r= (Resource) super.clone();
+            r.params = (HashMap<String, String>) this.params.clone();
+            return r;
         } catch (Exception e) {
             System.out.println("Cloning not allowed.");
             return this;
