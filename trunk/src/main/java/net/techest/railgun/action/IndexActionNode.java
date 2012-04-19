@@ -34,6 +34,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.*;
+import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Version;
 import org.dom4j.Element;
@@ -46,7 +47,7 @@ import org.wltea.analyzer.query.IKQueryExpressionParser;
  * @author baizhongwei.pt
  */
 public class IndexActionNode extends ActionNode {
-
+    
     @Override
     public void execute(Element node, Shell shell) throws Exception {
         // 初始化索引目录
@@ -54,22 +55,35 @@ public class IndexActionNode extends ActionNode {
         if (indexdir == null) {
             indexdir = "indexes";
         }
-        SimpleFSDirectory ramDir = new SimpleFSDirectory(new File(indexdir));
+        SimpleFSDirectory fsDir = new SimpleFSDirectory(new File(indexdir));
+        RAMDirectory ramDir = new RAMDirectory();
+        if (Configure.getSystemConfig().getString("LOADTOMEM", "false").toLowerCase().equals("true")) {
+            ramDir = new RAMDirectory(fsDir);
+        }
         IKAnalyzer ika = new IKAnalyzer();
-        IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_34, ika);
-        iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-        IndexWriter writer = new IndexWriter(ramDir, iwc);
-        boolean hashIndex = true;
-        IndexSearcher is = null;
+        IndexWriterConfig fsIwc = new IndexWriterConfig(Version.LUCENE_34, ika);
+        fsIwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+        fsIwc.setRAMBufferSizeMB(16.0);
+        IndexWriterConfig ramIwc = new IndexWriterConfig(Version.LUCENE_34, ika);
+        ramIwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+        ramIwc.setRAMBufferSizeMB(256.0);
+        IndexWriter ramWriter = new IndexWriter(ramDir, ramIwc);
+        IndexWriter fsWriter = new IndexWriter(fsDir, fsIwc);
+        IndexSearcher fsIs = null;
+        IndexSearcher ramIs = null;
         try {
-            is = new IndexSearcher(ramDir, true);
+            fsIs = new IndexSearcher(fsDir, true);
         }
         catch (IOException ex) {
-            hashIndex = false;
+        }
+        try {
+            ramIs = new IndexSearcher(ramDir, true);
+        }
+        catch (IOException ex) {
         }
         // data标签
         Element data = node.element("data");
-
+        
         ArrayList<String> colsName = new ArrayList<String>();
         ArrayList<String> colsValue = new ArrayList<String>();
         // 遍历form里面的data 拿到cols的名字和对应值
@@ -85,11 +99,11 @@ public class IndexActionNode extends ActionNode {
             colsValue.add(entry.elementTextTrim("content"));
         }
         // 遍历资源
-        // 按资源加入到数据库
+        // 按资源加入到索引中
         for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
             String consist = data.attributeValue("consist");
-            if (hashIndex && consist != null) {
+            if (consist != null) {
                 int pos = colsName.indexOf(consist);
                 if (pos == -1) {
                     Log4j.getInstance().error("Consist字段名不存在");
@@ -98,11 +112,22 @@ public class IndexActionNode extends ActionNode {
                 ArrayList<String> valueConverted = PatternHelper.convertAll(colsValue.get(pos), res, shell);
                 String content = valueConverted.get(0);
                 Query query = new TermQuery(new Term(consist, content));
-                TopDocs tops = is.search(query, 1);
-                if (tops.scoreDocs.length > 0) {
-                    Log4j.getInstance().debug("Index命中 " + tops.scoreDocs.length);
-                    Log4j.getInstance().debug("Index : Consist已存在 跳过存入");
-                    continue;
+                // 先从内存索引读.如果没有从文件索引读
+                if (ramIs != null) {
+                    TopDocs tops = ramIs.search(query, 1);
+                    if (tops.scoreDocs.length > 0) {
+                        Log4j.getInstance().debug("内存Index命中 " + tops.scoreDocs.length);
+                        Log4j.getInstance().debug("Index : Consist已存在 跳过存入");
+                        continue;
+                    }
+                }
+                if (fsIs != null) {
+                    TopDocs tops = fsIs.search(query, 1);
+                    if (tops.scoreDocs.length > 0) {
+                        Log4j.getInstance().debug("文件Index命中 " + tops.scoreDocs.length);
+                        Log4j.getInstance().debug("Index : Consist已存在 跳过存入");
+                        continue;
+                    }
                 }
             }
 
@@ -131,10 +156,17 @@ public class IndexActionNode extends ActionNode {
                 }
                 doc.add(f);
             }
-            writer.addDocument(doc);
+            ramWriter.addDocument(doc);
+            ramWriter.commit();
+            ramIs = new IndexSearcher(ramDir, true);
             Log4j.getInstance().debug("Index 存入成功");
         }
-        writer.close();
+        ramWriter.close();
+        // 合并内存index到文件
+        fsWriter.addIndexes(ramDir);
+        // 优化索引
+        fsWriter.optimize();
+        fsWriter.close();
         data.detach();
     }
 }
