@@ -39,39 +39,8 @@ public class RailGun {
     private long lastRunTime = 0;
     private long nextRunTime = 0;
     private RailGunRunningHandler handler;
-
-    public String getFileName() {
-        return doc.getName();
-    }
-
-    public RailGun(File doc, Shell shell) {
-        this.doc = doc;
-        this.shell = shell;
-    }
     
-    public long getLastRunTime() {
-        return lastRunTime;
-    }
-
-    public void setLastRunTime(long lastRunTime) {
-        this.lastRunTime = lastRunTime;
-    }
-
-    public long getNextRunTime() {
-        return nextRunTime;
-    }
-
-    public void setNextRunTime(long nextRunTime) {
-        this.nextRunTime = nextRunTime;
-    }
-
-    public Shell getShell() {
-        return shell;
-    }
-
-    public void setShell(Shell shell) {
-        this.shell = shell;
-    }
+    private boolean reload;
 
     /**
      * 执行
@@ -110,5 +79,51 @@ public class RailGun {
 
     void setHandler(RailGunRunningHandler handler) {
         this.handler = handler;
+    }
+
+
+    void setReload(boolean b) {
+        this.reload = b;
+    }
+    
+    public boolean isReload() {
+        return reload;
+    }
+
+    public String getFileName() {
+        return doc.getName();
+    }
+
+    public String getXMLPath() {
+        return doc.getAbsolutePath();
+    }
+
+    public RailGun(File doc, Shell shell) {
+        this.doc = doc;
+        this.shell = shell;
+    }
+    
+    public long getLastRunTime() {
+        return lastRunTime;
+    }
+
+    public void setLastRunTime(long lastRunTime) {
+        this.lastRunTime = lastRunTime;
+    }
+
+    public long getNextRunTime() {
+        return nextRunTime;
+    }
+
+    public void setNextRunTime(long nextRunTime) {
+        this.nextRunTime = nextRunTime;
+    }
+
+    public Shell getShell() {
+        return shell;
+    }
+
+    public void setShell(Shell shell) {
+        this.shell = shell;
     }
 }

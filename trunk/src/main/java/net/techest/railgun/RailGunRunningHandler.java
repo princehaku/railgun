@@ -19,6 +19,7 @@
 package net.techest.railgun;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import net.techest.railgun.util.Log4j;
 
 /**
@@ -28,6 +29,7 @@ import net.techest.railgun.util.Log4j;
 public class RailGunRunningHandler {
 
     private ArrayList<RailGun> appendingRemoval;
+    
     final byte[] lock = new byte[]{};
 
     RailGunRunningHandler(ArrayList<RailGun> railguns) {
@@ -39,6 +41,10 @@ public class RailGunRunningHandler {
             long runtime = System.currentTimeMillis() - railgun.getLastRunTime();
             Log4j.getInstance().info("完成 RailGun " + railgun.getShell().getName() + " 运行时间 [" + runtime + " ms] ");
             railgun.setNextRunTime(System.currentTimeMillis() + railgun.getShell().getReloadTime());
+            if(railgun.isReload()) {
+                railgun.setNextRunTime(System.currentTimeMillis());
+                railgun.setReload(false);
+            }
             if (railgun.getShell().getReloadTime() == -1) {
                 Log4j.getInstance().info("Railgun 一次性任务 " + railgun.getShell().getName());
                 appendingRemoval.add(railgun);

@@ -28,6 +28,11 @@ public class RailGunThread extends Thread {
 
     RailGun railgun;
     RailGunRunningHandler handler;
+    
+    public boolean isForYou(RailGun railgun) {
+        return this.railgun.equals(railgun);
+    }
+    
 
     public RailGunThread(RailGun railgun, RailGunRunningHandler handler) {
         this.railgun = railgun;

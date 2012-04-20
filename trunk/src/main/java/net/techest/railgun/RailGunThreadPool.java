@@ -20,11 +20,9 @@ package net.techest.railgun;
 
 import net.techest.railgun.system.AddShellException;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.techest.railgun.system.Shell;
 import net.techest.railgun.util.Configure;
 import net.techest.railgun.util.Log4j;
@@ -37,20 +35,25 @@ import net.techest.util.MD5;
 public class RailGunThreadPool extends TimerTask {
 
     /**
+     * 当前运行中的railguns线程
+     *
+     */
+    private LinkedList<RailGunThread> railgunThreads = new LinkedList<RailGunThread>();
+    /**
      * 当前运行中的railguns
      *
      */
     private ArrayList<RailGun> railguns = new ArrayList();
     /**
-     * 目录内文件hash
-     *
-     */
-    private HashMap<String, String> fileHashes = new HashMap();
-    /**
      * 待移除的railgun节点
      *
      */
     private ArrayList<RailGun> appendingRemoval = new ArrayList();
+    /**
+     * 目录内文件hash
+     *
+     */
+    private HashMap<String, String> fileHashes = new HashMap();
     /**
      * railgun运行处理器 负责任务完成，失败的消息处理
      */
@@ -112,6 +115,14 @@ public class RailGunThreadPool extends TimerTask {
         // 从待移除列表获取并移除
         for (Iterator<RailGun> t = appendingRemoval.iterator(); t.hasNext();) {
             railgun = (RailGun) t.next();
+            // 从任务进程中获取并销毁
+            for (Iterator<RailGunThread> rt = railgunThreads.iterator(); rt.hasNext();) {
+                RailGunThread rgt = rt.next();
+                if (rgt.isForYou(railgun)) {
+                    rt.remove();
+                    rgt = null;
+                }
+            }
             railguns.remove(railgun);
             t.remove();
         }
@@ -122,7 +133,9 @@ public class RailGunThreadPool extends TimerTask {
                 // 设置不再运行，线程结束时会自动重写并让其运行
                 railgun.setLastRunTime(System.currentTimeMillis());
                 railgun.setNextRunTime(Long.MAX_VALUE);
-                new RailGunThread(railgun, handler).start();
+                RailGunThread rt = new RailGunThread(railgun, handler);
+                railgunThreads.add(rt);
+                rt.start();
             }
         }
     }
@@ -147,14 +160,20 @@ public class RailGunThreadPool extends TimerTask {
                 if (fileHashes.get(file.getName()) == null || !fileHashes.get(file.getName()).equals(newHash)) {
                     try {
                         Log4j.getInstance().info(file.getName() + " 有更新");
-                        // 如果railgun里面已经存在变更文件 移除railgun
+                        // 如果railgun里面已经存在railgun 标记为已变更
+                        boolean isRunning = false;
                         for (Iterator<RailGun> t = railguns.iterator(); t.hasNext();) {
                             RailGun railgun = (RailGun) t.next();
                             if (railgun.getFileName().equals(file.getName())) {
-                                t.remove();
+                                Log4j.getInstance().info(file.getName() + " 加入更新队列");
+                                railgun.setReload(true);
+                                isRunning = true;
                             }
                         }
-                        this.addShellXml(file.getAbsolutePath());
+                        // 全新的就全新加入新的xml
+                        if (isRunning == false) {
+                            this.addShellXml(file.getAbsolutePath());
+                        }
                         fileHashes.put(file.getName(), newHash);
                     }
                     catch (AddShellException ex) {
