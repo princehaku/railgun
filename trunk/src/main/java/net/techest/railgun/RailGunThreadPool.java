@@ -173,8 +173,10 @@ public class RailGunThreadPool extends TimerTask {
                                         isRunning = true;
                                     }
                                 }
+                                // 如果没有正在运行的进程，从运行库中删掉更新的，并且更新下次运行时间
                                 if (isRunning = false) {
                                     railgun.setNextRunTime(System.currentTimeMillis());
+                                    appendingRemoval.add(railgun);
                                 }
                                 isRunning = true;
                             }
