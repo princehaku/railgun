@@ -27,10 +27,6 @@ import net.techest.railgun.system.AddShellException;
 public class Main {
 
     public static void main(String[] argvs) throws AddShellException {
-        if (System.getProperty("java.home") == null) {
-            System.out.println("Need JAVA HOME");
-            System.exit(1);
-        }
         RailGunThreadPool.getInstance().start();
     }
 }

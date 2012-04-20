@@ -91,8 +91,7 @@ public class HandlerActionNode extends ActionNode {
             }
         }
         catch (Exception ex) {
-            ex.printStackTrace();
-            throw new ActionException(className + "动态加载失败" + ex.getMessage());
+            throw new ActionException(className + "类动态加载失败" + ex.getMessage());
         }
 
         Log4j.getInstance().info("Apply Handler " + className);
@@ -103,7 +102,8 @@ public class HandlerActionNode extends ActionNode {
             }
         }
         catch (Exception ex) {
-            throw new ActionException("执行自定义操作失败" + ex.getMessage());
+            ex.printStackTrace();
+            Log4j.getInstance().error("自定义类执行失败" + ex.getMessage());
         }
     }
 }

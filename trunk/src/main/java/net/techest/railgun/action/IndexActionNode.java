@@ -43,7 +43,7 @@ import org.wltea.analyzer.lucene.IKAnalyzer;
  * @author baizhongwei.pt
  */
 public class IndexActionNode extends ActionNode {
-    
+
     @Override
     public void execute(Element node, Shell shell) throws Exception {
         // 初始化索引目录
@@ -79,13 +79,12 @@ public class IndexActionNode extends ActionNode {
         }
         // data标签
         Element data = node.element("data");
-        
+
         ArrayList<String> colsName = new ArrayList<String>();
         ArrayList<String> colsValue = new ArrayList<String>();
-        // 遍历form里面的data 拿到cols的名字和对应值
+
         if (data.elements("enty") == null) {
-            Log4j.getInstance().warn("form 标签内没有data规则");
-            return;
+            throw new ActionException("data标签内没有enty规则");
         }
         // 保存定位 用于Consist的offset计算
         Iterator enties = data.elements("enty").iterator();
@@ -102,7 +101,7 @@ public class IndexActionNode extends ActionNode {
             if (consist != null) {
                 int pos = colsName.indexOf(consist);
                 if (pos == -1) {
-                    Log4j.getInstance().error("Consist字段名不存在");
+                    throw new ActionException("Consist字段名不存在");
                 }
                 // 内容获取
                 ArrayList<String> valueConverted = PatternHelper.convertAll(colsValue.get(pos), res, shell);
@@ -164,5 +163,6 @@ public class IndexActionNode extends ActionNode {
         fsWriter.optimize();
         fsWriter.close();
         data.detach();
+        Log4j.getInstance().info("Index 存入完成");
     }
 }

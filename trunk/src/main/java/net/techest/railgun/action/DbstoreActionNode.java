@@ -21,8 +21,6 @@ package net.techest.railgun.action;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Properties;
-import java.util.Random;
 import javax.sql.DataSource;
 import net.techest.railgun.system.Shell;
 import net.techest.railgun.db.ConnectionPool;
@@ -30,8 +28,6 @@ import net.techest.railgun.system.Resource;
 import net.techest.railgun.util.Log4j;
 import net.techest.railgun.util.PatternHelper;
 import net.techest.util.ArrayTools;
-import net.techest.util.StringTools;
-import org.dom4j.Attribute;
 import org.dom4j.Element;
 
 /**
@@ -52,14 +48,13 @@ public class DbstoreActionNode extends ActionNode {
         Connection connection = null;
         try {
             connection = d.getConnection();
-            Log4j.getInstance().warn("连接数据库成功 " + source);
+            Log4j.getInstance().info("连接数据库成功 " + source);
         }
         catch (SQLException ex) {
-            Log4j.getInstance().warn("连接数据库失败 " + ex.getMessage() + source);
             if (node.elements("mapping") != null) {
                 node.elements("mapping").clear();
             }
-            return;
+            throw new ActionException("数据库连接失败"+ ex.getMessage() + source);
         }
         Iterator mappings = node.elements("mapping").iterator();
         while (mappings.hasNext()) {
@@ -71,8 +66,7 @@ public class DbstoreActionNode extends ActionNode {
             ArrayList<String> colsAll = new ArrayList<String>();
             // 遍历form里面的mapping 拿到cols的名字和对应值
             if (mapping.elements("enty") == null) {
-                Log4j.getInstance().warn("form 标签内没有mapping规则");
-                continue;
+                throw new ActionException("form 标签内没有mapping规则");
             }
             Iterator enties = mapping.elements("enty").iterator();
             while (enties.hasNext()) {
@@ -135,12 +129,12 @@ public class DbstoreActionNode extends ActionNode {
                     }
                     Log4j.getInstance().debug("[ID] " + rs.getInt(1) + " 存入表 " + formName + " 成功");
                 }
-                catch (SQLException ex) {
+                catch (Exception ex) {
                     Log4j.getInstance().debug("[SQL] " + sql);
                     Log4j.getInstance().error("DB存储失败 " + ex.getMessage());
                 }
             }
-
+            Log4j.getInstance().info("DB "+formName+" 存入完成");
             mapping.detach();
         }
     }

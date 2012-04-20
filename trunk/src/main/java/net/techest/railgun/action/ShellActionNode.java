@@ -37,8 +37,7 @@ public class ShellActionNode extends ActionNode {
     public void execute(Element node, Shell shell) throws Exception{
         // name字段是必须的
         if (node.element("name") == null) {
-            Log4j.getInstance().error("Your Bullet Need A Name");
-            throw new ActionException("Your Bullet Need A Name");
+            throw new ActionException("请设置railgun的Name标签");
         }
         Element nameNode = node.element("name");
         shell.setName(nameNode.getData().toString());

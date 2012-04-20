@@ -42,8 +42,7 @@ public class FetchActionNode extends ActionNode {
         shell.setClient(client);
         // url字段是必须的
         if (node.element("url") == null) {
-            Log4j.getInstance().error("FetchNode Need An Url Parameter");
-            throw new ActionException("FetchNode Need An Url Parameter");
+            throw new ActionException("FetchNode 需要设置url节点");
         }
         PatternGroup pg = new PatternGroup();
         String url = node.elementTextTrim("url");
@@ -88,8 +87,7 @@ public class FetchActionNode extends ActionNode {
             for (Iterator i = params.iterator(); i.hasNext();) {
                 Element e = (Element) i.next();
                 if (e.element("key") == null || e.element("value") == null) {
-                    Log4j.getInstance().warn("Param need both set key and value");
-                    continue;
+                    throw new ActionException("Param需要同时设置key和value");
                 }
                 String key = e.element("key").getData().toString();
                 String value = e.element("value").getData().toString();
@@ -109,8 +107,7 @@ public class FetchActionNode extends ActionNode {
             for (Iterator i = params.iterator(); i.hasNext();) {
                 Element e = (Element) i.next();
                 if (e.element("key") == null || e.element("value") == null) {
-                    Log4j.getInstance().warn("Cookie need both set key and value");
-                    continue;
+                    throw new ActionException("cookie需要同时设置key和value");
                 }
                 String key = e.element("key").getData().toString();
                 String value = e.element("value").getData().toString();

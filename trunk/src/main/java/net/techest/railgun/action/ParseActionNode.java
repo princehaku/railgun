@@ -46,13 +46,12 @@ class ParseActionNode extends ActionNode {
     @Override
     public void execute(Element node, Shell shell) throws Exception {
         if (node.attribute("method") == null || node.element("rule") == null) {
-            Log4j.getInstance().error("ParseNode Need method and rule param to work");
-            throw new ActionException("ParseNode Need method and rule param to work");
+            throw new ActionException("ParseNode 需要rule属性");
         }
         String rule = node.element("rule").getData().toString().trim();
         node.element("rule").detach();
 
-        Log4j.getInstance().debug("当前资源节点内有" + shell.getResources().size());
+        Log4j.getInstance().info("当前资源节点内有" + shell.getResources().size());
         LinkedList<Resource> resnew = new LinkedList<Resource>();
         for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
@@ -69,7 +68,7 @@ class ParseActionNode extends ActionNode {
                         resnew.add(r);
                     }
                 } catch (IOException ex) {
-                    Log4j.getInstance().error("dom方式解析失败 " + ex.getMessage() + res.getCharset());
+                    Log4j.getInstance().warn("dom方式解析失败 " + ex.getMessage() + res.getCharset());
                 }
             }
             if (node.attribute("method").getData().toString().equals("regxp")) {
@@ -91,7 +90,7 @@ class ParseActionNode extends ActionNode {
             }
         }
 
-        Log4j.getInstance().debug("处理后节点内有" + resnew.size());
+        Log4j.getInstance().info("处理后节点内有" + resnew.size());
         shell.setResources(resnew);
     }
 }
