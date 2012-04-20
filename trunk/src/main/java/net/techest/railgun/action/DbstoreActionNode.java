@@ -56,8 +56,8 @@ public class DbstoreActionNode extends ActionNode {
         }
         catch (SQLException ex) {
             Log4j.getInstance().warn("连接数据库失败 " + ex.getMessage() + source);
-            if (node.element("mapping") != null) {
-                node.element("mapping").detach();
+            if (node.elements("mapping") != null) {
+                node.elements("mapping").clear();
             }
             return;
         }

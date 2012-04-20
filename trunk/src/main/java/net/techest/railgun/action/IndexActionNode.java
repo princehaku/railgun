@@ -27,19 +27,15 @@ import net.techest.railgun.system.Resource;
 import net.techest.railgun.util.Configure;
 import net.techest.railgun.util.Log4j;
 import net.techest.railgun.util.PatternHelper;
-import net.techest.util.StringTools;
-import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.*;
-import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Version;
 import org.dom4j.Element;
 import org.wltea.analyzer.lucene.IKAnalyzer;
-import org.wltea.analyzer.query.IKQueryExpressionParser;
 
 /**
  * 数据库存储类

@@ -13,24 +13,21 @@
  *  limitations under the License.
  *
  *  Project Name : railgun
- *  Created on : Apr 1, 2012 , 2:37:37 PM
+ *  Created on : Apr 19, 2012 , 11:24:56 AM
  *  Author     : princehaku
  */
-package net.techest.railgun;
+package net.techest.railgun.test;
 
-import net.techest.railgun.system.AddShellException;
+import net.techest.railgun.system.Handler;
+import net.techest.railgun.system.Resource;
 
 /**
  *
  * @author baizhongwei.pt
  */
-public class Main {
+public class TestHandler implements Handler {
 
-    public static void main(String[] argvs) throws AddShellException {
-        if (System.getProperty("java.home") == null) {
-            System.out.println("Need JAVA HOME");
-            System.exit(1);
-        }
-        RailGunThreadPool.getInstance().start();
+    @Override
+    public void process(Resource resource) {
     }
 }

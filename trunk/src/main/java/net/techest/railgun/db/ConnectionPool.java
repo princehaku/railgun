@@ -17,13 +17,11 @@ package net.techest.railgun.db;
  * the License.
  */
 import java.util.HashMap;
-import javax.sql.DataSource;
 import java.util.Properties;
 import net.techest.railgun.util.Configure;
 import net.techest.railgun.util.Log4j;
 import net.techest.util.MD5;
 import org.apache.commons.dbcp.*;
-import org.dom4j.Attribute;
 
 public class ConnectionPool {
 
