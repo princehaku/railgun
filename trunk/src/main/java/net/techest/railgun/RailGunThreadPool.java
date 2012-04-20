@@ -167,6 +167,15 @@ public class RailGunThreadPool extends TimerTask {
                             if (railgun.getFileName().equals(file.getName())) {
                                 Log4j.getInstance().info(file.getName() + " 加入更新队列");
                                 railgun.setReload(true);
+                                for (Iterator<RailGunThread> rt = railgunThreads.iterator(); rt.hasNext();) {
+                                    RailGunThread rgt = rt.next();
+                                    if (rgt.isForYou(railgun)) {
+                                        isRunning = true;
+                                    }
+                                }
+                                if (isRunning = false) {
+                                    railgun.setNextRunTime(System.currentTimeMillis());
+                                }
                                 isRunning = true;
                             }
                         }

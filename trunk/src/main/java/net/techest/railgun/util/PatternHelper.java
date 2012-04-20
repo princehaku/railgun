@@ -66,30 +66,32 @@ public class PatternHelper {
      * @return
      */
     public static ArrayList<String> convertAll(String input, Resource res, Shell shell) {
-
-        Pattern p = Pattern.compile("\\$\\{(.*?)\\}");
-        Matcher m = p.matcher(input);
-        while (m.find()) {
-            String key = m.group(1);
-            input = input.replaceFirst("\\$\\{" + key + "\\}", res.getParam(key));
-            m = p.matcher(input);
+        try {
+            Pattern p = Pattern.compile("\\$\\{(.*?)\\}");
+            Matcher m = p.matcher(input);
+            while (m.find()) {
+                String key = m.group(1);
+                input = input.replaceFirst("\\$\\{" + key + "\\}", res.getParam(key).replaceAll("\\$", "\\\\\\$"));
+                m = p.matcher(input);
+            }
+            input = input.replaceAll("\\$result", res.toString().replaceAll("\\$", "\\\\\\$"));
+            input = input.replaceAll("\\$hash", MD5.getMD5(res.getBytes()) + SHA.getSHA1(res.getBytes()));
+            input = convertBase(input);
         }
-        input = input.replaceAll("\\$result", res.toString().replaceAll("\\$", "\\\\\\$"));
-        input = input.replaceAll("\\$hash", MD5.getMD5(res.getBytes()) + SHA.getSHA1(res.getBytes()));
-        input = convertBase(input);
+        catch (Exception ex) {
+            Log4j.getInstance().warn("转换失败" + ex.getMessage());
+        }
         ArrayList<String> strings = new ArrayList();
         PatternHelper.convertDeep(input, strings);
         return strings;
     }
 
     public static String convertBase(String input) {
-        input = input.replaceAll("\\$timestamp", System.currentTimeMillis()+"");
+        input = input.replaceAll("\\$timestamp", System.currentTimeMillis() + "");
         SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
         input = input.replaceAll("\\$date", sd.format(new Date()));
         sd = new SimpleDateFormat("HH:mm:ss");
         input = input.replaceAll("\\$time", sd.format(new Date()));
         return input;
     }
-    
-    
 }

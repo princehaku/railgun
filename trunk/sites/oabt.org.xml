@@ -6,13 +6,31 @@
     <reloadtime>60000</reloadtime>
     <stair>
         <fetch>
-            <url>http://oabt.org/?page=$[200,300]</url>
+            <url>http://oabt.org/?page=$[100,150]</url>
         </fetch>
         <parse method="dom">
             <rule>.toplist tbody</rule>
         </parse>
         <handler>OabtHandler</handler>
         <dbstore source="db1">
+            <mapping form="origin" consist="hash">
+                <enty>
+                    <name>url</name>
+                    <content>${url}</content>
+                </enty>
+                <enty>
+                    <name>hash</name>
+                    <content>$hash</content>
+                </enty>
+                <enty>
+                    <name>source</name>
+                    <content>$result</content>
+                </enty>
+                <enty>
+                    <name>fetchtime</name>
+                    <content>$date $time</content>
+                </enty>
+            </mapping>
             <mapping form="videos" consist="hash">
                 <enty>
                     <name>title</name>
@@ -37,24 +55,6 @@
                 <enty>
                     <name>links</name>
                     <content>${links}</content>
-                </enty>
-            </mapping>
-            <mapping form="origin" consist="hash">
-                <enty>
-                    <name>url</name>
-                    <content>${url}</content>
-                </enty>
-                <enty>
-                    <name>hash</name>
-                    <content>$hash</content>
-                </enty>
-                <enty>
-                    <name>source</name>
-                    <content>$result</content>
-                </enty>
-                <enty>
-                    <name>fetchtime</name>
-                    <content>$date $time</content>
                 </enty>
             </mapping>
         </dbstore>
