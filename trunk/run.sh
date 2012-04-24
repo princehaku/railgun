@@ -8,4 +8,4 @@ if [ "${JAVA_HOME-null}" == "null" ]; then
         exit 0;
     fi
 fi
-$JAVA_HOME/bin/java -jar target/railgun-0.1.jar
+$JAVA_HOME/bin/java -jar target/railgun-0.2.jar
