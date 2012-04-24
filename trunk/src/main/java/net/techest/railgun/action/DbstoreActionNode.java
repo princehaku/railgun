@@ -18,16 +18,14 @@
  */
 package net.techest.railgun.action;
 
-import java.sql.*;
+import net.techest.railgun.db.DBException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import javax.sql.DataSource;
 import net.techest.railgun.system.Shell;
-import net.techest.railgun.db.ConnectionPool;
+import net.techest.railgun.db.DBConnection;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.util.Log4j;
 import net.techest.railgun.util.PatternHelper;
-import net.techest.util.ArrayTools;
 import org.dom4j.Element;
 
 /**
@@ -43,27 +41,23 @@ public class DbstoreActionNode extends ActionNode {
             throw new ActionException("错误的数据库节点标记");
         }
         String source = node.attributeValue("source").toUpperCase();
-        DataSource d = ConnectionPool.getSystemPool().getFromPool(source);
-        // 数据库连接失败的话屏蔽掉异常但是打印错误
-        Connection connection = null;
+        DBConnection connection = null;
         try {
-            connection = d.getConnection();
-            Log4j.getInstance().info("连接数据库成功 " + source);
+            connection = new DBConnection(source);
         }
-        catch (SQLException ex) {
+        catch (DBException ex) {
             if (node.elements("mapping") != null) {
                 node.elements("mapping").clear();
             }
-            throw new ActionException("数据库连接失败"+ ex.getMessage() + source);
+            throw new ActionException(ex.getMessage());
         }
         Iterator mappings = node.elements("mapping").iterator();
         while (mappings.hasNext()) {
             Element mapping = (Element) mappings.next();
             String formName = mapping.attributeValue("form");
             String consist = mapping.attributeValue("consist");
-            ArrayList<String> colsName = new ArrayList<String>();
+            ArrayList<String> colNames = new ArrayList<String>();
             ArrayList<String> colsValue = new ArrayList<String>();
-            ArrayList<String> colsAll = new ArrayList<String>();
             // 遍历form里面的mapping 拿到cols的名字和对应值
             if (mapping.elements("enty") == null) {
                 throw new ActionException("form 标签内没有mapping规则");
@@ -71,9 +65,8 @@ public class DbstoreActionNode extends ActionNode {
             Iterator enties = mapping.elements("enty").iterator();
             while (enties.hasNext()) {
                 Element entry = (Element) enties.next();
-                colsName.add(entry.elementTextTrim("name"));
+                colNames.add(entry.elementTextTrim("name"));
                 colsValue.add(entry.elementTextTrim("content"));
-                colsAll.add("?");
             }
             // 按资源加入到数据库
             for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
@@ -88,53 +81,36 @@ public class DbstoreActionNode extends ActionNode {
                 }
                 // 如果consist不为空.对数据进行插入效验
                 if (consist != null) {
-                    int pos = colsName.indexOf(consist);
+                    int pos = colNames.indexOf(consist);
                     if (pos == -1) {
                         Log4j.getInstance().error("Consist字段名不存在");
                     }
-                    String sql = "select * from `" + formName + "` where `" + consist
-                            + "` = ? limit 1;";
                     try {
-                        PreparedStatement statement = connection.prepareStatement(sql);
-                        statement.setString(1, colsValueConverted.get(pos));
-                        ResultSet rs = statement.executeQuery();
-                        // 如果存在记录,跳过
-                        if (rs.next()) {
+                        String keys[] = {consist};
+                        String values[] = {colsValueConverted.get(pos)};
+                        if (connection.existed(formName, keys, values)) {
                             Log4j.getInstance().debug("DB : Consist已存在 跳过存入");
                             continue;
                         }
                     }
-                    catch (SQLException ex) {
-                        ex.printStackTrace();
-                        Log4j.getInstance().debug("[SQL] " + sql);
-                        Log4j.getInstance().error("检验Consist失败 " + ex.getMessage());
-                        continue;
+                    catch (DBException ex) {
+                        Log4j.getInstance().error(ex.getMessage());
                     }
                 }
 
-                String sql = "insert into `" + formName + "` (" + ArrayTools.implode(",", "`", colsName)
-                        + ") values (" + ArrayTools.implode(",", "", colsAll) + ")";
                 try {
-                    PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                    // 替换index
-                    int idx = 0;
-                    for (int idxParam = idx, size = colsValueConverted.size(); idxParam < size; idxParam++) {
-                        statement.setString(idxParam + 1, colsValueConverted.get(idxParam));
+                    int id = connection.insert(formName, colNames, colsValueConverted);
+                    if (id > 0) {
+                        res.putParam("id", +id + "");
+                        Log4j.getInstance().debug("[ID] " + id + " 存入表 " + formName + " 成功");
                     }
+                }
+                catch (DBException ex) {
+                    Log4j.getInstance().error(ex.getMessage());
+                }
 
-                    statement.executeUpdate();
-                    ResultSet rs = statement.getGeneratedKeys();
-                    if (rs.next()) {
-                        res.putParam("id", rs.getInt(1) + "");
-                    }
-                    Log4j.getInstance().debug("[ID] " + rs.getInt(1) + " 存入表 " + formName + " 成功");
-                }
-                catch (Exception ex) {
-                    Log4j.getInstance().debug("[SQL] " + sql);
-                    Log4j.getInstance().error("DB存储失败 " + ex.getMessage());
-                }
             }
-            Log4j.getInstance().info("DB "+formName+" 存入完成");
+            Log4j.getInstance().info("DB " + formName + " 存入完成");
             mapping.detach();
         }
     }

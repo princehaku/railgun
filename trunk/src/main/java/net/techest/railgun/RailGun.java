@@ -38,7 +38,7 @@ public class RailGun {
     private Shell shell;
     private long lastRunTime = 0;
     private long nextRunTime = 0;
-    private RailGunRunningHandler handler;
+    private RailGunFinishHandler handler;
     
     private boolean reload;
 
@@ -77,7 +77,7 @@ public class RailGun {
         }
     }
 
-    void setHandler(RailGunRunningHandler handler) {
+    void setHandler(RailGunFinishHandler handler) {
         this.handler = handler;
     }
 

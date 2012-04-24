@@ -20,11 +20,13 @@
 
 package net.techest.railgun.action;
 
+import net.techest.railgun.db.DBException;
+
 /**
  *
  * @author baizhongwei.pt
  */
-class ActionException extends Exception {
+public class ActionException extends Exception {
 
     public ActionException(String messge) {
         super(messge);

@@ -12,3 +12,7 @@ DB1_DRIVER = com.mysql.jdbc.Driver
 DB1_URL = jdbc:mysql://localhost:3306/railgun?autoReconnect=true&characterEncoding=utf8
 DB1_PASSWORD = hellorailgun
 DB1_USERNAME = railgun
+
+[REST]
+REST_APIENABLE = true
+REST_PORT = 9090

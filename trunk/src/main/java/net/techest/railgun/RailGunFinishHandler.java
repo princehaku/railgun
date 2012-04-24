@@ -19,20 +19,19 @@
 package net.techest.railgun;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import net.techest.railgun.util.Log4j;
 
 /**
  *
  * @author baizhongwei.pt
  */
-public class RailGunRunningHandler {
+public class RailGunFinishHandler {
 
     private ArrayList<RailGun> appendingRemoval;
     
     final byte[] lock = new byte[]{};
 
-    RailGunRunningHandler(ArrayList<RailGun> railguns) {
+    RailGunFinishHandler(ArrayList<RailGun> railguns) {
         this.appendingRemoval = railguns;
     }
 
@@ -56,6 +55,7 @@ public class RailGunRunningHandler {
         synchronized (lock) {
             appendingRemoval.add(railgun);
             Log4j.getInstance().error("RailGun " + railgun.getShell().getName() + " 发生致命错误，强行终止 " +ex.getMessage());
+            ex.printStackTrace();
         }
     }
 }

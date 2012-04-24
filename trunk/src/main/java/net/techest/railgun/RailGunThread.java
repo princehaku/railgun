@@ -27,14 +27,19 @@ import net.techest.railgun.util.Log4j;
 public class RailGunThread extends Thread {
 
     RailGun railgun;
-    RailGunRunningHandler handler;
+    RailGunFinishHandler handler;
     
+    /**是否是对应某railgun的线程
+     * 
+     * @param railgun
+     * @return 
+     */
     public boolean isForYou(RailGun railgun) {
         return this.railgun.equals(railgun);
     }
     
 
-    public RailGunThread(RailGun railgun, RailGunRunningHandler handler) {
+    public RailGunThread(RailGun railgun, RailGunFinishHandler handler) {
         this.railgun = railgun;
         this.handler = handler;
     }
@@ -48,7 +53,6 @@ public class RailGunThread extends Thread {
             }
         }
         catch (Exception ex) {
-            ex.printStackTrace();
             if (this.handler != null) {
                 this.handler.onError(this.railgun, ex);
             }

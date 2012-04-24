@@ -57,7 +57,7 @@ public class RailGunThreadPool extends TimerTask {
     /**
      * railgun运行处理器 负责任务完成，失败的消息处理
      */
-    private RailGunRunningHandler handler = new RailGunRunningHandler(appendingRemoval);
+    private RailGunFinishHandler handler = new RailGunFinishHandler(appendingRemoval);
 
     private static class holder {
 
