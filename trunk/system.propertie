@@ -14,5 +14,5 @@ DB1_PASSWORD = hellorailgun
 DB1_USERNAME = railgun
 
 [REST]
-REST_APIENABLE = true
+REST_ENABLE = true
 REST_PORT = 9090
