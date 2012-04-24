@@ -54,7 +54,6 @@ public class RestAPI {
 
     public void start() {
         try {
-            Log4j.getInstance().info("API尝试启动");
             InetSocketAddress inetSocketAddress = new InetSocketAddress(Configure.getSystemConfig().getInt("REST_PORT", 9090));
             HttpServer hs = HttpServer.create(inetSocketAddress, 0);
             hs.createContext("/api", new APIHandler());

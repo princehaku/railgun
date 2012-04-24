@@ -3,7 +3,7 @@ cd railgun
 hg pull
 hg update
 cd trunk
-sh -c "mvn install"
+sh -c "mvn clean install"
 echo "+++++++++++++++++++++"
 echo "deploy done"
 echo "+++++++++++++++++++++"

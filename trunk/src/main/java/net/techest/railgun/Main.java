@@ -32,6 +32,7 @@ public class Main {
 
     public static void main(String[] argvs){
         if(Configure.getSystemConfig().getString("REST_ENABLE", "true").equals("true")) {
+            Log4j.getInstance().info("API 尝试启动");
             RestAPI.getInstance().start();
         } else {
             Log4j.getInstance().info("API 不启动"+Configure.getSystemConfig().getString("REST_ENABLE", "true"));
