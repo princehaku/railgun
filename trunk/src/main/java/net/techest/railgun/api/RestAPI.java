@@ -35,32 +35,41 @@ import net.techest.railgun.util.Log4j;
 import org.apache.lucene.document.Document;
 
 /**
- * QPS:3000
  *
  * @author baizhongwei.pt
  */
 public class RestAPI {
 
-    public static void main(String[] args) throws IOException {
-        // 初始化索引目录
-        String indexdir = Configure.getSystemConfig().getString("INDEX_DIR");
-        if (indexdir == null) {
-            indexdir = "indexes";
-        }
-        Index index = new Index(indexdir);
-        HttpServer hs = HttpServer.create(new InetSocketAddress(Configure.getSystemConfig().getInt("REST_PORT", 9090)), 0);
-        hs.createContext("/api", new MyHandler(index));
-        hs.setExecutor(null);
-        hs.start();
+    RestAPI() {
     }
 
-    private static class MyHandler implements HttpHandler {
+    private static class holder {
 
-        Index index;
+        static RestAPI holder = new RestAPI();
+    };
+
+    public static RestAPI getInstance() {
+        return holder.holder;
+    }
+
+    public void start() {
+        try {
+            InetSocketAddress inetSocketAddress = new InetSocketAddress(Configure.getSystemConfig().getInt("REST_PORT", 9090));
+            HttpServer hs = HttpServer.create(inetSocketAddress, 0);
+            hs.createContext("/api", new APIHandler());
+            hs.setExecutor(null);
+            hs.start();
+            Log4j.getInstance().error("API启动完成 监听" + inetSocketAddress.toString());
+        } catch (IOException ex) {
+            Log4j.getInstance().error("API初始化失败" + ex.getMessage());
+        }
+    }
+
+    private static class APIHandler implements HttpHandler {
+
         HttpExchange httpEx;
 
-        public MyHandler(Index index) {
-            this.index = index;
+        public APIHandler() {
         }
 
         @Override
@@ -81,18 +90,23 @@ public class RestAPI {
                     requestParams.put(key, value);
                 }
                 if (requestParams.get("field") == null || requestParams.get("text") == null) {
-                    this.Output(500, "Not Support");
+                    this.Output(500, "Method Not Support");
                     return;
                 }
+                // 初始化索引目录
+                String indexdir = Configure.getSystemConfig().getString("INDEX_DIR");
+                if (indexdir == null) {
+                    indexdir = "indexes";
+                }
+                Index index = new Index(indexdir, true);
                 ArrayList<Document> search = index.search(requestParams.get("field"), requestParams.get("text"), 0, 10);
                 String response = search.toString();
                 this.Output(200, response);
-            }
-            catch (Exception ex) {
+                index = null;
+            } catch (Exception ex) {
                 Log4j.getInstance().error("API Error " + ex.getMessage());
                 this.Output(500, ex.getMessage());
-            }
-            finally {
+            } finally {
                 he.close();
             }
         }

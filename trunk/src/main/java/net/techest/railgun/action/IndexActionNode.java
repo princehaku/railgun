@@ -52,7 +52,7 @@ public class IndexActionNode extends ActionNode {
         if (indexdir == null) {
             indexdir = "indexes";
         }
-        Index index = new Index(indexdir);
+        Index index = new Index(indexdir, false);
 
         // data标签
         Element data = node.element("data");

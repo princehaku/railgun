@@ -51,8 +51,13 @@ public class Index {
     RAMDirectory ramDir;
     SimpleFSDirectory fsDir;
 
-    public Index(String indexdir) throws IOException {
+    public Index(String indexdir,boolean readMode) throws IOException {
         fsDir = new SimpleFSDirectory(new File(indexdir));
+        // 读取模式下只需要一个文件
+        if(readMode) {
+            fsIs = new IndexSearcher(fsDir, true);
+            return;
+        }
         ramDir = new RAMDirectory();
         if (Configure.getSystemConfig().getString("LOADTOMEM", "false").toLowerCase().equals("true")) {
             ramDir = new RAMDirectory(fsDir);

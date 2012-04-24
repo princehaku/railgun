@@ -13,26 +13,20 @@
  *  limitations under the License.
  *
  *  Project Name : railgun
- *  Created on : Apr 1, 2012 , 2:37:37 PM
+ *  Created on : Apr 24, 2012 , 5:20:40 PM
  *  Author     : princehaku
  */
-package net.techest.railgun;
+package net.techest.railgun.test;
 
 import net.techest.railgun.api.RestAPI;
-import net.techest.railgun.thread.RailGunThreadPool;
-import net.techest.railgun.util.Configure;
-
 
 /**
  *
  * @author baizhongwei.pt
  */
-public class Main {
+public class TestAPI {
 
-    public static void main(String[] argvs){
-        RailGunThreadPool.getInstance().start();
-        if(Configure.getSystemConfig().getString("REST_ENABLE", "true").equals("true")) {
-            RestAPI.getInstance().start();
-        }
+    public static void main(String[] argv) {
+        RestAPI.getInstance().start();
     }
 }
