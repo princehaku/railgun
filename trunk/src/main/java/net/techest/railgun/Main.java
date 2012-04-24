@@ -21,6 +21,7 @@ package net.techest.railgun;
 import net.techest.railgun.api.RestAPI;
 import net.techest.railgun.thread.RailGunThreadPool;
 import net.techest.railgun.util.Configure;
+import net.techest.railgun.util.Log4j;
 
 
 /**
@@ -33,6 +34,8 @@ public class Main {
         RailGunThreadPool.getInstance().start();
         if(Configure.getSystemConfig().getString("REST_ENABLE", "true").equals("true")) {
             RestAPI.getInstance().start();
+        } else {
+            Log4j.getInstance().info("API 不启动"+Configure.getSystemConfig().getString("REST_ENABLE", "true"));
         }
     }
 }

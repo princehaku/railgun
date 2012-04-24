@@ -101,7 +101,7 @@ public class Configure {
         if (res == null) {
             Log4j.getInstance().error(this.getClass().getName() + "属性" + key + "获取失败，请检查配置文件");
         }
-        return res;
+        return res.trim();
     }
 
     /**
@@ -130,7 +130,7 @@ public class Configure {
         if (res == null) {
             res = defaultValue;
         }
-        return res;
+        return res.trim();
     }
 
     /**
