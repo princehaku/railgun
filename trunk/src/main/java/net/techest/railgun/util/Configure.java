@@ -118,7 +118,6 @@ public class Configure {
         return r;
     }
 
-
     /**
      * 得到字符串型值，如果不存在，返回defaultValue
      *
@@ -142,12 +141,18 @@ public class Configure {
      * @return
      */
     public int getInt(String key, int defaultValue) {
-        int r = Integer.parseInt(propertie.getProperty(key));
-        if (propertie.getProperty(key) == null) {
-            r = defaultValue;
+        int r = defaultValue;
+        if (propertie.getProperty(key) != null) {
+            try {
+                r = Integer.parseInt(propertie.getProperty(key));
+            }
+            catch (NumberFormatException ex) {
+                
+            }
         }
         return r;
     }
+
     /**
      * 设置值
      *

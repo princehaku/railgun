@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import net.techest.railgun.index.Index;
 import net.techest.railgun.system.Shell;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.util.Configure;
@@ -51,32 +52,8 @@ public class IndexActionNode extends ActionNode {
         if (indexdir == null) {
             indexdir = "indexes";
         }
-        SimpleFSDirectory fsDir = new SimpleFSDirectory(new File(indexdir));
-        RAMDirectory ramDir = new RAMDirectory();
-        if (Configure.getSystemConfig().getString("LOADTOMEM", "false").toLowerCase().equals("true")) {
-            ramDir = new RAMDirectory(fsDir);
-        }
-        IKAnalyzer ika = new IKAnalyzer();
-        IndexWriterConfig fsIwc = new IndexWriterConfig(Version.LUCENE_34, ika);
-        fsIwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-        fsIwc.setRAMBufferSizeMB(16.0);
-        IndexWriterConfig ramIwc = new IndexWriterConfig(Version.LUCENE_34, ika);
-        ramIwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-        ramIwc.setRAMBufferSizeMB(256.0);
-        IndexWriter ramWriter = new IndexWriter(ramDir, ramIwc);
-        IndexWriter fsWriter = new IndexWriter(fsDir, fsIwc);
-        IndexSearcher fsIs = null;
-        IndexSearcher ramIs = null;
-        try {
-            fsIs = new IndexSearcher(fsDir, true);
-        }
-        catch (IOException ex) {
-        }
-        try {
-            ramIs = new IndexSearcher(ramDir, true);
-        }
-        catch (IOException ex) {
-        }
+        Index index = new Index(indexdir);
+
         // data标签
         Element data = node.element("data");
 
@@ -106,23 +83,9 @@ public class IndexActionNode extends ActionNode {
                 // 内容获取
                 ArrayList<String> valueConverted = PatternHelper.convertAll(colsValue.get(pos), res, shell);
                 String content = valueConverted.get(0);
-                Query query = new TermQuery(new Term(consist, content));
-                // 先从内存索引读.如果没有从文件索引读
-                if (ramIs != null) {
-                    TopDocs tops = ramIs.search(query, 1);
-                    if (tops.scoreDocs.length > 0) {
-                        Log4j.getInstance().debug("内存Index命中 " + tops.scoreDocs.length);
-                        Log4j.getInstance().debug("Index : Consist已存在 跳过存入");
-                        continue;
-                    }
-                }
-                if (fsIs != null) {
-                    TopDocs tops = fsIs.search(query, 1);
-                    if (tops.scoreDocs.length > 0) {
-                        Log4j.getInstance().debug("文件Index命中 " + tops.scoreDocs.length);
-                        Log4j.getInstance().debug("Index : Consist已存在 跳过存入");
-                        continue;
-                    }
+                if (index.existed(consist, content)) {
+                    Log4j.getInstance().debug("Index : Consist已存在 跳过存入");
+                    continue;
                 }
             }
 
@@ -151,17 +114,10 @@ public class IndexActionNode extends ActionNode {
                 }
                 doc.add(f);
             }
-            ramWriter.addDocument(doc);
-            ramWriter.commit();
-            ramIs = new IndexSearcher(ramDir, true);
+            index.addToRam(doc);
             Log4j.getInstance().debug("Index 存入成功");
         }
-        ramWriter.close();
-        // 合并内存index到文件
-        fsWriter.addIndexes(ramDir);
-        // 优化索引
-        fsWriter.optimize();
-        fsWriter.close();
+        index.applyToDisk();
         data.detach();
         Log4j.getInstance().info("Index 存入完成");
     }
