@@ -18,7 +18,7 @@
  */
 package net.techest.railgun.test;
 
-import net.techest.railgun.RailGunThreadPool;
+import net.techest.railgun.thread.RailGunThreadPool;
 import net.techest.railgun.system.AddShellException;
 
 /**

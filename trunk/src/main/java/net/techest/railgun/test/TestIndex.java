@@ -21,7 +21,7 @@ package net.techest.railgun.test;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import net.techest.railgun.RailGunThreadPool;
+import net.techest.railgun.thread.RailGunThreadPool;
 import net.techest.railgun.system.AddShellException;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -42,7 +42,6 @@ import org.apache.lucene.util.Version;
 import org.wltea.analyzer.core.IKSegmenter;
 import org.wltea.analyzer.core.Lexeme;
 import org.wltea.analyzer.lucene.IKAnalyzer;
-import org.wltea.analyzer.sample.IKAnalyzerDemo;
 
 /**
  *

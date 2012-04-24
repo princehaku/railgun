@@ -18,7 +18,8 @@
  */
 package net.techest.railgun;
 
-import net.techest.railgun.system.AddShellException;
+import net.techest.railgun.thread.RailGunThreadPool;
+
 
 /**
  *
@@ -26,7 +27,7 @@ import net.techest.railgun.system.AddShellException;
  */
 public class Main {
 
-    public static void main(String[] argvs) throws AddShellException {
+    public static void main(String[] argvs){
         RailGunThreadPool.getInstance().start();
     }
 }

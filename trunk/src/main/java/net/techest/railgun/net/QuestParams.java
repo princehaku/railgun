@@ -29,9 +29,15 @@ import java.util.Map.Entry;
  *
  */
 public class QuestParams extends HashMap<String, String> {
-
+    
+    /**参数组合成字符串
+    * 不会经过urlencode
+    * 
+    * @author princehaku
+    *
+    */
     @Override
-    public java.lang.String toString() {
+    public String toString() {
         Iterator<Entry<String, String>> ir = this.entrySet().iterator();
         StringBuilder sb = new StringBuilder();
         while (ir.hasNext()) {

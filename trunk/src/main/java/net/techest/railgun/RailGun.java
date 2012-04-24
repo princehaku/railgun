@@ -23,6 +23,7 @@ import java.util.Iterator;
 import net.techest.railgun.action.ActionNode;
 import net.techest.railgun.action.ActionNodeFactory;
 import net.techest.railgun.system.Shell;
+import net.techest.railgun.thread.RailGunFinishHandler;
 import net.techest.railgun.util.Log4j;
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -77,12 +78,12 @@ public class RailGun {
         }
     }
 
-    void setHandler(RailGunFinishHandler handler) {
+    public void setHandler(RailGunFinishHandler handler) {
         this.handler = handler;
     }
 
 
-    void setReload(boolean b) {
+    public void setReload(boolean b) {
         this.reload = b;
     }
     
