@@ -3,4 +3,8 @@ cd railgun
 hg pull
 hg update
 cd trunk
-mvn install
+cmd /c "mvn install"
+echo "+++++++++++++++++++++"
+echo "deploy done"
+echo "+++++++++++++++++++++"
+pause
