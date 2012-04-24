@@ -37,6 +37,7 @@ public class Main {
         } else {
             Log4j.getInstance().info("API 不启动"+Configure.getSystemConfig().getString("REST_ENABLE", "true"));
         }
+        Log4j.getInstance().info("RailGun开始运行...");
         RailGunThreadPool.getInstance().start();
     }
 }

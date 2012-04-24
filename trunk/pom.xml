@@ -30,7 +30,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>net.techest.railgun.test.TestMain</mainClass>
+                            <mainClass>net.techest.railgun.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

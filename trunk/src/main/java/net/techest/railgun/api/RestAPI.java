@@ -22,12 +22,9 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.techest.railgun.index.Index;
 import net.techest.railgun.net.QuestParams;
 import net.techest.railgun.util.Configure;
@@ -44,7 +41,6 @@ public class RestAPI {
     }
 
     private static class holder {
-
         static RestAPI holder = new RestAPI();
     };
 
