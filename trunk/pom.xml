@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.techest</groupId>
     <artifactId>railgun</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
     <packaging>jar</packaging>
     <name>railgun</name>
     <url>http://maven.apache.org</url>
@@ -85,12 +85,6 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>wltea</groupId>
-            <artifactId>IKAnalyzer</artifactId>
-            <version>2012</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.6.1</version>
@@ -114,6 +108,11 @@
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
             <version>3.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>wltea</groupId>
+            <artifactId>IKAnalyzer</artifactId>
+            <version>2012</version>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
