@@ -1,6 +1,11 @@
 @echo off
 rmdir /S /Q railgun
-hg clone http://hg.code.sf.net/p/railgun/code railgun || (echo "Please Install hg "; exit 0;)
+hg clone http://hg.code.sf.net/p/railgun/code railgun
 cd railgun/trunk
-mvn install:install-file -DgroupId=wltea -DartifactId=IKAnalyzer -Dversion=2012 -Dpackaging=jar -Dfile=lib/IKAnalyzer-2012.jar && mvn install
-echo "安装完成 请使用run.bat运行"
+cmd /c mvn install:install-file -DgroupId=wltea -DartifactId=IKAnalyzer -Dversion=2012 -Dpackaging=jar -Dfile=lib/IKAnalyzer-2012.jar
+cmd /c mvn install
+cd ../../
+rm build.bat
+move railgun\shell\deploy.bat .\deploy.bat
+echo "build done"
+pause
