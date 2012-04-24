@@ -54,12 +54,13 @@ public class RestAPI {
 
     public void start() {
         try {
+            Log4j.getInstance().info("API尝试启动");
             InetSocketAddress inetSocketAddress = new InetSocketAddress(Configure.getSystemConfig().getInt("REST_PORT", 9090));
             HttpServer hs = HttpServer.create(inetSocketAddress, 0);
             hs.createContext("/api", new APIHandler());
             hs.setExecutor(null);
             hs.start();
-            Log4j.getInstance().error("API启动完成 监听" + inetSocketAddress.toString());
+            Log4j.getInstance().info("API启动完成 监听" + inetSocketAddress.toString());
         } catch (IOException ex) {
             Log4j.getInstance().error("API初始化失败" + ex.getMessage());
         }
