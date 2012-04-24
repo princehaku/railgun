@@ -173,13 +173,6 @@ public class RailGunThreadPool extends TimerTask {
                                         isRunning = true;
                                     }
                                 }
-                                // 如果没有正在运行的进程，则之前是错误结束掉了
-                                if (isRunning = false) {
-                                    Log4j.getInstance().info(file.getName() + " 没有在运行 加入");
-                                    railgun.setNextRunTime(System.currentTimeMillis());
-                                    appendingRemoval.add(railgun);
-                                }
-                                isRunning = true;
                             }
                         }
                         // 全新的就全新加入新的xml
