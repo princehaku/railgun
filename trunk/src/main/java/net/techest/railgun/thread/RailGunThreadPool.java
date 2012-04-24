@@ -18,10 +18,10 @@
  */
 package net.techest.railgun.thread;
 
-import net.techest.railgun.system.AddShellException;
 import java.io.File;
 import java.util.*;
 import net.techest.railgun.RailGun;
+import net.techest.railgun.system.AddShellException;
 import net.techest.railgun.system.Shell;
 import net.techest.railgun.util.Configure;
 import net.techest.railgun.util.Log4j;
@@ -165,6 +165,7 @@ public class RailGunThreadPool extends TimerTask {
                             RailGun railgun = (RailGun) t.next();
                             if (railgun.getFileName().equals(file.getName())) {
                                 Log4j.getInstance().info(file.getName() + " 加入更新队列");
+                                railgun.setNextRunTime(System.currentTimeMillis());
                                 railgun.setReload(true);
                                 for (Iterator<RailGunThread> rt = railgunThreads.iterator(); rt.hasNext();) {
                                     RailGunThread rgt = rt.next();
@@ -172,8 +173,9 @@ public class RailGunThreadPool extends TimerTask {
                                         isRunning = true;
                                     }
                                 }
-                                // 如果没有正在运行的进程，从运行库中删掉更新的，并且更新下次运行时间
+                                // 如果没有正在运行的进程，则之前是错误结束掉了
                                 if (isRunning = false) {
+                                    Log4j.getInstance().info(file.getName() + " 没有在运行 加入");
                                     railgun.setNextRunTime(System.currentTimeMillis());
                                     appendingRemoval.add(railgun);
                                 }
