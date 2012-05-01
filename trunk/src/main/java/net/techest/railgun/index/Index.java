@@ -50,7 +50,13 @@ public class Index {
     IndexSearcher fsIs;
     RAMDirectory ramDir;
     SimpleFSDirectory fsDir;
-
+    
+    /**
+     * 
+     * @param indexdir
+     * @param readMode
+     * @throws IOException 
+     */
     public Index(String indexdir,boolean readMode) throws IOException {
         fsDir = new SimpleFSDirectory(new File(indexdir));
         // 读取模式下只需要一个文件
@@ -193,10 +199,10 @@ public class Index {
             }
         }
         catch (ParseException ex) {
-            Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
+            Log4j.getInstance().error("[INDEX]" + ex.getMessage());
         }
         catch (IOException ex) {
-            Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
+            Log4j.getInstance().error("[INDEX]" + ex.getMessage());
         }
 
         return docs;

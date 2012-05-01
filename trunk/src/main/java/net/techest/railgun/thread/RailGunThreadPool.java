@@ -110,7 +110,6 @@ public class RailGunThreadPool extends TimerTask {
      */
     private void execAll() {
         RailGun railgun = null;
-        Log4j.getInstance().debug("SITE XML 总量" + railguns.size());
         // 从待移除列表获取并移除
         for (Iterator<RailGun> t = appendingRemoval.iterator(); t.hasNext();) {
             railgun = (RailGun) t.next();
@@ -124,6 +123,7 @@ public class RailGunThreadPool extends TimerTask {
             }
             railguns.remove(railgun);
             t.remove();
+            Log4j.getInstance().debug("SITE XML 总量" + railguns.size());
         }
         for (Iterator<RailGun> t = railguns.iterator(); t.hasNext();) {
             railgun = (RailGun) t.next();
@@ -145,7 +145,7 @@ public class RailGunThreadPool extends TimerTask {
      */
     public void checkAndAdd() {
         // 提取目录文件hash
-        String sitesDir = Configure.getSystemConfig().getString("XML_DIR");
+        String sitesDir = Configure.getSystemConfig().getString("XML_DIR", "sites");
         File f = new File(sitesDir);
         if (!f.exists()) {
             f.mkdirs();

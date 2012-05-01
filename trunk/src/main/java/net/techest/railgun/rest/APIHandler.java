@@ -16,26 +16,22 @@
  *  Created on : Apr 26, 2012 , 9:02:44 AM
  *  Author     : princehaku
  */
-
-
-package net.techest.railgun.api;
+package net.techest.railgun.rest;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import net.techest.railgun.index.Index;
+import net.sf.json.JSONObject;
 import net.techest.railgun.net.QuestParams;
-import net.techest.railgun.util.Configure;
 import net.techest.railgun.util.Log4j;
-import org.apache.lucene.document.Document;
 
 /**
  *
  * @author baizhongwei.pt
  */
 class APIHandler implements HttpHandler {
+
     HttpExchange httpEx;
 
     public APIHandler() {
@@ -43,11 +39,13 @@ class APIHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange he) throws IOException {
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("status", 0);
         try {
             he.getRequestBody();
             this.httpEx = he;
             he.getResponseHeaders().add("X-Powered-By", "RailGun");
-            he.getResponseHeaders().add("Content-Type", "text/xml;charset=utf-8");
+            he.getResponseHeaders().add("Content-Type", "application/javascript;charset=utf-8");
             // 解析url
             String query = he.getRequestURI().getQuery();
             String[] querySeg = query.split("&");
@@ -58,37 +56,30 @@ class APIHandler implements HttpHandler {
                 String value = cols[1];
                 requestParams.put(key, value);
             }
-            if (requestParams.get("field") == null || requestParams.get("text") == null) {
-                this.Output(500, "Method Not Support");
-                return;
+            String source = requestParams.get("s", "db");
+            String respMessage = "";
+            if (source.equals("index")) {
+                new IndexHandler().handle(requestParams, responseJson);
+            } else {
+                new DBHandler().handle(requestParams, responseJson);
             }
-            // 初始化索引目录
-            String indexdir = Configure.getSystemConfig().getString("INDEX_DIR");
-            if (indexdir == null) {
-                indexdir = "indexes";
-            }
-            Index index = new Index(indexdir, true);
-            ArrayList<Document> search = index.search(requestParams.get("field"), requestParams.get("text"), 0, 10);
-            String response = search.toString();
-            this.Output(200, response);
-            index = null;
-        }
-        catch (Exception ex) {
-            Log4j.getInstance().error("API Error " + ex.getMessage());
-            this.Output(500, ex.getMessage());
-        }
-        finally {
+            responseJson.put("status", 1);
+            this.OutputJson(responseJson);
+        } catch (Exception ex) {
+            responseJson.put("errmsg", ex.getMessage());
+            this.OutputJson(responseJson);
+        } finally {
             he.close();
         }
     }
 
-    public void Output(int code, String response) throws IOException {
-        httpEx.sendResponseHeaders(code, response.getBytes("utf-8").length);
+    public void OutputJson(JSONObject result) throws IOException {
+        byte[] resultbytes = result.toString().getBytes("utf-8");
+        httpEx.sendResponseHeaders(200, resultbytes.length);
         OutputStream os = httpEx.getResponseBody();
-        for (byte byet : response.getBytes("utf-8")) {
+        for (byte byet : resultbytes) {
             os.write(byet);
         }
         os.close();
     }
-
 }

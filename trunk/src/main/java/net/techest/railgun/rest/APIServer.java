@@ -16,7 +16,7 @@
  *  Created on : Apr 23, 2012 , 9:10:16 AM
  *  Author     : princehaku
  */
-package net.techest.railgun.api;
+package net.techest.railgun.rest;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -35,16 +35,16 @@ import org.apache.lucene.document.Document;
  *
  * @author baizhongwei.pt
  */
-public class RestAPI {
+public class APIServer {
 
-    RestAPI() {
+    APIServer() {
     }
 
     private static class holder {
-        static RestAPI holder = new RestAPI();
+        static APIServer holder = new APIServer();
     };
 
-    public static RestAPI getInstance() {
+    public static APIServer getInstance() {
         return holder.holder;
     }
 

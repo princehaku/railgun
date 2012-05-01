@@ -1,4 +1,4 @@
-/*  Copyright 2012 princehaku
+/*  Copyright 2010 princehaku
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -12,21 +12,18 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  Project Name : railgun
- *  Created on : Apr 24, 2012 , 5:20:40 PM
+ *  Created on : May 1, 2012, 3:24:23 PM
  *  Author     : princehaku
  */
-package net.techest.railgun.test;
+package net.techest.railgun.rest;
 
-import net.techest.railgun.rest.APIServer;
+import net.sf.json.JSONObject;
+import net.techest.railgun.net.QuestParams;
 
 /**
  *
- * @author baizhongwei.pt
+ * @author princehaku
  */
-public class TestAPI {
-
-    public static void main(String[] argv) {
-        APIServer.getInstance().start();
-    }
+public interface APIHandlerInterface {
+    public void handle(QuestParams requestParams, JSONObject responseJson);
 }

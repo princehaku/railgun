@@ -78,15 +78,10 @@ public class Configure {
 
             this.filePath = filePath;
 
-        }
-        catch (FileNotFoundException ex) {
+        } catch (FileNotFoundException ex) {
             Log4j.getInstance().error(this.getClass().getName() + "配置文件" + filePath + "不存在 " + ex.getMessage());
-            return;
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             Log4j.getInstance().error(this.getClass().getName() + "配置文件" + filePath + "读取失败 " + ex.getMessage());
-            return;
-
         }
     }
 
@@ -96,10 +91,10 @@ public class Configure {
      * @param key
      * @return String
      */
-    public String getString(String key) {
+    public String getString(String key) throws NoSuchFieldException {
         String res = propertie.getProperty(key);
         if (res == null) {
-            Log4j.getInstance().error(this.getClass().getName() + "属性" + key + "获取失败，请检查配置文件");
+            throw new NoSuchFieldException("属性不存在" + key);
         }
         return res.trim();
     }
@@ -110,10 +105,15 @@ public class Configure {
      * @param key
      * @return int
      */
-    public int getInt(String key) {
-        int r = Integer.parseInt(propertie.getProperty(key));
+    public int getInt(String key) throws NoSuchFieldException {
         if (propertie.getProperty(key) == null) {
-            Log4j.getInstance().error(this.getClass().getName() + "属性" + key + "获取失败，请检查配置文件");
+            throw new NoSuchFieldException("属性不存在" + key);
+        }
+        int r = -1;
+        try {
+            r = Integer.parseInt(propertie.getProperty(key));
+        } catch (NumberFormatException ex) {
+            throw new NoSuchFieldError("属性非INT型" + key);
         }
         return r;
     }
@@ -145,9 +145,7 @@ public class Configure {
         if (propertie.getProperty(key) != null) {
             try {
                 r = Integer.parseInt(propertie.getProperty(key));
-            }
-            catch (NumberFormatException ex) {
-                
+            } catch (NumberFormatException ex) {
             }
         }
         return r;
@@ -178,11 +176,9 @@ public class Configure {
             FileOutputStream outputFile = new FileOutputStream(filePath);
             propertie.store(outputFile, "Configure File");
             outputFile.close();
-        }
-        catch (FileNotFoundException ex) {
+        } catch (FileNotFoundException ex) {
             Log4j.getInstance().error(this.getClass().getName() + "配置文件保存失败" + ex.getMessage());
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             Log4j.getInstance().error(this.getClass().getName() + "配置文件保存失败" + ex.getMessage());
         }
     }

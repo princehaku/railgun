@@ -55,4 +55,11 @@ public class QuestParams extends HashMap<String, String> {
     public Iterator<Entry<String, String>> getIterator() {
         return this.entrySet().iterator();
     }
+    
+    public String get(String key,String defaultValue) {
+        if(this.get(key) != null){
+            return this.get(key);
+        }
+        return defaultValue;
+    }
 }

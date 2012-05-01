@@ -52,7 +52,7 @@ public class HandlerActionNode extends ActionNode {
             throw new ActionException("请输入Handler类名");
         }
         String className = node.getTextTrim();
-        String scriptDirString = Configure.getSystemConfig().getString("HANDLER_DIR");
+        String scriptDirString = Configure.getSystemConfig().getString("HANDLER_DIR", "scripts");
         File scriptDir = new File(scriptDirString);
         
         String filePath = scriptDir.getAbsolutePath() + "/" + className + ".java";

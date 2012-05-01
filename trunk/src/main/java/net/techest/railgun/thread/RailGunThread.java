@@ -19,7 +19,6 @@
 package net.techest.railgun.thread;
 
 import net.techest.railgun.RailGun;
-import net.techest.railgun.util.Log4j;
 
 /**
  *

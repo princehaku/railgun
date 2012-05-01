@@ -40,10 +40,7 @@ public class IndexActionNode extends ActionNode {
     @Override
     public void execute(Element node, Shell shell) throws Exception {
         // 初始化索引目录
-        String indexdir = Configure.getSystemConfig().getString("INDEX_DIR");
-        if (indexdir == null) {
-            indexdir = "indexes";
-        }
+        String indexdir = Configure.getSystemConfig().getString("INDEX_DIR", "indexes");
         Index index = null;
         try {
             index = new Index(indexdir, false);
