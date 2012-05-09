@@ -108,10 +108,12 @@ public class DbstoreActionNode extends ActionNode {
                 catch (DBException ex) {
                     Log4j.getInstance().error(ex.getMessage());
                 }
-
+ 
             }
             Log4j.getInstance().info("DB " + formName + " 存入完成");
             mapping.detach();
         }
+        
+        connection.getConnection().close();
     }
 }

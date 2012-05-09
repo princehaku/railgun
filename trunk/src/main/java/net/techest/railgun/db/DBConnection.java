@@ -21,13 +21,9 @@ package net.techest.railgun.db;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sql.DataSource;
-import net.techest.railgun.action.ActionException;
 import net.techest.railgun.util.Log4j;
 import net.techest.util.ArrayTools;
-import org.dom4j.Element;
 
 /**
  *
