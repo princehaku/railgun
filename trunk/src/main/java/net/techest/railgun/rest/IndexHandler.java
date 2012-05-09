@@ -19,11 +19,15 @@ package net.techest.railgun.rest;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.techest.railgun.index.Index;
 import net.techest.railgun.net.QuestParams;
 import net.techest.railgun.util.Configure;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Fieldable;
 
 /**
  *
@@ -33,7 +37,7 @@ public class IndexHandler implements APIHandlerInterface {
 
     @Override
     public void handle(QuestParams requestParams, JSONObject responseJson) {
-        if (requestParams.get("field") == null || requestParams.get("text") == null) {
+        if (requestParams.get("key") == null || requestParams.get("value") == null) {
             responseJson.put("errmsg", "Method Not Support");
             return;
         }
@@ -42,12 +46,20 @@ public class IndexHandler implements APIHandlerInterface {
         Index index = null;
         try {
             index = new Index(indexdir, true);
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             responseJson.put("errmsg", "Index Dir读取失败" + ex.getMessage());
             return;
         }
-        ArrayList<Document> search = index.search(requestParams.get("field"), requestParams.get("text"), 0, 10);
-        String response = search.toString();
+        ArrayList<Document> search = index.search(requestParams.get("key"), requestParams.get("value"), 0, 10);
+        JSONArray response = new JSONArray();
+        for (Document doc : search) {
+            JSONObject enty = new JSONObject();
+            for (Fieldable fieldable : doc.getFields()) {
+                enty.put(fieldable.name(), fieldable.stringValue());
+            }
+            response.add(enty);
+        }
         index = null;
         responseJson.put("content", response);
     }
