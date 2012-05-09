@@ -43,7 +43,7 @@ public class HandlerActionNode extends ActionNode {
      * 脚本文件hash
      *
      */
-    private HashMap<String, String> fileHashes = new HashMap();
+    private static HashMap<String, String> fileHashes = new HashMap();
 
     @Override
     public void execute(Element node, Shell shell) throws Exception {
@@ -65,7 +65,7 @@ public class HandlerActionNode extends ActionNode {
         boolean loaded = false;
         // 不在hash里的有更新的文件则重新编译
         String newHash = MD5.getMD5(( file.getName() + file.length() + file.lastModified() ).getBytes());
-        if (fileHashes.containsKey(file.getName()) && fileHashes.get(file.getName()).equals(newHash)) {
+        if (HandlerActionNode.fileHashes.containsKey(file.getName()) && HandlerActionNode.fileHashes.get(file.getName()).equals(newHash)) {
             try {
                 handler = (Handler) ( ( classLoader.loadClass(className) ).newInstance() );
                 loaded = true;
@@ -73,6 +73,7 @@ public class HandlerActionNode extends ActionNode {
             catch (Exception ex) {
                 Log4j.getInstance().info(className + "加载失败，尝试动态编译。" + ex.getMessage());
             }
+            HandlerActionNode.fileHashes.put(file.getName(), newHash);
         }
         // 加载失败就编译一次
         try {
@@ -102,7 +103,6 @@ public class HandlerActionNode extends ActionNode {
             }
         }
         catch (Exception ex) {
-            ex.printStackTrace();
             Log4j.getInstance().error("自定义类执行失败" + ex.getMessage());
         }
     }
