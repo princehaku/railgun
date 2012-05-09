@@ -123,7 +123,7 @@ and open the template in the editor.
         <xs:sequence>
             <xs:element name="mapping" type="mapping" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
-        <xs:attribute name="source" type="xs:string" minOccurs="1" />
+        <xs:attribute name="source" type="xs:string" use="required"/>
     </xs:complexType>
     
     <xs:complexType name="mapping">
