@@ -52,9 +52,9 @@ public class HandlerActionNode extends ActionNode {
             throw new ActionException("请输入Handler类名");
         }
         String className = node.getTextTrim();
-        String scriptDirString = Configure.getSystemConfig().getString("HANDLER_DIR", "scripts");
+        String scriptDirString = Configure.getSystemConfig().getString("HANDLER_DIR", "handlers");
         File scriptDir = new File(scriptDirString);
-        
+
         String filePath = scriptDir.getAbsolutePath() + "/" + className + ".java";
         File file = new File(filePath);
         URL[] urls = new URL[]{new URL("file://" + scriptDir.getAbsolutePath() + "/")};
@@ -67,13 +67,12 @@ public class HandlerActionNode extends ActionNode {
         String newHash = MD5.getMD5(( file.getName() + file.length() + file.lastModified() ).getBytes());
         if (HandlerActionNode.fileHashes.containsKey(file.getName()) && HandlerActionNode.fileHashes.get(file.getName()).equals(newHash)) {
             try {
-                handler = (Handler) ( ( classLoader.loadClass(className) ).newInstance() );
+                handler = (Handler) ((classLoader.loadClass(className)).newInstance() );
                 loaded = true;
             }
             catch (Exception ex) {
                 Log4j.getInstance().info(className + "加载失败，尝试动态编译。" + ex.getMessage());
             }
-            HandlerActionNode.fileHashes.put(file.getName(), newHash);
         }
         // 加载失败就编译一次
         try {
@@ -87,14 +86,14 @@ public class HandlerActionNode extends ActionNode {
                 if (status != 0) {
                     throw new ActionException("编译script失败" + status);
                 }
-                handler = (Handler) ( ( classLoader.loadClass(className) ).newInstance() );
+                handler = (Handler) ((classLoader.loadClass(className)).newInstance() );
                 loaded = true;
             }
         }
         catch (Exception ex) {
             throw new ActionException(className + "类动态加载失败" + ex.getMessage());
         }
-
+        HandlerActionNode.fileHashes.put(file.getName(), newHash);
         Log4j.getInstance().info("Apply Handler " + className);
         try {
             for (Iterator i = shell.getResources().iterator(); i.hasNext();) {

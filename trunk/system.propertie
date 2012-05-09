@@ -5,7 +5,7 @@ XML_DIR = sites
 INDEX_DIR = indexes
 
 [HANDLER]
-HANDLER_DIR = scripts
+HANDLER_DIR = handlers
 
 [DB]
 DB1_DRIVER = com.mysql.jdbc.Driver
