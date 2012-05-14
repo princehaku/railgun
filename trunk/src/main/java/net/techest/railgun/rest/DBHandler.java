@@ -19,15 +19,11 @@ package net.techest.railgun.rest;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.techest.railgun.db.DBConnection;
 import net.techest.railgun.db.DBException;
 import net.techest.railgun.net.QuestParams;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Fieldable;
 
 /**
  *

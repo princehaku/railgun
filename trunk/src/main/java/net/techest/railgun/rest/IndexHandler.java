@@ -19,14 +19,12 @@ package net.techest.railgun.rest;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.techest.railgun.index.Index;
 import net.techest.railgun.net.QuestParams;
 import net.techest.railgun.util.Configure;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Fieldable;
 
 /**
@@ -51,7 +49,15 @@ public class IndexHandler implements APIHandlerInterface {
             responseJson.put("errmsg", "Index Dir读取失败" + ex.getMessage());
             return;
         }
-        ArrayList<Document> search = index.search(requestParams.get("key"), requestParams.get("value"), 0, 10);
+        int offset = 0;
+        if (requestParams.get("st") != null) {
+            offset = Integer.parseInt(requestParams.get("st"));
+        }
+        int number = 15;
+        if (requestParams.get("n") != null) {
+            offset = Integer.parseInt(requestParams.get("n"));
+        }
+        ArrayList<Document> search = index.search(requestParams.get("key"), requestParams.get("value"), offset, number);
         JSONArray response = new JSONArray();
         for (Document doc : search) {
             JSONObject enty = new JSONObject();
@@ -60,6 +66,7 @@ public class IndexHandler implements APIHandlerInterface {
             }
             response.add(enty);
         }
+        // 释放index资源
         index = null;
         responseJson.put("content", response);
     }
