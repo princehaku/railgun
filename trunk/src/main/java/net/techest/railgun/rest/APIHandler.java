@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import net.sf.json.JSONObject;
 import net.techest.railgun.net.QuestParams;
-import net.techest.railgun.util.Log4j;
 
 /**
  *
@@ -57,7 +56,6 @@ class APIHandler implements HttpHandler {
                 requestParams.put(key, value);
             }
             String source = requestParams.get("s", "db");
-            String respMessage = "";
             if (source.equals("index")) {
                 new IndexHandler().handle(requestParams, responseJson);
             } else {

@@ -50,17 +50,18 @@ public class Index {
     IndexSearcher fsIs;
     RAMDirectory ramDir;
     SimpleFSDirectory fsDir;
-    
+    private int totalHits = 0;
+
     /**
-     * 
+     *
      * @param indexdir
      * @param readMode
-     * @throws IOException 
+     * @throws IOException
      */
-    public Index(String indexdir,boolean readMode) throws IOException {
+    public Index(String indexdir, boolean readMode) throws IOException {
         fsDir = new SimpleFSDirectory(new File(indexdir));
         // 读取模式下只需要一个文件
-        if(readMode) {
+        if (readMode) {
             fsIs = new IndexSearcher(fsDir, true);
             return;
         }
@@ -131,10 +132,11 @@ public class Index {
 
         return false;
     }
-    /**添加doc到内存索引
-     * 并重置内存读取器
-     * 
-     * @param doc 
+
+    /**
+     * 添加doc到内存索引 并重置内存读取器
+     *
+     * @param doc
      */
     public void addToRam(Document doc) {
         try {
@@ -149,8 +151,10 @@ public class Index {
             Log4j.getInstance().error(ex.getMessage());
         }
     }
-    /**合并mem和fs
-     * 
+
+    /**
+     * 合并mem和fs
+     *
      */
     public void applyToDisk() {
         try {
@@ -168,15 +172,26 @@ public class Index {
             Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    /**从文件索引中查找结果
-     * 
+
+    /**
+     * 得到总命中数
+     *
+     * @return
+     */
+    public int getTotalHits() {
+        return totalHits;
+    }
+
+    /**
+     * 从文件索引中查找结果
+     *
      * @param searchField
      * @param value
      * @param offset
      * @param number
-     * @return 
+     * @return
      */
-    public ArrayList<Document> search(String searchField, String value,int offset,int number) {
+    public ArrayList<Document> search(String searchField, String value, int offset, int number) {
         ArrayList<Document> docs = new ArrayList();
         if (fsIs == null) {
             return docs;
@@ -187,8 +202,9 @@ public class Index {
             qp.setDefaultOperator(QueryParser.OR_OPERATOR);
             Query query = qp.parse(value);
             TopDocs tops = fsIs.search(query, offset + number);
+            this.totalHits = tops.totalHits;
             if (tops.totalHits < offset) {
-               return docs;
+                return docs;
             }
             int max = offset + number;
             if (tops.totalHits < offset + number) {
@@ -196,7 +212,7 @@ public class Index {
             }
             ScoreDoc[] scoreDoc = tops.scoreDocs;
             // 加到里面去
-            for(int i=offset;i<max;i++){
+            for (int i = offset; i < max; i++) {
                 docs.add(fsIs.doc(scoreDoc[i].doc));
             }
         }

@@ -55,9 +55,10 @@ public class IndexHandler implements APIHandlerInterface {
         }
         int number = 15;
         if (requestParams.get("n") != null) {
-            offset = Integer.parseInt(requestParams.get("n"));
+            number = Integer.parseInt(requestParams.get("n"));
         }
         ArrayList<Document> search = index.search(requestParams.get("key"), requestParams.get("value"), offset, number);
+        responseJson.put("totalhits", index.getTotalHits());
         JSONArray response = new JSONArray();
         for (Document doc : search) {
             JSONObject enty = new JSONObject();

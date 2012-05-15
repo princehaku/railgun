@@ -18,18 +18,11 @@
  */
 package net.techest.railgun.rest;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import net.techest.railgun.index.Index;
-import net.techest.railgun.net.QuestParams;
 import net.techest.railgun.util.Configure;
 import net.techest.railgun.util.Log4j;
-import org.apache.lucene.document.Document;
 
 /**
  *
