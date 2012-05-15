@@ -11,19 +11,28 @@ public class OabtHandler implements Handler {
     @Override
     public void process(Resource res) {
         Document doc = Jsoup.parse("<body><table>" + res.getText() + "</table></body>");
-        String cat = doc.select(".cat a").html();
-        res.putParam("cat", cat);
+        // 标题
         String title = doc.select(".name a").html();
         res.putParam("title", title);
-        String downloadLink = doc.select(".dow a").outerHtml();
+        // 目录
+        String cat = doc.select(".cat a").html();
+        res.putParam("cat", cat);
+        // 下载链接
+        String downloadLink = doc.select(".dow .magDown").attr("href");
+        downloadLink += "[|||]" + doc.select(".dow .ed2kDown").attr("ed2k");
         res.putParam("links", downloadLink);
+        // 大小
         String size = "";
         if (doc.select(".seed").size() > 0) {
             size = doc.select(".seed").get(0).html();
         }
         res.putParam("size", size);
-        res.putParam("index", title + downloadLink);
+        // 页面url
+        String surl = doc.select(".magTitle a").attr("href");
+        res.putParam("surl","http://oabt.org/" + surl);
         
+        // 全文索引
+        res.putParam("index", title + downloadLink);
         try {
             res.setBytes((cat + title + downloadLink).getBytes("UTF-8"));
         }

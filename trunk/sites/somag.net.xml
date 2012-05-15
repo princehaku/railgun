@@ -56,6 +56,10 @@
                     <name>links</name>
                     <content>${links}</content>
                 </enty>
+                <enty>
+                    <name>surl</name>
+                    <content>${surl}</content>
+                </enty>
             </mapping>
         </dbstore>
         <index>
