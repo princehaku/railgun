@@ -13,21 +13,20 @@
  *  limitations under the License.
  *
  *  Project Name : railgun
- *  Created on : Apr 6, 2012 , 4:54:46 PM
+ *  Created on : May 15, 2012 , 11:07:23 AM
  *  Author     : princehaku
  */
 
 
-package net.techest.railgun.action;
+package net.techest.railgun.index;
 
 /**
  *
  * @author baizhongwei.pt
  */
-public class ActionException extends Exception {
-
-    public ActionException(String messge) {
+class IndexException extends Exception {
+    
+    public IndexException(String messge) {
         super(messge);
     }
-
 }

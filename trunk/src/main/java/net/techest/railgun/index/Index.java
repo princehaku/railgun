@@ -71,9 +71,11 @@ public class Index {
         IKAnalyzer ika = new IKAnalyzer();
         IndexWriterConfig fsIwc = new IndexWriterConfig(Version.LUCENE_34, ika);
         fsIwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+        fsIwc.setWriteLockTimeout(-1);
         fsIwc.setRAMBufferSizeMB(Configure.getSystemConfig().getInt("INDEX_FS_BUFFER", 16));
         IndexWriterConfig ramIwc = new IndexWriterConfig(Version.LUCENE_34, ika);
         ramIwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+        ramIwc.setWriteLockTimeout(-1);
         ramIwc.setRAMBufferSizeMB(Configure.getSystemConfig().getInt("INDEX_RAM_BUFFER", 128));
         ramWriter = new IndexWriter(ramDir, ramIwc);
         fsWriter = new IndexWriter(fsDir, fsIwc);

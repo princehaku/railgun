@@ -13,21 +13,30 @@
  *  limitations under the License.
  *
  *  Project Name : railgun
- *  Created on : Apr 6, 2012 , 4:54:46 PM
+ *  Created on : May 15, 2012 , 11:05:35 AM
  *  Author     : princehaku
  */
-
-
-package net.techest.railgun.action;
+package net.techest.railgun.index;
 
 /**
- *
- * @author baizhongwei.pt
+ * @deprecated @author baizhongwei.pt
  */
-public class ActionException extends Exception {
+public class IndexFactory {
 
-    public ActionException(String messge) {
-        super(messge);
+    /**
+     * @deprecated
+     */
+    public static Index getIndex(String indexdir, boolean readOnly) throws IndexException {
+        Index index = null;
+        try {
+            // 如果是以读写形式打开的 需要加锁
+            if (readOnly == false) {
+            }
+            index = new Index(indexdir, readOnly);
+        }
+        catch (Exception ex) {
+            throw new IndexException(ex.getMessage());
+        }
+        return index;
     }
-
 }

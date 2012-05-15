@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shell xmlns="http://railgun.techest.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://railgun.techest.net shell.xsd">
-    <name>oabt</name>
+    <name>somag</name>
     <description>我爱P2P电影抓取</description>
     <baseurl>*</baseurl>
-    <reloadtime>600000</reloadtime>
+    <reloadtime>60000</reloadtime>
     <stair>
         <fetch>
-            <url>http://oabt.org/?page=1</url>
+            <url>http://www.somag.net/page/$[1,3]/</url>
         </fetch>
         <parse method="dom">
-            <rule>.toplist tbody</rule>
+            <rule>html body div.center div.content ul.list li.post</rule>
         </parse>
-        <handler>OabtHandler</handler>
+        <handler>SomaHandler</handler>
         <dbstore source="db1">
             <mapping form="origin" consist="hash">
                 <enty>
