@@ -169,10 +169,12 @@ public class RailGunThreadPool extends TimerTask {
                         Log4j.getInstance().info(file.getName() + " 有更新");
                         // 如果railgun里面已经存在railgun 标记为已变更
                         boolean isRunning = false;
+                        boolean hasOld = false;
                         for (Iterator<RailGun> t = railguns.iterator(); t.hasNext();) {
                             RailGun railgun = (RailGun) t.next();
                             if (railgun.getFileName().equals(file.getName())) {
                                 Log4j.getInstance().info(file.getName() + " 加入更新队列");
+                                hasOld = true;
                                 railgun.setNextRunTime(System.currentTimeMillis());
                                 railgun.setReload(true);
                                 for (Iterator<RailGunThread> rt = railgunThreads.iterator(); rt.hasNext();) {
@@ -185,7 +187,7 @@ public class RailGunThreadPool extends TimerTask {
                             }
                         }
                         // 全新的就全新加入新的xml
-                        if (isRunning == false) {
+                        if (hasOld == false && isRunning == false) {
                             this.addShellXml(file.getAbsolutePath());
                         }
                         fileHashes.put(file.getName(), newHash);
