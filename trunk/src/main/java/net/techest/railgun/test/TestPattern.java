@@ -21,6 +21,8 @@ package net.techest.railgun.test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import net.techest.railgun.system.AddShellException;
+import net.techest.railgun.system.Resource;
+import net.techest.railgun.system.Shell;
 import net.techest.railgun.util.PatternGroup;
 
 /**
@@ -30,7 +32,7 @@ import net.techest.railgun.util.PatternGroup;
 public class TestPattern {
 
     public static void main(String[] argvs) throws AddShellException {
-        PatternGroup pg = new PatternGroup();
+        PatternGroup pg = new PatternGroup(new Resource(),new Shell());
         pg.addNewString("url", "uu$[1,2]", true);
         pg.addNewString("cookie", "aa$[3,4]", true);
         pg.addNewString("set", "ss$[5,6]", true);

@@ -44,9 +44,7 @@ public class FetchActionNode extends ActionNode {
         if (node.element("url") == null) {
             throw new ActionException("FetchNode 需要设置url节点");
         }
-        PatternGroup pg = new PatternGroup();
         String url = node.elementTextTrim("url");
-        pg.addNewString("url", url, canPattern(node.element("url")));
         // Method设置
         if (node.element("method") != null) {
             String requestMethod = node.element("method").getData().toString();
@@ -56,18 +54,18 @@ public class FetchActionNode extends ActionNode {
             }
             node.element("method").detach();
         }
+        String content = "";
         // 获取并设置body节点内容
         if (node.element("content") != null) {
-            pg.addNewString("content", node.elementTextTrim("content"), canPattern(node.element("content")));
+            content = node.elementTextTrim("content");
             node.element("content").detach();
         }
+        String charset = "auto";
         // 编码定制
         if (node.element("charset") != null) {
-            pg.addNewString("charset", node.elementTextTrim("charset"), canPattern(node.element("charset")));
+            charset = node.elementTextTrim("charset");
             node.element("charset").detach();
-        } else {
-            pg.addNewString("charset", "auto", false);
-        }
+        } 
         // 超时设置
         if (node.element("timeout") != null) {
             int timemillons = Integer.parseInt(node.element("timeout").getData().toString());
@@ -96,11 +94,12 @@ public class FetchActionNode extends ActionNode {
             node.element("params").detach();
         }
         Cookies cookie = new Cookies();
+        String cookieString = "";
         // 组合cookie参数
         if (node.element("cookies") != null) {
             // 如果有cookie-string,优先解析
             if (node.element("cookies").element("cookie-string") != null) {
-                pg.addNewString("cookie-string", node.element("cookies").elementTextTrim("cookie-string"), canPattern(node.element("cookies").element("cookie-string")));
+                cookieString = node.element("cookies").elementTextTrim("cookie-string");
                 cookie.fromString(node.element("cookies").elementTextTrim("cookie-string"));
             }
             List params = node.element("cookies").elements("cookie");
@@ -125,6 +124,12 @@ public class FetchActionNode extends ActionNode {
         // 循环资源节点
         for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
+            PatternGroup pg = new PatternGroup(res,shell);
+            pg.addNewString("url", url, true);
+            pg.addNewString("content", content,true);
+            pg.addNewString("cookie-string", cookieString, true);
+                
+            
             String newurl = url;
             ArrayList<HashMap<String, String>> pgs = pg.convert();
             // 循环匹配组
@@ -152,9 +157,9 @@ public class FetchActionNode extends ActionNode {
                         client.setPostString(hash.get("content"));
                     }
                     // 重设编码
-                    client.setCharset(hash.get("charset"));
+                    client.setCharset(charset);
                     // 重设cookie
-                    if (hash.get("cookie-string") != null) {
+                    if (!hash.get("cookie-string") .equals("")) {
                         cookie.fromString(hash.get("cookie-string"));
                         client.setCookie(cookie);
                     }

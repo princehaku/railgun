@@ -32,14 +32,26 @@ import net.techest.railgun.system.Shell;
  */
 public class PatternGroup {
 
-    Resource res = new Resource();
+    Resource res;
     
-    Shell shell = new Shell();
+    Shell shell;
     
     private HashMap<String, ArrayList<String>> patterns = new HashMap<String, ArrayList<String>>();
     
     private ArrayList<HashMap<String, String>> converted = new ArrayList<HashMap<String, String>>();
+    
+    public PatternGroup(Resource res, Shell shell){
+        this.res = res;
+        this.shell = shell;
+    }
 
+    public void setRes(Resource res) {
+        this.res = res;
+    }
+    
+    public void setShell(Shell shell) {
+        this.shell = shell;
+    }
     /**添加新字符组到HashMap中
      * 
      * @param keyName

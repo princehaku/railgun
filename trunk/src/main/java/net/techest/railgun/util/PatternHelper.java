@@ -79,6 +79,7 @@ public class PatternHelper {
             input = convertBase(input);
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             Log4j.getInstance().warn("转换失败" + ex.getMessage());
         }
         ArrayList<String> strings = new ArrayList();

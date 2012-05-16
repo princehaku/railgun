@@ -36,24 +36,24 @@ public class Resource implements Cloneable {
     private String charset = null;
     // 参数组,用于参数替换
     private HashMap<String, String> params = new HashMap<String, String>();
-
+    
     public Resource(byte[] bytes, String charset) {
         this.bytes = bytes;
         this.charset = charset;
     }
-
+    
     public byte[] getBytes() {
         return bytes;
     }
-
+    
     public void setBytes(byte[] bytes) {
         this.bytes = bytes;
     }
-
+    
     public String getCharset() {
         return charset;
     }
-
+    
     public void setCharset(String charset) {
         this.charset = charset;
     }
@@ -81,6 +81,7 @@ public class Resource implements Cloneable {
     public HashMap<String, String> getParams() {
         return this.params;
     }
+
     /**
      * 设置参数 之后xml中的值可以通过${key}变量进行获取
      *
@@ -105,14 +106,15 @@ public class Resource implements Cloneable {
             this.putParam(regxpu + "", regxpResult.group(regxpu));
         }
     }
-
+    
     public Resource() {
         this.bytes = new byte[1];
         this.charset = "utf8";
     }
+
     /**
      * @see getText()
-     * @return 
+     * @return
      */
     @Override
     public String toString() {
@@ -128,7 +130,8 @@ public class Resource implements Cloneable {
         String result = "";
         try {
             result = new String(this.bytes, this.charset);
-        } catch (UnsupportedEncodingException ex) {
+        }
+        catch (UnsupportedEncodingException ex) {
             Log4j.getInstance().error("Resource " + ex.getMessage());
         }
         return result;
@@ -137,10 +140,11 @@ public class Resource implements Cloneable {
     @Override
     public Object clone() {
         try {
-            Resource r= (Resource) super.clone();
+            Resource r = (Resource) super.clone();
             r.params = (HashMap<String, String>) this.params.clone();
             return r;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             System.out.println("Cloning not allowed.");
             return this;
         }
