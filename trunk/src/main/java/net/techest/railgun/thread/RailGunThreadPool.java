@@ -56,7 +56,7 @@ public class RailGunThreadPool extends TimerTask {
     /**
      * railgun运行处理器 负责任务完成，失败的消息处理
      */
-    private RailGunFinishHandler handler = new RailGunFinishHandler(appendingRemoval);
+    private RailGunFinishHandler handler = new RailGunFinishHandler(appendingRemoval, railgunThreads);
 
     private static class holder {
 
@@ -86,6 +86,7 @@ public class RailGunThreadPool extends TimerTask {
             railgun = new RailGun(inputXml, shell);
             railgun.setHandler(this.handler);
             railguns.add(railgun);
+            Log4j.getInstance().info("RailGun" + xmlpath + "添加完成，等待运行");
         }
         catch (Exception ex) {
             // 出错了.不把shell添加到节点域
@@ -127,7 +128,14 @@ public class RailGunThreadPool extends TimerTask {
         }
         for (Iterator<RailGun> t = railguns.iterator(); t.hasNext();) {
             railgun = (RailGun) t.next();
-            if (railgun.getNextRunTime() <= System.currentTimeMillis()) {
+            boolean isRunning = false;
+            for (Iterator<RailGunThread> rt = railgunThreads.iterator(); rt.hasNext();) {
+                RailGunThread rgt = rt.next();
+                if (rgt.isForYou(railgun)) {
+                    isRunning = true;
+                }
+            }
+            if (isRunning == false && railgun.getNextRunTime() <= System.currentTimeMillis()) {
                 Log4j.getInstance().info("运行 RailGun " + railgun.getShell().getName());
                 // 设置不再运行，线程结束时会自动重写并让其运行
                 railgun.setLastRunTime(System.currentTimeMillis());
@@ -170,6 +178,7 @@ public class RailGunThreadPool extends TimerTask {
                                 for (Iterator<RailGunThread> rt = railgunThreads.iterator(); rt.hasNext();) {
                                     RailGunThread rgt = rt.next();
                                     if (rgt.isForYou(railgun)) {
+                                        Log4j.getInstance().info(file.getName() + " 正在运行");
                                         isRunning = true;
                                     }
                                 }
