@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shell xmlns="http://railgun.techest.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://railgun.techest.net shell.xsd">
     <name>somag</name>
-    <description>我爱P2P电影抓取</description>
+    <description>磁力下载抓取</description>
     <baseurl>*</baseurl>
-    <reloadtime>60000</reloadtime>
+    <reloadtime>60000000</reloadtime>
     <stair>
         <fetch>
             <url>http://www.somag.net/page/$[1,3]/</url>
