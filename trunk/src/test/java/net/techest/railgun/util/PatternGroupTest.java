@@ -7,6 +7,8 @@ package net.techest.railgun.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 import junit.framework.TestCase;
+import net.techest.railgun.system.Resource;
+import net.techest.railgun.system.Shell;
 
 /**
  *
@@ -36,7 +38,7 @@ public class PatternGroupTest extends TestCase {
         String keyName = "";
         String input = "";
         boolean convert = false;
-        PatternGroup pg = new PatternGroup();
+        PatternGroup pg = new PatternGroup(new Resource(),new Shell());
         pg.addNewString("url", "uu$[1,2]", true);
         pg.addNewString("cookie", "aa$[3,4]", true);
         pg.addNewString("set", "ss$[5,6]", true);
