@@ -3,7 +3,7 @@
     <name>oabt</name>
     <description>我爱P2P电影抓取</description>
     <baseurl>*</baseurl>
-    <reloadtime>60000000</reloadtime>
+    <reloadtime>43200000</reloadtime>
     <stair>
         <fetch>
             <url>http://oabt.org/?page=$[1,3]</url>
