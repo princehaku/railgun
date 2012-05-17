@@ -28,8 +28,8 @@ import org.dom4j.Element;
  * @author baizhongwei.pt
  */
 public abstract class ActionNode {
-
-    public abstract void execute(Element node, Shell shell) throws Exception;
+    
+    public abstract Shell execute(Element node, Shell shell) throws Exception;
 
     protected boolean canPattern(Element element) {
         return true;

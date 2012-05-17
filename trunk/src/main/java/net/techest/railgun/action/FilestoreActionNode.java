@@ -36,7 +36,7 @@ import org.dom4j.Element;
 public class FilestoreActionNode extends ActionNode {
 
     @Override
-    public void execute(Element node, Shell shell) throws Exception {
+    public Shell execute(Element node, Shell shell) throws Exception {
         // 参数path是必须的
         if (node.element("path") == null) {
             throw new ActionException("FilestoreNode 需要参数 path");
@@ -83,5 +83,7 @@ public class FilestoreActionNode extends ActionNode {
         if (node.element("data") != null) {
             node.element("data").detach();
         }
+        
+        return shell;
     }
 }

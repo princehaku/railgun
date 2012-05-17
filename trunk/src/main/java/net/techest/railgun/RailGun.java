@@ -19,9 +19,12 @@
 package net.techest.railgun;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import net.techest.railgun.action.ActionNode;
 import net.techest.railgun.action.ActionNodeFactory;
+import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import net.techest.railgun.thread.RailGunFinishHandler;
 import net.techest.railgun.util.Log4j;
@@ -40,7 +43,6 @@ public class RailGun {
     private long lastRunTime = 0;
     private long nextRunTime = 0;
     private RailGunFinishHandler handler;
-    
     private boolean reload;
 
     /**
@@ -69,12 +71,30 @@ public class RailGun {
         }
         Log4j.getInstance().info("Execute Action " + e.getName());
         // 执行
-        ActionNodeFactory.executeAction(action, e, shell);
+        shell = ActionNodeFactory.executeAction(action, e, shell);
 
         for (Iterator i = e.elementIterator(); i.hasNext();) {
             Element childe = (Element) i.next();
             // 处理子节点 递归
             applyAction(childe, shell);
+        }
+        // 如果shell需要join 进行资源join操作
+        if (shell.getJoinShell() != null) {
+            Log4j.getInstance().info("fork节点合并");
+            Shell old = shell.getJoinShell();
+            if (old.getResources().size() != shell.getResources().size()) {
+                Log4j.getInstance().warn("join无法进行，节点资源数量不一致");
+            }
+            LinkedList<Resource> newReses = shell.getResources();
+            for (int j = 0, size = newReses.size(); j < size; j++) {
+                Resource newres = newReses.get(j);
+                Resource oldres = old.getResources().get(j);
+                HashMap<String, String> oldParams = oldres.getParams();
+                for (String key : oldParams.keySet()) {
+                    newres.putParam(key, oldres.getParam(key));
+                }
+            }
+            shell.setJoinShell(null);
         }
     }
 
@@ -82,11 +102,10 @@ public class RailGun {
         this.handler = handler;
     }
 
-
     public void setReload(boolean b) {
         this.reload = b;
     }
-    
+
     public boolean isReload() {
         return reload;
     }
@@ -103,7 +122,7 @@ public class RailGun {
         this.doc = doc;
         this.shell = shell;
     }
-    
+
     public long getLastRunTime() {
         return lastRunTime;
     }

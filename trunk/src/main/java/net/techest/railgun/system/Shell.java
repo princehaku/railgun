@@ -39,6 +39,8 @@ public class Shell implements Cloneable {
     Client client;
     // 资源类
     LinkedList<Resource> resources;
+    // 待重join操作的原始shell
+    private Shell joinShell = null;
 
     public String getBaseUrl() {
         return baseUrl;
@@ -107,5 +109,35 @@ public class Shell implements Cloneable {
             System.out.println("Cloning not allowed.");
             return this;
         }
+    }
+
+    public void setJoinShell(Shell shell) {
+        this.joinShell = shell;
+    }
+
+    public Shell getJoinShell() {
+        return this.joinShell;
+    }
+
+    public void clear() {
+        this.name = null;
+        this.baseUrl = null;
+        this.joinShell=null;
+        this.reloadTime = -1;
+        this.description = null;
+        this.maxReloadTime = -1;
+        this.client = null;
+        this.resources = null;
+    }
+    
+    public void clone(Shell s) {
+        this.name = s.name;
+        this.baseUrl = s.baseUrl;
+        this.joinShell = s.joinShell;
+        this.reloadTime = s.reloadTime;
+        this.description = s.description;
+        this.maxReloadTime = s.maxReloadTime;
+        this.client = s.client;
+        this.resources = s.resources;
     }
 }

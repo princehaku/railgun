@@ -37,7 +37,7 @@ import org.dom4j.Element;
 public class FetchActionNode extends ActionNode {
 
     @Override
-    public void execute(Element node, Shell shell) throws Exception {
+    public Shell execute(Element node, Shell shell) throws Exception {
         HttpClient client = (HttpClient) shell.getClient();
         shell.setClient(client);
         // url字段是必须的
@@ -175,5 +175,6 @@ public class FetchActionNode extends ActionNode {
             }
             shell.setResources(resnew);
         }
+        return shell;
     }
 }

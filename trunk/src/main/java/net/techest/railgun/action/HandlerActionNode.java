@@ -46,7 +46,7 @@ public class HandlerActionNode extends ActionNode {
     private static HashMap<String, String> fileHashes = new HashMap();
 
     @Override
-    public void execute(Element node, Shell shell) throws Exception {
+    public Shell execute(Element node, Shell shell) throws Exception {
         // 动态编译和执行脚本
         if (node.getData() == null) {
             throw new ActionException("请输入Handler类名");
@@ -104,5 +104,6 @@ public class HandlerActionNode extends ActionNode {
         catch (Exception ex) {
             Log4j.getInstance().error("自定义类执行失败" + ex.getMessage());
         }
+        return shell;
     }
 }

@@ -34,7 +34,7 @@ import org.dom4j.Element;
 public class ShellActionNode extends ActionNode {
 
     @Override
-    public void execute(Element node, Shell shell) throws Exception{
+    public Shell execute(Element node, Shell shell) throws Exception{
         // name字段是必须的
         if (node.element("name") == null) {
             throw new ActionException("请设置railgun的Name标签");
@@ -69,5 +69,6 @@ public class ShellActionNode extends ActionNode {
         LinkedList<Resource> res = new LinkedList();
         res.add(new Resource());
         shell.setResources(res);
+        return shell;
     }
 }

@@ -39,7 +39,7 @@ public class ActionNodeFactory {
         return n;
     }
 
-    public static void executeAction(ActionNode action, Element element, Shell shell) throws Exception {
-        action.execute(element, shell);
+    public static Shell executeAction(ActionNode action, Element element, Shell shell) throws Exception {
+        return action.execute(element, shell);
     }
 }

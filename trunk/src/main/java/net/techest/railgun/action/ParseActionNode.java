@@ -18,7 +18,6 @@
  */
 package net.techest.railgun.action;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
@@ -44,44 +43,99 @@ class ParseActionNode extends ActionNode {
     }
 
     @Override
-    public void execute(Element node, Shell shell) throws Exception {
+    public Shell execute(Element node, Shell shell) throws Exception {
         if (node.attribute("method") == null || node.element("rule") == null) {
             throw new ActionException("ParseNode 需要rule属性");
         }
-        String rule = node.element("rule").getData().toString().trim();
+        String rule = node.elementTextTrim("rule");
         node.element("rule").detach();
+        String returnType = "html";
+        if (node.element("returnType") != null) {
+            returnType = node.elementTextTrim("returnType");
+            node.element("returnType").detach();
+        }
+        String set = node.elementTextTrim("set");
+        if (node.element("set") != null) {
+            node.element("set").detach();
+        }
 
         Log4j.getInstance().info("当前资源节点内有" + shell.getResources().size());
         LinkedList<Resource> resnew = new LinkedList<Resource>();
         for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
-            if (node.attribute("method").getData().toString().equals("dom")) {
+            if (node.attributeValue("method").equals("dom")) {
                 try {
                     // dom搜索 使用jsoup
-                    Document doc = Jsoup.parse(new ByteArrayInputStream(res.getBytes()), res.getCharset(), "");
+                    String htmlContent = res.getText();
+                    // --特别的 针对没有table标签的tr进行处理--
+                    if (res.getText().indexOf("tr") >= 0 && res.getText().indexOf("table") == -1) {
+                        htmlContent = "<table>" + htmlContent + "</table>";
+                    }
+                    // --特别的 针对没有html标签的进行处理--
+                    if (res.getText().indexOf("html") == -1) {
+                        htmlContent = "<html><body>" + htmlContent + "</body></html>";
+                    }
+                    Document doc = Jsoup.parse(htmlContent);
                     Elements els = doc.select(rule);
+                    // 如果有set标记 存放到set中 不替换res
+                    if (set != null) {
+                        Resource r = (Resource) res.clone();
+                        if (els.size() > 0) {
+                            org.jsoup.nodes.Element e = els.get(0);
+                            String elementValue = e.outerHtml();
+                            if(returnType.equals("text")) {
+                                elementValue = e.text();
+                            }
+                            if(returnType.equals("html")) {
+                                elementValue = e.html();
+                            }
+                            if(returnType.equals("outerhtml")) {
+                                elementValue = e.outerHtml();
+                            }
+                            r.putParam(set, elementValue);
+                        } else {
+                            r.putParam(set, null);
+                        }
+                        resnew.add(r);
+                        continue;
+                    }
                     //循环els存放为新的r节点
                     for (Iterator ri = els.iterator(); ri.hasNext();) {
                         org.jsoup.nodes.Element el = (org.jsoup.nodes.Element) ri.next();
                         Resource r = (Resource) res.clone();
-                        r.setBytes(el.outerHtml().getBytes(res.getCharset()));
+                        byte[] valueBytes = el.outerHtml().getBytes(res.getCharset());
+                        r.setBytes(valueBytes);
                         resnew.add(r);
                     }
-                } catch (IOException ex) {
+                }
+                catch (IOException ex) {
                     Log4j.getInstance().warn("dom方式解析失败 " + ex.getMessage() + res.getCharset());
                 }
             }
-            if (node.attribute("method").getData().toString().equals("regxp")) {
+            if (node.attributeValue("method").equals("regxp")) {
                 // 正则搜索
                 Pattern ptn = Pattern.compile(rule);
                 Matcher m = ptn.matcher(res.toString());
+                // 如果有set标记 存放到set中 不替换res
+                if (set != null) {
+                    Resource r = (Resource) res.clone();
+                    if (m.find()) {
+                        String e = m.group(0);
+                        r.putParam(set, e);
+                    } else {
+                        r.putParam(set, null);
+                    }
+                    resnew.add(r);
+                    continue;
+                }
                 if (m.find()) {
                     try {
                         Resource r = (Resource) res.clone();
                         r.setBytes(m.group(0).getBytes(res.getCharset()));
                         r.setRegxpResult(m);
                         resnew.add(r);
-                    } catch (UnsupportedEncodingException ex) {
+                    }
+                    catch (UnsupportedEncodingException ex) {
                         Log4j.getInstance().error("不支持的编码 " + ex.getMessage() + res.getCharset());
                     }
                 } else {
@@ -92,5 +146,7 @@ class ParseActionNode extends ActionNode {
 
         Log4j.getInstance().info("处理后节点内有" + resnew.size());
         shell.setResources(resnew);
+
+        return shell;
     }
 }

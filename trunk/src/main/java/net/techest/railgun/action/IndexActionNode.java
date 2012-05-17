@@ -38,7 +38,7 @@ import org.dom4j.Element;
 public class IndexActionNode extends ActionNode {
 
     @Override
-    public void execute(Element node, Shell shell) throws Exception {
+    public Shell execute(Element node, Shell shell) throws Exception {
         // 初始化索引目录
         String indexdir = Configure.getSystemConfig().getString("INDEX_DIR", "indexes");
         Index index = null;
@@ -113,5 +113,6 @@ public class IndexActionNode extends ActionNode {
         index.applyToDisk();
         data.detach();
         Log4j.getInstance().info("Index 存入完成");
+        return shell;
     }
 }

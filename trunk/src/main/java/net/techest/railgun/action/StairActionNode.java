@@ -33,11 +33,15 @@ import org.dom4j.Element;
 public class StairActionNode extends ActionNode {
 
     @Override
-    public void execute(Element node, Shell shell) throws Exception {
+    public Shell execute(Element node, Shell shell) throws Exception {
         // stair可以进行资源节点克隆
         if (node.attribute("fork") != null && node.attribute("fork").getData().toString().equals("true")) {
             Log4j.getInstance().info("Shell Cloned");
             Shell newshell = (Shell) shell.clone();
+            if (node.attribute("join") != null && node.attribute("join").getData().toString().equals("true")) {
+                Log4j.getInstance().info("Join Shell Setted");
+                newshell.setJoinShell(shell);
+            }
             shell = newshell;
         }
         // 是否进行资源清理
@@ -48,6 +52,7 @@ public class StairActionNode extends ActionNode {
             shell.setResources(res);
             shell.setClient(new HttpClient());
         }
-
+        
+        return shell;
     }
 }

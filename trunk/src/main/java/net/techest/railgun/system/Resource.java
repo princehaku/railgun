@@ -89,7 +89,11 @@ public class Resource implements Cloneable {
      * @return
      */
     public void putParam(String key, String value) {
-        this.params.put(key.trim(), value.trim());
+        if(value == null) {
+            this.params.put(key.trim(), value);
+        } else {
+            this.params.put(key.trim(), value.trim());
+        }
     }
 
     /**

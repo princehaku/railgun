@@ -36,7 +36,7 @@ import org.dom4j.Element;
 public class DbstoreActionNode extends ActionNode {
 
     @Override
-    public void execute(Element node, Shell shell) throws Exception {
+    public Shell execute(Element node, Shell shell) throws Exception {
         if (node.attribute("source") == null) {
             throw new ActionException("错误的数据库节点标记");
         }
@@ -115,5 +115,7 @@ public class DbstoreActionNode extends ActionNode {
         }
         
         connection.getConnection().close();
+        
+        return shell;
     }
 }

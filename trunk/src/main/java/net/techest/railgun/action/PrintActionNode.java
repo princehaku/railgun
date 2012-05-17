@@ -33,8 +33,8 @@ class PrintActionNode extends ActionNode {
     }
     
     @Override
-    public void execute(Element node, Shell bullet) throws Exception {
-        for (Iterator i = bullet.getResources().iterator(); i.hasNext();) {
+    public Shell execute(Element node, Shell shell) throws Exception {
+        for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
             for (String key : res.getParams().keySet()) {
                 System.out.println("[key]" + key);
@@ -42,5 +42,6 @@ class PrintActionNode extends ActionNode {
             }
             System.out.println("[content]" + res.toString());
         }
+        return shell;
     }
 }
