@@ -159,6 +159,9 @@ public class RailGunThreadPool extends TimerTask {
             f.mkdirs();
         }
         File[] files = f.listFiles();
+        if (files == null) {
+            return;
+        }
         for (int i = 0, size = files.length; i < size; i++) {
             File file = files[i];
             String prefix = file.getName().substring(file.getName().lastIndexOf(".") + 1);
