@@ -35,6 +35,12 @@ and open the template in the editor.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute name="join">
+            <xs:simpleType>
+                <xs:restriction base="xs:boolean">
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="reset">
             <xs:simpleType>
                 <xs:restriction base="xs:boolean">
@@ -97,6 +103,8 @@ and open the template in the editor.
     <xs:complexType name="parse">
         <xs:all>
             <xs:element name="rule" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="returnType" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="set" type="xs:string" minOccurs="0" maxOccurs="1"/>
         </xs:all>
         <xs:attribute name="method">
             <xs:simpleType>
