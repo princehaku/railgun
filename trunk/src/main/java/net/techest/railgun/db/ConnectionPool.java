@@ -30,7 +30,6 @@ public class ConnectionPool {
      *
      */
     private static class holder {
-
         static ConnectionPool instance = new ConnectionPool();
     }
 
@@ -61,6 +60,13 @@ public class ConnectionPool {
         return dataSource;
     }
 
+    /**
+     * 从数据连接池中连接
+     *
+     * @param dbPoolName
+     * @return
+     * @throws DBException
+     */
     public BasicDataSource getFromPool(String dbPoolName) throws DBException {
         BasicDataSource dataSource = null;
         String key = MD5.getMD5(dbPoolName.getBytes());
