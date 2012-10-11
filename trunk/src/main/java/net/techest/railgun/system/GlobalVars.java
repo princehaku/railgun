@@ -16,8 +16,6 @@
  *  Created on : May 16, 2012 , 10:46:54 AM
  *  Author     : princehaku
  */
-
-
 package net.techest.railgun.system;
 
 import java.util.HashMap;
@@ -29,8 +27,8 @@ import java.util.regex.Matcher;
  */
 public class GlobalVars {
     // 参数组,用于参数替换
-    private HashMap<String, String> params = new HashMap<String, String>();
 
+    private HashMap<String, String> params = new HashMap<String, String>();
 
     /**
      * 得到设置的参数
@@ -55,6 +53,7 @@ public class GlobalVars {
     public HashMap<String, String> getParams() {
         return this.params;
     }
+
     /**
      * 设置参数 之后xml中的值可以通过${key}变量进行获取
      *
@@ -76,7 +75,7 @@ public class GlobalVars {
         }
         for (int regxpu = 0, regsize = regxpResult.groupCount();
                 regxpu <= regsize; regxpu++) {
-             this.putParam(regxpu + "", regxpResult.group(regxpu));
+            this.putParam(regxpu + "", regxpResult.group(regxpu));
         }
     }
 }

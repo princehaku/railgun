@@ -14,31 +14,29 @@
  *
  *  Author     : princehaku
  */
-
 package net.techest.util;
 
 import java.text.ParseException;
 
 public class StringDivider {
-	private String left;
-	private String right;
-	
-	public StringDivider(String string,String delim) throws ParseException{
-		int pos=string.indexOf(delim);
-		if(pos==-1){
-			throw new ParseException("无法分隔", 0);
-		}
-		this.left=(string.substring(0, pos));
-		this.right=string.substring(pos+delim.length(),string.length());
-	}
 
-	public String getLeft() {
-		return left;
-	}
+    private String left;
+    private String right;
 
-	public String getRight() {
-		return right;
-	}
+    public StringDivider(String string, String delim) throws ParseException {
+        int pos = string.indexOf(delim);
+        if (pos == -1) {
+            throw new ParseException("无法分隔", 0);
+        }
+        this.left = (string.substring(0, pos));
+        this.right = string.substring(pos + delim.length(), string.length());
+    }
 
+    public String getLeft() {
+        return left;
+    }
 
+    public String getRight() {
+        return right;
+    }
 }

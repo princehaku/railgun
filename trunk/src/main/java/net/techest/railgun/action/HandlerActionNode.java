@@ -64,13 +64,12 @@ public class HandlerActionNode extends ActionNode {
         // 直接加载一次
         boolean loaded = false;
         // 不在hash里的有更新的文件则重新编译
-        String newHash = MD5.getMD5(( file.getName() + file.length() + file.lastModified() ).getBytes());
+        String newHash = MD5.getMD5((file.getName() + file.length() + file.lastModified()).getBytes());
         if (HandlerActionNode.fileHashes.containsKey(file.getName()) && HandlerActionNode.fileHashes.get(file.getName()).equals(newHash)) {
             try {
-                handler = (Handler) ((classLoader.loadClass(className)).newInstance() );
+                handler = (Handler) ((classLoader.loadClass(className)).newInstance());
                 loaded = true;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Log4j.getInstance().info(className + "加载失败，尝试动态编译。" + ex.getMessage());
             }
         }
@@ -86,11 +85,10 @@ public class HandlerActionNode extends ActionNode {
                 if (status != 0) {
                     throw new ActionException("编译script失败" + status);
                 }
-                handler = (Handler) ((classLoader.loadClass(className)).newInstance() );
+                handler = (Handler) ((classLoader.loadClass(className)).newInstance());
                 loaded = true;
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new ActionException(className + "类动态加载失败" + ex.getMessage());
         }
         HandlerActionNode.fileHashes.put(file.getName(), newHash);
@@ -100,8 +98,7 @@ public class HandlerActionNode extends ActionNode {
                 Resource res = (Resource) i.next();
                 handler.process(res);
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             Log4j.getInstance().error("自定义类执行失败" + ex.getMessage());
         }
         return shell;

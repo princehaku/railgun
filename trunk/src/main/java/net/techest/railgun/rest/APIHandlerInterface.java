@@ -25,5 +25,6 @@ import net.techest.railgun.net.QuestParams;
  * @author princehaku
  */
 public interface APIHandlerInterface {
+
     public void handle(QuestParams requestParams, JSONObject responseJson);
 }

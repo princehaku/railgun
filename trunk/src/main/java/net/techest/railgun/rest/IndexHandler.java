@@ -44,8 +44,7 @@ public class IndexHandler implements APIHandlerInterface {
         Index index = null;
         try {
             index = new Index(indexdir, true);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             responseJson.put("errmsg", "Index Dir读取失败" + ex.getMessage());
             return;
         }

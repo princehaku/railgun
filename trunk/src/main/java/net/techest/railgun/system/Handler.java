@@ -16,16 +16,14 @@
  *  Created on : Mar 23, 2012 , 8:12:14 PM
  *  Author     : princehaku
  */
-
-
 package net.techest.railgun.system;
 
-/**处理器
- * 可以对资源节点进行操作
+/**
+ * 处理器 可以对资源节点进行操作
+ *
  * @author baizhongwei.pt
  */
 public interface Handler {
 
     public void process(Resource resource);
-
 }

@@ -29,7 +29,7 @@ public class MD5 {
             java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
             md.update(source);
             // MD5 的计算结果是一个 128 位的长整数，
-            byte tmp[] = md.digest();          
+            byte tmp[] = md.digest();
             s = StringTools.bin2hex(tmp);
         } catch (Exception e) {
             e.printStackTrace();

@@ -30,14 +30,27 @@ public class ConnectionPool {
      *
      */
     private static class holder {
+
         static ConnectionPool instance = new ConnectionPool();
     }
 
+    /**
+     * 获取连接池
+     *
+     * @return
+     */
     public static ConnectionPool getSystemPool() {
         return ConnectionPool.holder.instance;
     }
     private HashMap<String, BasicDataSource> pools = new HashMap<String, BasicDataSource>();
 
+    /**
+     * 从系统属性里面进行数据连接池初始化
+     *
+     * @param dbPoolName
+     * @return
+     * @throws DBException
+     */
     private BasicDataSource setupDataSource(String dbPoolName) throws DBException {
         BasicDataSource dataSource = null;
         try {

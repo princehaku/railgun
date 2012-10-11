@@ -57,9 +57,8 @@ public class PatternHelper {
     }
 
     /**
-     * 根据既有规则进行字符串转换 注意得到的结果是个数组,哪怕只有一个值返回 支持的字段 $result 当前res的内容 $date
-     * yyyy-MM-dd $time HH:mm:ss $[number,number] 范围数字 $hash 资源hash值 ${key}
-     * 预存的资源 上一步正则返回值${group_id}
+     * 根据既有规则进行字符串转换 注意得到的结果是个数组,哪怕只有一个值返回 支持的字段 $result 当前res的内容 $date yyyy-MM-dd $time HH:mm:ss $[number,number] 范围数字
+     * $hash 资源hash值 ${key} 预存的资源 上一步正则返回值${group_id}
      *
      * @param input
      * @param m
@@ -77,8 +76,7 @@ public class PatternHelper {
             input = input.replaceAll("\\$result", res.toString().replaceAll("\\$", "\\\\\\$"));
             input = input.replaceAll("\\$hash", MD5.getMD5(res.getBytes()) + SHA.getSHA1(res.getBytes()));
             input = convertBase(input);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             Log4j.getInstance().warn("转换失败" + ex.getMessage());
         }

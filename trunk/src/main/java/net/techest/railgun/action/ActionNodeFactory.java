@@ -22,7 +22,8 @@ import net.techest.railgun.system.Shell;
 import net.techest.railgun.util.Log4j;
 import org.dom4j.Element;
 
-/**ActionNode自动装载工厂
+/**
+ * ActionNode自动装载工厂
  *
  * @author baizhongwei.pt
  */
@@ -39,6 +40,15 @@ public class ActionNodeFactory {
         return n;
     }
 
+    /**
+     * execute an actionNode
+     *
+     * @param action
+     * @param element
+     * @param shell
+     * @return
+     * @throws Exception
+     */
     public static Shell executeAction(ActionNode action, Element element, Shell shell) throws Exception {
         return action.execute(element, shell);
     }

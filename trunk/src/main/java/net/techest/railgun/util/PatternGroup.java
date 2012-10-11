@@ -25,22 +25,19 @@ import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 
 /**
- * 模式组.用于多批量替换 ("url", "uu$[1,2]", true); ("cookie", "aa$[3,4]", true); ("set",
- * "ss$[5,6]", true);  conver后转换为ArrayList<HashMap<String, String>>
+ * 模式组.用于多批量替换 ("url", "uu$[1,2]", true); ("cookie", "aa$[3,4]", true); ("set", "ss$[5,6]", true);
+ * conver后转换为ArrayList<HashMap<String, String>>
  *
  * @author baizhongwei.pt
  */
 public class PatternGroup {
 
     Resource res;
-    
     Shell shell;
-    
     private HashMap<String, ArrayList<String>> patterns = new HashMap<String, ArrayList<String>>();
-    
     private ArrayList<HashMap<String, String>> converted = new ArrayList<HashMap<String, String>>();
-    
-    public PatternGroup(Resource res, Shell shell){
+
+    public PatternGroup(Resource res, Shell shell) {
         this.res = res;
         this.shell = shell;
     }
@@ -48,15 +45,17 @@ public class PatternGroup {
     public void setRes(Resource res) {
         this.res = res;
     }
-    
+
     public void setShell(Shell shell) {
         this.shell = shell;
     }
-    /**添加新字符组到HashMap中
-     * 
+
+    /**
+     * 添加新字符组到HashMap中
+     *
      * @param keyName
      * @param input
-     * @param convert 
+     * @param convert
      */
     public void addNewString(String keyName, String input, boolean convert) {
         ArrayList<String> convertAll = new ArrayList<String>();
@@ -69,8 +68,10 @@ public class PatternGroup {
 
         this.patterns.put(keyName, convertAll);
     }
-    /**得到转换后的结果
-     * 
+
+    /**
+     * 得到转换后的结果
+     *
      * @return ArrayList<HashMap<String, String>>
      */
     public ArrayList<HashMap<String, String>> convert() {
@@ -79,11 +80,13 @@ public class PatternGroup {
         this.convertDeep(patterns, null, vr);
         return converted;
     }
-    /**递归处理
-     * 
+
+    /**
+     * 递归处理
+     *
      * @param patterns
      * @param keyName
-     * @param vr 
+     * @param vr
      */
     private void convertDeep(HashMap<String, ArrayList<String>> patterns, String keyName, ArrayList<String[]> vr) {
         Iterator pi = patterns.keySet().iterator();

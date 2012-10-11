@@ -71,8 +71,7 @@ public class StringTools {
         String returnString = "";
         try {
             returnString = new String(source, encode);
-        }
-        catch (UnsupportedEncodingException ex) {
+        } catch (UnsupportedEncodingException ex) {
             ex.printStackTrace();
         }
         return returnString;

@@ -83,7 +83,7 @@ public class FilestoreActionNode extends ActionNode {
         if (node.element("data") != null) {
             node.element("data").detach();
         }
-        
+
         return shell;
     }
 }

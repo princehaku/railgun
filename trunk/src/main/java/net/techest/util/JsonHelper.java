@@ -15,13 +15,13 @@
  *  Created on : 2011-9-5, 下午4:29:30
  *  Author     : princehaku
  */
-
 package net.techest.util;
 
 import net.sf.json.JSONArray;
 
 public class JsonHelper {
-	public JSONArray StringToJson(String string){
-		return JSONArray.fromObject(string);
-	}
+
+    public JSONArray StringToJson(String string) {
+        return JSONArray.fromObject(string);
+    }
 }

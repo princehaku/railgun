@@ -31,12 +31,10 @@ import net.techest.railgun.util.Log4j;
 public class RailGunFinishHandler {
 
     private ArrayList<RailGun> appendingRemoval;
-    
     final byte[] lock = new byte[]{};
-    
     private LinkedList<RailGunThread> railgunThreads;
 
-    RailGunFinishHandler(ArrayList<RailGun> railguns,LinkedList<RailGunThread> railgunThreads) {
+    RailGunFinishHandler(ArrayList<RailGun> railguns, LinkedList<RailGunThread> railgunThreads) {
         this.appendingRemoval = railguns;
         this.railgunThreads = railgunThreads;
     }
@@ -46,7 +44,7 @@ public class RailGunFinishHandler {
             long runtime = System.currentTimeMillis() - railgun.getLastRunTime();
             Log4j.getInstance().info("完成 RailGun " + railgun.getShell().getName() + " 运行时间 [" + runtime + " ms] ");
             railgun.setNextRunTime(System.currentTimeMillis() + railgun.getShell().getReloadTime());
-            if(railgun.isReload()) {
+            if (railgun.isReload()) {
                 railgun.setNextRunTime(System.currentTimeMillis());
                 railgun.setReload(false);
             }
@@ -63,7 +61,7 @@ public class RailGunFinishHandler {
         }
     }
 
-    synchronized void onError(RailGun railgun,Exception ex) {
+    synchronized void onError(RailGun railgun, Exception ex) {
         synchronized (lock) {
             appendingRemoval.add(railgun);
             for (Iterator<RailGunThread> rt = railgunThreads.iterator(); rt.hasNext();) {
@@ -72,7 +70,7 @@ public class RailGunFinishHandler {
                     rt.remove();
                 }
             }
-            Log4j.getInstance().error("RailGun " + railgun.getShell().getName() + " 发生致命错误，强行终止 " +ex.getMessage());
+            Log4j.getInstance().error("RailGun " + railgun.getShell().getName() + " 发生致命错误，强行终止 " + ex.getMessage());
             ex.printStackTrace();
         }
     }

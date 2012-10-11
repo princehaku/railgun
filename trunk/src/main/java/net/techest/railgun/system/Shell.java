@@ -102,8 +102,8 @@ public class Shell implements Cloneable {
     public Object clone() {
         try {
             Shell s = (Shell) super.clone();
-            s.setClient((Client)this.client.clone());
-            s.setResources((LinkedList<Resource>)this.resources.clone());
+            s.setClient((Client) this.client.clone());
+            s.setResources((LinkedList<Resource>) this.resources.clone());
             return s;
         } catch (CloneNotSupportedException e) {
             System.out.println("Cloning not allowed.");
@@ -122,14 +122,14 @@ public class Shell implements Cloneable {
     public void clear() {
         this.name = null;
         this.baseUrl = null;
-        this.joinShell=null;
+        this.joinShell = null;
         this.reloadTime = -1;
         this.description = null;
         this.maxReloadTime = -1;
         this.client = null;
         this.resources = null;
     }
-    
+
     public void clone(Shell s) {
         this.name = s.name;
         this.baseUrl = s.baseUrl;

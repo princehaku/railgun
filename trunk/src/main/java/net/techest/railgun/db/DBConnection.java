@@ -40,7 +40,7 @@ public class DBConnection {
      * @throws DBException
      */
     public DBConnection(String sourceName) throws DBException {
-        
+
         DataSource d = ConnectionPool.getSystemPool().getFromPool(sourceName);
         // 数据库连接失败的话屏蔽掉异常但是打印错误
         this.connection = null;

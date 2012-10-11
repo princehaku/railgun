@@ -23,7 +23,6 @@ import net.techest.railgun.net.Client;
 import net.techest.railgun.net.HttpClient;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
-import net.techest.railgun.util.Log4j;
 import org.dom4j.Element;
 
 /**
@@ -34,7 +33,7 @@ import org.dom4j.Element;
 public class ShellActionNode extends ActionNode {
 
     @Override
-    public Shell execute(Element node, Shell shell) throws Exception{
+    public Shell execute(Element node, Shell shell) throws Exception {
         // name字段是必须的
         if (node.element("name") == null) {
             throw new ActionException("请设置railgun的Name标签");
@@ -63,7 +62,7 @@ public class ShellActionNode extends ActionNode {
         // 连接器初始化 如果没有默认使用httpclient
         Client hc = new HttpClient();
         if (node.element("client") == null) {
-            //Log4j.getInstance().info("Your Shell Has No Gun To Lauther");
+            // Log4j.getInstance().info("Your Shell Has No Gun To Lauther");
         }
         shell.setClient(hc);
         LinkedList<Resource> res = new LinkedList();

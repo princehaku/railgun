@@ -83,13 +83,13 @@ class ParseActionNode extends ActionNode {
                         if (els.size() > 0) {
                             org.jsoup.nodes.Element e = els.get(0);
                             String elementValue = e.outerHtml();
-                            if(returnType.equals("text")) {
+                            if (returnType.equals("text")) {
                                 elementValue = e.text();
                             }
-                            if(returnType.equals("html")) {
+                            if (returnType.equals("html")) {
                                 elementValue = e.html();
                             }
-                            if(returnType.equals("outerhtml")) {
+                            if (returnType.equals("outerhtml")) {
                                 elementValue = e.outerHtml();
                             }
                             r.putParam(set, elementValue);
@@ -107,8 +107,7 @@ class ParseActionNode extends ActionNode {
                         r.setBytes(valueBytes);
                         resnew.add(r);
                     }
-                }
-                catch (IOException ex) {
+                } catch (IOException ex) {
                     Log4j.getInstance().warn("dom方式解析失败 " + ex.getMessage() + res.getCharset());
                 }
             }
@@ -134,8 +133,7 @@ class ParseActionNode extends ActionNode {
                         r.setBytes(m.group(0).getBytes(res.getCharset()));
                         r.setRegxpResult(m);
                         resnew.add(r);
-                    }
-                    catch (UnsupportedEncodingException ex) {
+                    } catch (UnsupportedEncodingException ex) {
                         Log4j.getInstance().error("不支持的编码 " + ex.getMessage() + res.getCharset());
                     }
                 } else {

@@ -87,8 +87,7 @@ public class RailGunThreadPool extends TimerTask {
             railgun.setHandler(this.handler);
             railguns.add(railgun);
             Log4j.getInstance().info("RailGun" + xmlpath + "添加完成，等待运行");
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             // 出错了.不把shell添加到节点域
             Log4j.getInstance().error("AddShell Failed Ex: " + ex.getMessage());
             railguns.remove(railgun);
@@ -166,7 +165,7 @@ public class RailGunThreadPool extends TimerTask {
             File file = files[i];
             String prefix = file.getName().substring(file.getName().lastIndexOf(".") + 1);
             if (prefix.toLowerCase().equals("xml")) {
-                String newHash = MD5.getMD5(( file.getName() + file.length() + file.lastModified() ).getBytes());
+                String newHash = MD5.getMD5((file.getName() + file.length() + file.lastModified()).getBytes());
                 if (fileHashes.get(file.getName()) == null || !fileHashes.get(file.getName()).equals(newHash)) {
                     try {
                         Log4j.getInstance().info(file.getName() + " 有更新");
@@ -194,8 +193,7 @@ public class RailGunThreadPool extends TimerTask {
                             this.addShellXml(file.getAbsolutePath());
                         }
                         fileHashes.put(file.getName(), newHash);
-                    }
-                    catch (AddShellException ex) {
+                    } catch (AddShellException ex) {
                     }
                 }
             }

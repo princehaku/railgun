@@ -32,7 +32,6 @@ public class SHA {
             byte tmp[] = md.digest();
             s = StringTools.bin2hex(tmp);
         } catch (Exception e) {
-            
         }
         return s;
     }

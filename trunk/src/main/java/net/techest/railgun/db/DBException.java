@@ -16,18 +16,15 @@
  *  Created on : Apr 24, 2012 , 9:56:02 AM
  *  Author     : princehaku
  */
-
-
 package net.techest.railgun.db;
 
 /**
  *
  * @author baizhongwei.pt
  */
-public class DBException extends Exception{
+public class DBException extends Exception {
 
     public DBException(String messge) {
         super(messge);
     }
-
 }
