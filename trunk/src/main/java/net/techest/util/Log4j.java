@@ -12,21 +12,44 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
+ *  Created on : 2010-11-17, 8:21:36
  *  Author     : princehaku
  */
+
 package net.techest.util;
 
-public class Timer {
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+/**日志类
+ *
+ * @author princehaku
+ */
+public class Log4j {
 
-    private long interval;
-    private long sysTime;
+    private static class InstanceHolder {
 
-    public void setInterval(long milliontime) {
-        this.interval = milliontime;
-        this.sysTime = System.currentTimeMillis();
+        final static Log4j instance = new Log4j();
+    }
+    /**得到单例
+     * 
+     * @return 
+     */
+    public static Logger getInstance() {
+        return InstanceHolder.instance.getLogger();
     }
 
-    public boolean isTimeUp() {
-        return (System.currentTimeMillis() - this.sysTime > this.interval);
+    private Logger logger;
+
+    public Logger getLogger(){
+        
+        if(logger==null){
+            
+            BasicConfigurator.configure();
+        }
+
+        logger = Logger.getLogger("");
+        
+        return logger;
     }
+    
 }
