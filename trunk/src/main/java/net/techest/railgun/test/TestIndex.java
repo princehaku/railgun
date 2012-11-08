@@ -57,7 +57,7 @@ public class TestIndex {
         iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
         IndexWriter writer = new IndexWriter(ramDir, iwc);
         Document doc = new Document();
-        Field f= new Field("source", "虽然lucene没有定义一个确定的输入文档格式，但越来越多的人想到使用一个标准的中间格式作为Lucene的数据导入接口，然后其他数据，比如PDF只需要通过解析器转换成标准的中间格式就可以进行数据索引了。", Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES);
+        Field f = new Field("source", "虽然lucene没有定义一个确定的输入文档格式，但越来越多的人想到使用一个标准的中间格式作为Lucene的数据导入接口，然后其他数据，比如PDF只需要通过解析器转换成标准的中间格式就可以进行数据索引了。", Field.Store.YES, Field.Index.ANALYZED, Field.TermVector.YES);
         doc.add(f);
         writer.addDocument(doc);
         writer.close();

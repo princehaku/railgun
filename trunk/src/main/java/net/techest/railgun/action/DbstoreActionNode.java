@@ -29,7 +29,7 @@ import net.techest.railgun.util.PatternHelper;
 import org.dom4j.Element;
 
 /**
- * 数据库存储类
+ * 数据库存储类 Save Resource To Db
  *
  * @author baizhongwei.pt
  */
@@ -44,8 +44,7 @@ public class DbstoreActionNode extends ActionNode {
         DBConnection connection = null;
         try {
             connection = new DBConnection(source);
-        }
-        catch (DBException ex) {
+        } catch (DBException ex) {
             if (node.elements("mapping") != null) {
                 node.elements("mapping").clear();
             }
@@ -92,8 +91,7 @@ public class DbstoreActionNode extends ActionNode {
                             Log4j.getInstance().debug("DB : Consist已存在 跳过存入");
                             continue;
                         }
-                    }
-                    catch (DBException ex) {
+                    } catch (DBException ex) {
                         Log4j.getInstance().error(ex.getMessage());
                     }
                 }
@@ -104,18 +102,17 @@ public class DbstoreActionNode extends ActionNode {
                         res.putParam("id", +id + "");
                         Log4j.getInstance().debug("[ID] " + id + " 存入表 " + formName + " 成功");
                     }
-                }
-                catch (DBException ex) {
+                } catch (DBException ex) {
                     Log4j.getInstance().error(ex.getMessage());
                 }
- 
+
             }
             Log4j.getInstance().info("DB " + formName + " 存入完成");
             mapping.detach();
         }
-        
+
         connection.getConnection().close();
-        
+
         return shell;
     }
 }

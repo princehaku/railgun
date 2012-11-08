@@ -22,20 +22,18 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 /**
- * 请求参数类 方便把参数组合成字符串
- * 不会经过urlencode
- * 
+ * 请求参数类 方便把参数组合成字符串 不会经过urlencode
+ *
  * @author princehaku
  *
  */
 public class QuestParams extends HashMap<String, String> {
-    
-    /**参数组合成字符串
-    * 不会经过urlencode
-    * 
-    * @author princehaku
-    *
-    */
+
+    /**
+     * 参数组合成字符串 不会经过urlencode
+     *
+     * @return String
+     */
     @Override
     public String toString() {
         Iterator<Entry<String, String>> ir = this.entrySet().iterator();
@@ -55,9 +53,9 @@ public class QuestParams extends HashMap<String, String> {
     public Iterator<Entry<String, String>> getIterator() {
         return this.entrySet().iterator();
     }
-    
-    public String get(String key,String defaultValue) {
-        if(this.get(key) != null){
+
+    public String get(String key, String defaultValue) {
+        if (this.get(key) != null) {
             return this.get(key);
         }
         return defaultValue;

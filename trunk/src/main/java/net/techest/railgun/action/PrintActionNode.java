@@ -23,15 +23,16 @@ import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import org.dom4j.Element;
 
-/**打印resource信息
+/**
+ * 打印resource信息
  *
  * @author baizhongwei.pt
  */
 class PrintActionNode extends ActionNode {
-    
+
     public PrintActionNode() {
     }
-    
+
     @Override
     public Shell execute(Element node, Shell shell) throws Exception {
         for (Iterator i = shell.getResources().iterator(); i.hasNext();) {

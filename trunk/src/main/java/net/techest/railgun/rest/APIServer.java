@@ -34,6 +34,7 @@ public class APIServer {
     }
 
     private static class holder {
+
         static APIServer holder = new APIServer();
     };
 

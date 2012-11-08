@@ -33,8 +33,7 @@ public class IndexFactory {
             if (readOnly == false) {
             }
             index = new Index(indexdir, readOnly);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new IndexException(ex.getMessage());
         }
         return index;

@@ -16,7 +16,6 @@
  *  Created on : Mar 22, 2012 , 2:04:26 PM
  *  Author     : princehaku
  */
-
 package net.techest.railgun.net;
 
 import java.net.URL;
@@ -47,22 +46,24 @@ public interface Client extends Cloneable {
 
     /**
      *
-     * @param charset 页面编码
-     * 可以指定auto然后会自动从Content-Type猜测
+     * @param charset 页面编码 可以指定auto然后会自动从Content-Type猜测
      */
     void setCharset(String charset);
 
-    /**设置响应超时时间
-     * 默认30000毫秒
+    /**
+     * 设置响应超时时间 默认30000毫秒
+     *
      * @param timemillons
      */
     void setResponseTimeOut(int timemillons);
-    
-    /**设置连接超时时间
-     * 默认10000毫秒
+
+    /**
+     * 设置连接超时时间 默认10000毫秒
+     *
      * @param timemillons
      */
     void setConnectTimeOut(int timemillons);
+
     /**
      * 设置请求的url
      *
@@ -70,5 +71,4 @@ public interface Client extends Cloneable {
      * @throws MalformedURLException
      */
     void setUrl(String url);
-
 }

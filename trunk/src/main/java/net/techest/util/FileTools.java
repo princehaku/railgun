@@ -25,21 +25,23 @@ import java.io.*;
  * @author princehaku
  */
 public class FileTools {
-    /**读取一个文件的全部内容
+
+    /**
+     * 读取一个文件的全部内容
      *
      * @param filePath
      * @return
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public static String getContent(String filePath){
-        FileReader fr=null;
+    public static String getContent(String filePath) {
+        FileReader fr = null;
         String strContent = "";
         String line = "";
         try {
             fr = new FileReader(filePath);
         } catch (FileNotFoundException ex) {
-            Log4j.getInstance().error("FileTools"+ex.getMessage());
+            Log4j.getInstance().error("FileTools" + ex.getMessage());
         }
         BufferedReader br = new BufferedReader(fr);
 
@@ -48,13 +50,14 @@ public class FileTools {
                 strContent += line;
             }
         } catch (IOException ex) {
-            Log4j.getInstance().error("FileTools"+ex.getMessage());
+            Log4j.getInstance().error("FileTools" + ex.getMessage());
         }
 
         return strContent;
     }
 
-    /**读取一个文件的全部内容
+    /**
+     * 读取一个文件的全部内容
      *
      * @param filePath
      * @param encode
@@ -62,14 +65,14 @@ public class FileTools {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public static String getContent(String filePath,String enCode) throws UnsupportedEncodingException{
-        InputStreamReader read =null;
+    public static String getContent(String filePath, String enCode) throws UnsupportedEncodingException {
+        InputStreamReader read = null;
         String strContent = "";
         String line = "";
         try {
-            read   =  new InputStreamReader (new FileInputStream(filePath),enCode);
+            read = new InputStreamReader(new FileInputStream(filePath), enCode);
         } catch (FileNotFoundException ex) {
-            Log4j.getInstance().error("FileTools"+ex.getMessage());
+            Log4j.getInstance().error("FileTools" + ex.getMessage());
         }
 
         BufferedReader br = new BufferedReader(read);
@@ -79,22 +82,24 @@ public class FileTools {
                 strContent += line;
             }
         } catch (IOException ex) {
-            Log4j.getInstance().error("FileTools"+ex.getMessage());
+            Log4j.getInstance().error("FileTools" + ex.getMessage());
         }
 
         return strContent;
     }
 
-    /**得到一个文件的后缀名
+    /**
+     * 得到一个文件的后缀名
      *
      * @param File file
      * @return
      */
     public static String getFileExt(File file) {
-        String   filename   =   file.getName();
-        int   index   =   filename.lastIndexOf( ".");
-        if(index   <0   ||   index==filename.length()-1)
-            return   "";
-        return   filename.substring(index+1).toLowerCase();
+        String filename = file.getName();
+        int index = filename.lastIndexOf(".");
+        if (index < 0 || index == filename.length() - 1) {
+            return "";
+        }
+        return filename.substring(index + 1).toLowerCase();
     }
 }

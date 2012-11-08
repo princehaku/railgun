@@ -65,7 +65,7 @@ public class FetchActionNode extends ActionNode {
         if (node.element("charset") != null) {
             charset = node.elementTextTrim("charset");
             node.element("charset").detach();
-        } 
+        }
         // 超时设置
         if (node.element("timeout") != null) {
             int timemillons = Integer.parseInt(node.element("timeout").getData().toString());
@@ -124,12 +124,12 @@ public class FetchActionNode extends ActionNode {
         // 循环资源节点
         for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
             Resource res = (Resource) i.next();
-            PatternGroup pg = new PatternGroup(res,shell);
+            PatternGroup pg = new PatternGroup(res, shell);
             pg.addNewString("url", url, true);
-            pg.addNewString("content", content,true);
+            pg.addNewString("content", content, true);
             pg.addNewString("cookie-string", cookieString, true);
-                
-            
+
+
             String newurl = url;
             ArrayList<HashMap<String, String>> pgs = pg.convert();
             // 循环匹配组
@@ -140,12 +140,11 @@ public class FetchActionNode extends ActionNode {
                 try {
                     new URL(newurl);
                     // 如果不在baseUrl范围内 不抓取
-                    if (!( shell.getBaseUrl().equals("*") || newurl.indexOf(shell.getBaseUrl()) != -1 )) {
+                    if (!(shell.getBaseUrl().equals("*") || newurl.indexOf(shell.getBaseUrl()) != -1)) {
                         Log4j.getInstance().warn("URI " + newurl + " Doesn't Match BaseURL");
                         continue;
                     }
-                }
-                catch (MalformedURLException ex) {
+                } catch (MalformedURLException ex) {
                     Log4j.getInstance().warn("URI " + ex.getMessage());
                 }
                 Log4j.getInstance().info("Fetching " + newurl);
@@ -159,7 +158,7 @@ public class FetchActionNode extends ActionNode {
                     // 重设编码
                     client.setCharset(charset);
                     // 重设cookie
-                    if (!hash.get("cookie-string") .equals("")) {
+                    if (!hash.get("cookie-string").equals("")) {
                         cookie.fromString(hash.get("cookie-string"));
                         client.setCookie(cookie);
                     }
@@ -168,8 +167,7 @@ public class FetchActionNode extends ActionNode {
                     newResNode.putParam("url", newurl);
                     newResNode.putParam("cookie", client.getCookieString());
                     resnew.add(newResNode);
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     Log4j.getInstance().warn("Fetch Error " + ex.getMessage());
                 }
             }

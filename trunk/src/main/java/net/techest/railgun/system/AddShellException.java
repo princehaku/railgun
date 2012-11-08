@@ -16,8 +16,6 @@
  *  Created on : Apr 6, 2012 , 4:27:59 PM
  *  Author     : princehaku
  */
-
-
 package net.techest.railgun.system;
 
 /**
@@ -28,5 +26,4 @@ public class AddShellException extends Exception {
 
     public AddShellException(Exception ex) {
     }
-
 }

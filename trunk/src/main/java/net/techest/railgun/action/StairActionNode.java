@@ -52,7 +52,7 @@ public class StairActionNode extends ActionNode {
             shell.setResources(res);
             shell.setClient(new HttpClient());
         }
-        
+
         return shell;
     }
 }

@@ -16,8 +16,6 @@
  *  Created on : May 15, 2012 , 11:07:23 AM
  *  Author     : princehaku
  */
-
-
 package net.techest.railgun.index;
 
 /**
@@ -25,7 +23,7 @@ package net.techest.railgun.index;
  * @author baizhongwei.pt
  */
 class IndexException extends Exception {
-    
+
     public IndexException(String messge) {
         super(messge);
     }

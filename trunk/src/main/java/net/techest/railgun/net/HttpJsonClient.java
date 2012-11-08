@@ -20,6 +20,7 @@ package net.techest.railgun.net;
 import net.sf.json.JSONObject;
 
 /**
+ * 适配器可以从结果解析出json结果
  *
  */
 public class HttpJsonClient extends HttpClient implements Cloneable {

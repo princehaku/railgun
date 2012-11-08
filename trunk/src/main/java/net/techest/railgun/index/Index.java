@@ -39,6 +39,7 @@ import org.apache.lucene.util.Version;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
 /**
+ * 全文索引系统
  *
  * @author baizhongwei.pt
  */
@@ -84,13 +85,11 @@ public class Index {
         ramIs = null;
         try {
             fsIs = new IndexSearcher(fsDir, true);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
         }
         try {
             ramIs = new IndexSearcher(ramDir, true);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
         }
     }
 
@@ -112,8 +111,7 @@ public class Index {
                     Log4j.getInstance().debug("内存Index命中 " + tops.scoreDocs.length);
                     return true;
                 }
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 Log4j.getInstance().warn("内存Index搜索错误" + ex.getMessage());
             }
         }
@@ -124,8 +122,7 @@ public class Index {
                     Log4j.getInstance().debug("文件Index命中 " + tops.scoreDocs.length);
                     return true;
                 }
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 Log4j.getInstance().warn("文件Index搜索错误" + ex.getMessage());
             }
         }
@@ -143,17 +140,15 @@ public class Index {
             ramWriter.addDocument(doc);
             ramWriter.commit();
             ramIs = new IndexSearcher(ramDir, true);
-        }
-        catch (CorruptIndexException ex) {
+        } catch (CorruptIndexException ex) {
             Log4j.getInstance().error(ex.getMessage());
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             Log4j.getInstance().error(ex.getMessage());
         }
     }
 
     /**
-     * 合并mem和fs
+     * 合并mem和fs的索引
      *
      */
     public void applyToDisk() {
@@ -164,11 +159,9 @@ public class Index {
             // 优化索引
             fsWriter.optimize();
             fsWriter.close();
-        }
-        catch (CorruptIndexException ex) {
+        } catch (CorruptIndexException ex) {
             Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -215,11 +208,9 @@ public class Index {
             for (int i = offset; i < max; i++) {
                 docs.add(fsIs.doc(scoreDoc[i].doc));
             }
-        }
-        catch (ParseException ex) {
+        } catch (ParseException ex) {
             Log4j.getInstance().error("[INDEX]" + ex.getMessage());
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             Log4j.getInstance().error("[INDEX]" + ex.getMessage());
         }
 

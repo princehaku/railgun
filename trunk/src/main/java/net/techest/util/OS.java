@@ -22,7 +22,7 @@ package net.techest.util;
  * @author princehaku
  */
 public class OS {
-    
+
     public static final boolean isLinux;
 
     static {
@@ -32,5 +32,4 @@ public class OS {
             isLinux = true;
         }
     }
-    
 }

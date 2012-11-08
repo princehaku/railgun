@@ -16,8 +16,6 @@
  *  Created on : Apr 6, 2012 , 4:54:46 PM
  *  Author     : princehaku
  */
-
-
 package net.techest.railgun.action;
 
 /**
@@ -29,5 +27,4 @@ public class ActionException extends Exception {
     public ActionException(String messge) {
         super(messge);
     }
-
 }

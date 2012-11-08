@@ -12,28 +12,44 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  Created on : 2010-12-9, 15:58:46
+ *  Created on : 2010-11-17, 8:21:36
  *  Author     : princehaku
  */
+
 package net.techest.util;
 
-/**
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+/**日志类
  *
  * @author princehaku
  */
-public class MD5 {
+public class Log4j {
 
-    public static String getMD5(byte[] source) {
-        String s = null;
-        try {
-            java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
-            md.update(source);
-            // MD5 的计算结果是一个 128 位的长整数，
-            byte tmp[] = md.digest();
-            s = StringTools.bin2hex(tmp);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return s;
+    private static class InstanceHolder {
+
+        final static Log4j instance = new Log4j();
     }
+    /**得到单例
+     * 
+     * @return 
+     */
+    public static Logger getInstance() {
+        return InstanceHolder.instance.getLogger();
+    }
+
+    private Logger logger;
+
+    public Logger getLogger(){
+        
+        if(logger==null){
+            
+            BasicConfigurator.configure();
+        }
+
+        logger = Logger.getLogger("");
+        
+        return logger;
+    }
+    
 }

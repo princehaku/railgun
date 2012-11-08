@@ -15,12 +15,13 @@
  *  Created on : 2010-11-17, 8:21:36
  *  Author     : princehaku
  */
-
 package net.techest.railgun.util;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
-/**日志类
+
+/**
+ * 日志类
  *
  * @author princehaku
  */
@@ -30,26 +31,26 @@ public class Log4j {
 
         final static Log4j instance = new Log4j();
     }
-    /**得到单例
-     * 
-     * @return 
+
+    /**
+     * 得到单例
+     *
+     * @return
      */
     public static Logger getInstance() {
         return InstanceHolder.instance.getLogger();
     }
-
     private Logger logger;
 
-    public Logger getLogger(){
-        
-        if(logger==null){
-            
+    public Logger getLogger() {
+
+        if (logger == null) {
+
             BasicConfigurator.configure();
         }
 
         logger = Logger.getLogger("");
-        
+
         return logger;
     }
-    
 }

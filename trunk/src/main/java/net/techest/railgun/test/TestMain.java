@@ -28,6 +28,5 @@ import net.techest.railgun.system.AddShellException;
 public class TestMain {
 
     public static void main(String[] argvs) throws AddShellException {
-        
     }
 }

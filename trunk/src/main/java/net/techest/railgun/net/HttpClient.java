@@ -42,6 +42,7 @@ import net.techest.util.StringTools;
 public class HttpClient implements Client {
 
     public enum REQ_TYPE {
+
         POST, GET
     };
     private HttpURLConnection httpConn = null;
@@ -83,20 +84,22 @@ public class HttpClient implements Client {
         try {
             turl = new URL(url);
             Log4j.getInstance().debug("URL SET :" + url);
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             turl = null;
             Log4j.getInstance().error("错误的URL格式" + e.getMessage());
             return;
         }
     }
 
+    /**
+     *
+     * @param url
+     */
     public HttpClient(String url) {
         try {
             turl = new URL(url);
             Log4j.getInstance().debug("URL SET :" + url);
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             Log4j.getInstance().error("错误的URL格式" + e.getMessage());
         }
     }
@@ -162,6 +165,11 @@ public class HttpClient implements Client {
         return postString;
     }
 
+    /**
+     * 设置post串
+     *
+     * @param postString
+     */
     public void setPostString(String postString) {
         this.setRequestType(REQ_TYPE.POST);
         this.postString = postString;
@@ -241,7 +249,7 @@ public class HttpClient implements Client {
                     "utf8,gbk,GB2312;q=0.7,*;q=0.7");
             // 发送cookie
             String cookieString = cookies.toString();
-            if (!( cookieString.equals("") )) {
+            if (!(cookieString.equals(""))) {
                 httpConn.setRequestProperty("Cookie", cookieString);
             }
             httpConn.setRequestProperty("Keep-Alive", "off");
@@ -303,7 +311,7 @@ public class HttpClient implements Client {
                 uurl = new GZIPInputStream(uurl);
             }
             int length;
-            while (( length = uurl.read(bufferCache) ) > 0) {
+            while ((length = uurl.read(bufferCache)) > 0) {
                 content.write(bufferCache, 0, length);
             }
 
@@ -331,8 +339,7 @@ public class HttpClient implements Client {
                 charset = "utf8";
             }
             Log4j.getInstance().debug("Page Encode : " + charset);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (httpConn != null) {
                 httpConn.disconnect();
             }
@@ -353,13 +360,12 @@ public class HttpClient implements Client {
     @Override
     public Object clone() {
         try {
-            HttpClient c= (HttpClient) super.clone();
-            c.setCookie((Cookies)this.cookies.clone());
+            HttpClient c = (HttpClient) super.clone();
+            c.setCookie((Cookies) this.cookies.clone());
             c.postParams = (QuestParams) this.postParams.clone();
             c.requestParam = (QuestParams) this.requestParam.clone();
             return c;
-        }
-        catch (CloneNotSupportedException e) {
+        } catch (CloneNotSupportedException e) {
             System.out.println("Cloning not allowed.");
             return this;
         }

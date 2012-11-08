@@ -28,16 +28,16 @@ public class RailGunThread extends Thread {
 
     RailGun railgun;
     RailGunFinishHandler handler;
-    
-    /**是否是对应某railgun的线程
-     * 
+
+    /**
+     * 是否是对应某railgun的线程
+     *
      * @param railgun
-     * @return 
+     * @return
      */
     public boolean isForYou(RailGun railgun) {
         return this.railgun.equals(railgun);
     }
-    
 
     public RailGunThread(RailGun railgun, RailGunFinishHandler handler) {
         this.railgun = railgun;
@@ -51,8 +51,7 @@ public class RailGunThread extends Thread {
             if (this.handler != null) {
                 this.handler.onComplete(this.railgun);
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             if (this.handler != null) {
                 this.handler.onError(this.railgun, ex);
             }

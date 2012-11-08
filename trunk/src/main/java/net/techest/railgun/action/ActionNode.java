@@ -16,8 +16,6 @@
  *  Created on : Mar 22, 2012 , 9:47:55 AM
  *  Author     : princehaku
  */
-
-
 package net.techest.railgun.action;
 
 import net.techest.railgun.system.Shell;
@@ -28,7 +26,7 @@ import org.dom4j.Element;
  * @author baizhongwei.pt
  */
 public abstract class ActionNode {
-    
+
     public abstract Shell execute(Element node, Shell shell) throws Exception;
 
     protected boolean canPattern(Element element) {

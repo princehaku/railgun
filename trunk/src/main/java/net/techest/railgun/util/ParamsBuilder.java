@@ -22,20 +22,21 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 /**
- * 参数类 方便把参数组合成字符串
- * 不会经过urlencode
- * 
+ * 参数类 方便把参数组合成字符串 不会经过urlencode
+ *
  * @author princehaku
  *
  */
 public class ParamsBuilder extends HashMap<String, String> {
-    /**组装如
-     * key{seg}value{glue}key{seg}...
+
+    /**
+     * 组装如 key{seg}value{glue}key{seg}...
+     *
      * @param seg
      * @param glue
-     * @return 
+     * @return
      */
-    public java.lang.String getString(String seg,String glue) {
+    public java.lang.String getString(String seg, String glue) {
         Iterator<Entry<String, String>> ir = this.entrySet().iterator();
         StringBuilder sb = new StringBuilder();
         while (ir.hasNext()) {

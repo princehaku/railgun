@@ -38,7 +38,7 @@ public class DBHandler implements APIHandlerInterface {
             responseJson.put("errmsg", "Method Not Support");
             return;
         }
-        
+
         DBConnection dbc = null;
         try {
             dbc = new DBConnection(requestParams.get("db"));
@@ -57,14 +57,10 @@ public class DBHandler implements APIHandlerInterface {
             responseJson.put("content", response);
 
             dbc.getConnection().close();
-        }
-        catch (DBException ex) {
+        } catch (DBException ex) {
             responseJson.put("errmsg", ex.getMessage());
-            return;
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             responseJson.put("errmsg", ex.getMessage());
-            return;
         }
     }
 }
