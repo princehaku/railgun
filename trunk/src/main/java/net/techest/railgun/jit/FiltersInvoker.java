@@ -13,6 +13,7 @@
 package net.techest.railgun.jit;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -85,10 +86,12 @@ public class FiltersInvoker {
         FiltersInvoker.fileHashes.put(file.getName(), newHash);
         Log4j.getInstance().info("Apply Handler " + className);
         try {
-            filter.process(shell);
+            Method method = filter.getClass().getDeclaredMethod(methodName, Shell.class);
+            method.setAccessible(true);//设置安全检查，访问私有成员方法必须
+            method.invoke(filter, shell);
         } catch (Exception ex) {
-            Log4j.getInstance().error("自定义类执行失败" + ex.getMessage());
-            throw new JitException(className + "自定义类执行失败" + ex.getMessage());
+            Log4j.getInstance().error("自定义类执行" + methodName + "失败" + ex.getMessage());
+            throw new JitException(className + "自定义类执行" + methodName + "失败" + ex.getMessage());
         }
     }
 }

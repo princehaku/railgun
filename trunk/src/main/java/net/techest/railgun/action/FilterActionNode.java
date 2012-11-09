@@ -34,8 +34,13 @@ public class FilterActionNode extends ActionNode {
         if (node.getData() == null) {
             throw new ActionException("请填入Filter类名，然后放置在filters文件夹内");
         }
-        String className = node.getTextTrim();
-        new FiltersInvoker().invoke(shell, className, className);
+        String[] classP = node.getTextTrim().split("/");
+        String className = classP[0];
+        String methodName = "process";
+        if (classP.length == 2) {
+            methodName = classP[1];
+        }
+        new FiltersInvoker().invoke(shell, className, methodName);
         return shell;
     }
 }
