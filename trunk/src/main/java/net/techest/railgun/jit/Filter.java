@@ -16,14 +16,16 @@
  *  Created on : Mar 23, 2012 , 8:12:14 PM
  *  Author     : princehaku
  */
-package net.techest.railgun.system;
+package net.techest.railgun.jit;
+
+import net.techest.railgun.system.Shell;
 
 /**
  * 处理器 可以对资源节点进行操作
  *
  * @author baizhongwei.pt
  */
-public interface Handler {
+public interface Filter {
 
-    public void process(Resource resource);
+    public void process(Shell shell);
 }

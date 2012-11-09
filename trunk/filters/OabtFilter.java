@@ -1,14 +1,16 @@
+
 import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.techest.railgun.system.Handler;
+import net.techest.railgun.jit.Filter;
 import net.techest.railgun.system.Resource;
+import net.techest.railgun.system.Shell;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-public class BtmeeHandler implements Handler {
+public class OabtFilter implements Filter {
 
-    @Override
     public void process(Resource res) {
         Document doc = Jsoup.parse("<body><table>" + res.getText() + "</table></body>");
         // 标题
@@ -29,15 +31,22 @@ public class BtmeeHandler implements Handler {
         res.putParam("size", size);
         // 页面url
         String surl = doc.select(".magTitle a").attr("href");
-        res.putParam("surl","http://btmee.com" + surl);
-        
+        res.putParam("surl", "http://oabt.org/" + surl);
+
         // 全文索引
         res.putParam("index", title + downloadLink);
         try {
             res.setBytes((cat + title + downloadLink).getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(OabtFilter.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(BtmeeHandler.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
+    @Override
+    public void process(Shell shell) {
+        for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
+            Resource res = (Resource) i.next();
+            this.process(res);
         }
     }
 }

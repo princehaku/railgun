@@ -11,7 +11,7 @@
         <parse method="dom">
             <rule>.toplist tbody</rule>
         </parse>
-        <handler>OabtHandler</handler>
+        <filter>OabtFilter</filter>
         <dbstore source="db1">
             <mapping form="origin" consist="hash">
                 <enty>

@@ -11,7 +11,7 @@
         <parse method="dom">
             <rule>html body div.center div.content ul.list li.post</rule>
         </parse>
-        <handler>SomaHandler</handler>
+        <filter>SomaFilter</filter>
         <dbstore source="db1">
             <mapping form="origin" consist="hash">
                 <enty>
