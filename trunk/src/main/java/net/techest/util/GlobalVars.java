@@ -16,7 +16,7 @@
  *  Created on : May 16, 2012 , 10:46:54 AM
  *  Author     : princehaku
  */
-package net.techest.railgun.system;
+package net.techest.util;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;
