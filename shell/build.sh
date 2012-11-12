@@ -1,6 +1,6 @@
 #!/bin/bash
 rm railgun -rf
-hg clone http://hg.code.sf.net/p/railgun/code railgun
+git clone git://github.com/princehaku/railgun.git railgun
 cd railgun/trunk
 sh -c "mvn install:install-file -DgroupId=wltea -DartifactId=IKAnalyzer -Dversion=2012 -Dpackaging=jar -Dfile=lib/IKAnalyzer-2012.jar"
 sh -c "mvn install"
