@@ -15,7 +15,7 @@
  *  Created on : May 1, 2012, 3:14:34 PM
  *  Author     : princehaku
  */
-package net.techest.railgun.rest;
+package net.techest.vsearch.rest;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

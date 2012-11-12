@@ -15,7 +15,7 @@
  *  Created on : May 1, 2012, 3:24:23 PM
  *  Author     : princehaku
  */
-package net.techest.railgun.rest;
+package net.techest.vsearch.rest;
 
 import net.sf.json.JSONObject;
 import net.techest.railgun.net.QuestParams;

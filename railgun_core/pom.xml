@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.techest</groupId>
     <artifactId>railgun</artifactId>
-    <version>0.2</version>
+    <version>0.3</version>
     <packaging>jar</packaging>
     <name>railgun</name>
     <url>http://maven.apache.org</url>

@@ -1,18 +1,14 @@
 [SITES]
-XML_DIR = sites
+XML_DIR = src/main/java/net/techest/vsearch/sites/
+
+[Filters]
+FILTERS_DIR = src/main/java/net/techest/vsearch/filters/
 
 [INDEX]
-INDEX_DIR = indexes
-
-[FILTERS]
-FILTERS_DIR = filters
+INDEX_DIR = /home/admin/railgun/indexes
 
 [DB]
 DB1_DRIVER = com.mysql.jdbc.Driver
 DB1_URL = jdbc:mysql://localhost:3306/railgun?autoReconnect=true&characterEncoding=utf8
 DB1_PASSWORD = hellorailgun
 DB1_USERNAME = railgun
-
-[REST]
-REST_ENABLE = true
-REST_PORT = 9090

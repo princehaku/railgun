@@ -16,7 +16,7 @@
  *  Created on : Apr 26, 2012 , 9:02:44 AM
  *  Author     : princehaku
  */
-package net.techest.railgun.rest;
+package net.techest.vsearch.rest;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;

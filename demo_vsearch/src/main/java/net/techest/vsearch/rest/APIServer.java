@@ -16,7 +16,7 @@
  *  Created on : Apr 23, 2012 , 9:10:16 AM
  *  Author     : princehaku
  */
-package net.techest.railgun.rest;
+package net.techest.vsearch.rest;
 
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
