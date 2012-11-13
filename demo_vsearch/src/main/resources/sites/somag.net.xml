@@ -24,7 +24,7 @@
                 </enty>
                 <enty>
                     <name>source</name>
-                    <content>$result</content>
+                    <content>${result}</content>
                 </enty>
                 <enty>
                     <name>fetchtime</name>

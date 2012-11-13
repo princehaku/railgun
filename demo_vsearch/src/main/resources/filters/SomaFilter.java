@@ -43,12 +43,7 @@ public class SomaFilter implements Filter {
         byte[] hashBytes = (cat + title + downloadLink).getBytes();
         String hash = MD5.getMD5(hashBytes) + SHA.getSHA1(hashBytes);
         res.putParam("hash", hash);
-        try {
-            res.setBytes((cat + title + downloadLink).getBytes("UTF-8"));
-        }
-        catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(Filter.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        res.putParam("result", cat + title + downloadLink);
     }
     
     @Override
