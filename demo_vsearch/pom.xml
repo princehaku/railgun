@@ -4,7 +4,7 @@
 
   <groupId>net.techest</groupId>
   <artifactId>vsearch</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.3</version>
   <packaging>jar</packaging>
 
   <name>vsearch</name>
