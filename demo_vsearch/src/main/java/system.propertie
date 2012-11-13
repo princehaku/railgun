@@ -1,8 +1,8 @@
 [SITES]
-XML_DIR = src/main/java/net/techest/vsearch/sites/
+XML_DIR = src/main/resources/sites/
 
 [Filters]
-FILTERS_DIR = src/main/java/net/techest/vsearch/filters/
+FILTERS_DIR = src/main/resources/filters/
 
 [INDEX]
 INDEX_DIR = /home/admin/railgun/indexes

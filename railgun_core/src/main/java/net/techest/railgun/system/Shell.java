@@ -18,6 +18,7 @@
  */
 package net.techest.railgun.system;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import net.techest.railgun.net.Client;
 
@@ -39,9 +40,47 @@ public class Shell implements Cloneable {
     Client client;
     // 资源类
     LinkedList<Resource> resources;
-    // 待重join操作的原始shell
-    private Shell joinShell = null;
+    // 参数组,用于参数替换
+    private HashMap<String, String> params = new HashMap<String, String>();
 
+    /**
+     * 得到设置的参数
+     *
+     * @param key
+     * @return
+     */
+    public String getParam(String key) {
+        String value = this.params.get(key);
+        if (value == null) {
+            value = "";
+        }
+        return value;
+    }
+
+    /**
+     * 得到设置的参数组
+     *
+     * @param key
+     * @return
+     */
+    public HashMap<String, String> getParams() {
+        return this.params;
+    }
+
+    /**
+     * 设置参数 之后xml中的值可以通过${key}变量进行获取
+     *
+     * @param key
+     * @return
+     */
+    public void putParam(String key, String value) {
+        if (value == null) {
+            this.params.put(key.trim(), value);
+        } else {
+            this.params.put(key.trim(), value.trim());
+        }
+    }
+    
     public String getBaseUrl() {
         return baseUrl;
     }
@@ -110,19 +149,10 @@ public class Shell implements Cloneable {
             return this;
         }
     }
-
-    public void setJoinShell(Shell shell) {
-        this.joinShell = shell;
-    }
-
-    public Shell getJoinShell() {
-        return this.joinShell;
-    }
-
+    
     public void clear() {
         this.name = null;
         this.baseUrl = null;
-        this.joinShell = null;
         this.reloadTime = -1;
         this.description = null;
         this.maxReloadTime = -1;
@@ -133,7 +163,6 @@ public class Shell implements Cloneable {
     public void clone(Shell s) {
         this.name = s.name;
         this.baseUrl = s.baseUrl;
-        this.joinShell = s.joinShell;
         this.reloadTime = s.reloadTime;
         this.description = s.description;
         this.maxReloadTime = s.maxReloadTime;

@@ -1,15 +1,13 @@
-/**  
+/**
  * Copyright 2012 Etao Inc.
  *
- *  Project Name : net.techest_railgun_jar_0.2
- *  Created on : Nov 9, 2012, 2:43:27 PM
- *  Author     : haku
+ * Project Name : net.techest_railgun_jar_0.2 Created on : Nov 9, 2012, 2:43:27
+ * PM Author : haku
  */
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package net.techest.railgun.jit;
 
 import java.io.File;
@@ -36,8 +34,8 @@ public class FiltersInvoker {
      *
      */
     private static HashMap<String, String> fileHashes = new HashMap();
-    
-    public void invoke(Shell shell,String className, String methodName) throws JitException {
+
+    public void invoke(Shell shell, String className, String methodName) throws JitException {
         String scriptDirString = Configure.getSystemConfig().getString("FILTERS_DIR", "filters");
         File scriptDir = new File(scriptDirString);
         scriptDir.mkdirs();
@@ -73,11 +71,11 @@ public class FiltersInvoker {
                 if (javac == null) {
                     throw new JitException("javac无法获取");
                 }
-                int status = javac.run(null, null, null, "-d", scriptDir.getAbsolutePath(), filePath);
+                int status = javac.run(null, null, null, "-s", scriptDir.getAbsolutePath(), filePath);
                 if (status != 0) {
                     throw new JitException("编译script失败" + status);
                 }
-                filter = (Filter) ((classLoader.loadClass(className)).newInstance());
+                filter = (Filter) ((Class.forName(className, true, classLoader)).newInstance());
                 loaded = true;
             }
         } catch (Exception ex) {

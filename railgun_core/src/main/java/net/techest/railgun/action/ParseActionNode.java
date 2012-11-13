@@ -18,6 +18,7 @@
  */
 package net.techest.railgun.action;
 
+import net.techest.railgun.system.StringResource;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
@@ -27,9 +28,9 @@ import java.util.regex.Pattern;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
 import net.techest.railgun.util.Log4j;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.dom4j.Element;
+import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 
 /**
@@ -62,7 +63,8 @@ class ParseActionNode extends ActionNode {
         Log4j.getInstance().info("当前资源节点内有" + shell.getResources().size());
         LinkedList<Resource> resnew = new LinkedList<Resource>();
         for (Iterator i = shell.getResources().iterator(); i.hasNext();) {
-            Resource res = (Resource) i.next();
+            Resource resw = (Resource) i.next();
+            StringResource res = new StringResource(resw);
             if (node.attributeValue("method").equals("dom")) {
                 try {
                     // dom搜索 使用jsoup
@@ -79,7 +81,7 @@ class ParseActionNode extends ActionNode {
                     Elements els = doc.select(rule);
                     // 如果有set标记 存放到set中 不替换res
                     if (set != null) {
-                        Resource r = (Resource) res.clone();
+                        Resource r = (Resource) resw.clone();
                         if (els.size() > 0) {
                             org.jsoup.nodes.Element e = els.get(0);
                             String elementValue = e.outerHtml();
@@ -102,9 +104,9 @@ class ParseActionNode extends ActionNode {
                     //循环els存放为新的r节点
                     for (Iterator ri = els.iterator(); ri.hasNext();) {
                         org.jsoup.nodes.Element el = (org.jsoup.nodes.Element) ri.next();
-                        Resource r = (Resource) res.clone();
-                        byte[] valueBytes = el.outerHtml().getBytes(res.getCharset());
-                        r.setBytes(valueBytes);
+                        Resource r = (Resource) resw.clone();
+                        byte[] data = el.outerHtml().getBytes(res.getCharset());
+                        r.putParam("bytedata", data);
                         resnew.add(r);
                     }
                 } catch (IOException ex) {
@@ -117,7 +119,7 @@ class ParseActionNode extends ActionNode {
                 Matcher m = ptn.matcher(res.toString());
                 // 如果有set标记 存放到set中 不替换res
                 if (set != null) {
-                    Resource r = (Resource) res.clone();
+                    Resource r = (Resource) resw.clone();
                     if (m.find()) {
                         String e = m.group(0);
                         r.putParam(set, e);
@@ -129,8 +131,8 @@ class ParseActionNode extends ActionNode {
                 }
                 if (m.find()) {
                     try {
-                        Resource r = (Resource) res.clone();
-                        r.setBytes(m.group(0).getBytes(res.getCharset()));
+                        Resource r = (Resource) resw.clone();
+                        r.putParam("bytedata", m.group(0).getBytes(res.getCharset()));
                         r.setRegxpResult(m);
                         resnew.add(r);
                     } catch (UnsupportedEncodingException ex) {

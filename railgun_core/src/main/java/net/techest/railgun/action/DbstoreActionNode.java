@@ -88,7 +88,7 @@ public class DbstoreActionNode extends ActionNode {
                         String keys[] = {consist};
                         String values[] = {colsValueConverted.get(pos)};
                         if (connection.existed(formName, keys, values)) {
-                            Log4j.getInstance().debug("DB : Consist已存在 跳过存入");
+                            Log4j.getInstance().debug(shell.getName() + " DB : Consist已存在 " + " [VAL]:" + values[0]);
                             continue;
                         }
                     } catch (DBException ex) {
@@ -100,14 +100,14 @@ public class DbstoreActionNode extends ActionNode {
                     int id = connection.insert(formName, colNames, colsValueConverted);
                     if (id > 0) {
                         res.putParam("id", +id + "");
-                        Log4j.getInstance().debug("[ID] " + id + " 存入表 " + formName + " 成功");
+                        Log4j.getInstance().debug(shell.getName() + "[ID] " + id + " 存入表 " + formName + " 成功");
                     }
                 } catch (DBException ex) {
                     Log4j.getInstance().error(ex.getMessage());
                 }
 
             }
-            Log4j.getInstance().info("DB " + formName + " 存入完成");
+            Log4j.getInstance().info(shell.getName() + "DB " + formName + " 存入完成");
             mapping.detach();
         }
 

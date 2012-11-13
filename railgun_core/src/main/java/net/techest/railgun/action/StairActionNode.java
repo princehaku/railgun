@@ -38,10 +38,6 @@ public class StairActionNode extends ActionNode {
         if (node.attribute("fork") != null && node.attribute("fork").getData().toString().equals("true")) {
             Log4j.getInstance().info("Shell Cloned");
             Shell newshell = (Shell) shell.clone();
-            if (node.attribute("join") != null && node.attribute("join").getData().toString().equals("true")) {
-                Log4j.getInstance().info("Join Shell Setted");
-                newshell.setJoinShell(shell);
-            }
             shell = newshell;
         }
         // 是否进行资源清理

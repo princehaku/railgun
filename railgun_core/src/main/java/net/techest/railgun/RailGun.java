@@ -78,24 +78,6 @@ public class RailGun {
             // 处理子节点 递归
             applyAction(childe, shell);
         }
-        // 如果shell需要join 进行资源join操作
-        if (shell.getJoinShell() != null) {
-            Log4j.getInstance().info("fork节点合并");
-            Shell old = shell.getJoinShell();
-            if (old.getResources().size() != shell.getResources().size()) {
-                Log4j.getInstance().warn("join无法进行，节点资源数量不一致");
-            }
-            LinkedList<Resource> newReses = shell.getResources();
-            for (int j = 0, size = newReses.size(); j < size; j++) {
-                Resource newres = newReses.get(j);
-                Resource oldres = old.getResources().get(j);
-                HashMap<String, String> oldParams = oldres.getParams();
-                for (String key : oldParams.keySet()) {
-                    newres.putParam(key, oldres.getParam(key));
-                }
-            }
-            shell.setJoinShell(null);
-        }
     }
 
     public void setHandler(RailGunFinishHandler handler) {

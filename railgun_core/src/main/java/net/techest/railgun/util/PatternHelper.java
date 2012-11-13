@@ -25,8 +25,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
-import net.techest.util.MD5;
-import net.techest.util.SHA;
 
 /**
  * 模式串处理 将一个带有特殊标记的字符串处理为系统标准字符串 比如DATE转换为2012-03-02这样的 支持范围定义
@@ -57,8 +55,9 @@ public class PatternHelper {
     }
 
     /**
-     * 根据既有规则进行字符串转换 注意得到的结果是个数组,哪怕只有一个值返回 支持的字段 $result 当前res的内容 $date yyyy-MM-dd $time HH:mm:ss $[number,number] 范围数字
-     * $hash 资源hash值 ${key} 预存的资源 上一步正则返回值${group_id}
+     * 根据既有规则进行字符串转换 注意得到的结果是个数组,哪怕只有一个值返回 支持的字段 $result 当前res的内容 $date
+     * yyyy-MM-dd $time HH:mm:ss $[number,number] 范围数字 $hash 资源hash值 ${key}
+     * 预存的资源 上一步正则返回值${group_id}
      *
      * @param input
      * @param m
@@ -70,14 +69,11 @@ public class PatternHelper {
             Matcher m = p.matcher(input);
             while (m.find()) {
                 String key = m.group(1);
-                input = input.replaceFirst("\\$\\{" + key + "\\}", res.getParam(key).replaceAll("\\$", "\\\\\\$"));
+                input = input.replaceFirst("\\$\\{" + key + "\\}", ((String) res.getParam(key)).replaceAll("\\$", "\\\\\\$"));
                 m = p.matcher(input);
             }
-            input = input.replaceAll("\\$result", res.toString().replaceAll("\\$", "\\\\\\$"));
-            input = input.replaceAll("\\$hash", MD5.getMD5(res.getBytes()) + SHA.getSHA1(res.getBytes()));
             input = convertBase(input);
         } catch (Exception ex) {
-            ex.printStackTrace();
             Log4j.getInstance().warn("转换失败" + ex.getMessage());
         }
         ArrayList<String> strings = new ArrayList();

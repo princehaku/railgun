@@ -46,7 +46,7 @@ public class FilestoreActionNode extends ActionNode {
             Resource res = (Resource) i.next();
             FileOutputStream fw = null;
             String savePath = node.element("path").getData().toString();
-            byte[] data = res.getBytes();
+            byte[] data = (byte[]) res.getParam("bytedata");
             // 如果数据节点存在，替换数据节点
             if (node.element("data") != null) {
                 ArrayList<String> content = PatternHelper.convertAll(node.element("data").getData().toString(), res, shell);

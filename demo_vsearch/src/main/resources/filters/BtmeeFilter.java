@@ -1,5 +1,4 @@
 
-
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -7,12 +6,16 @@ import java.util.logging.Logger;
 import net.techest.railgun.jit.Filter;
 import net.techest.railgun.system.Resource;
 import net.techest.railgun.system.Shell;
+import net.techest.railgun.system.StringResource;
+import net.techest.util.MD5;
+import net.techest.util.SHA;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 public class BtmeeFilter implements Filter {
 
-    public void process(Resource res) {
+    public void process(Resource res1) {
+        StringResource res = new StringResource(res1);
         Document doc = Jsoup.parse("<body><table>" + res.getText() + "</table></body>");
         // 标题
         String title = doc.select(".name a").html();
@@ -36,6 +39,11 @@ public class BtmeeFilter implements Filter {
 
         // 全文索引
         res.putParam("index", title + downloadLink);
+        
+        // hash
+        byte[] hashBytes = (cat + title + downloadLink).getBytes();
+        String hash = MD5.getMD5(hashBytes) + SHA.getSHA1(hashBytes);
+        res.putParam("hash", hash);
         try {
             res.setBytes((cat + title + downloadLink).getBytes("UTF-8"));
         } catch (UnsupportedEncodingException ex) {

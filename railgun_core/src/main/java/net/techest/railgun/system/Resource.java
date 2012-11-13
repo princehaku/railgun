@@ -29,34 +29,8 @@ import net.techest.railgun.util.Log4j;
  * @author baizhongwei.pt
  */
 public class Resource implements Cloneable {
-    // 字节流
-
-    private byte[] bytes;
-    // 字节流的编码方式
-    private String charset = null;
     // 参数组,用于参数替换
-    private HashMap<String, String> params = new HashMap<String, String>();
-
-    public Resource(byte[] bytes, String charset) {
-        this.bytes = bytes;
-        this.charset = charset;
-    }
-
-    public byte[] getBytes() {
-        return bytes;
-    }
-
-    public void setBytes(byte[] bytes) {
-        this.bytes = bytes;
-    }
-
-    public String getCharset() {
-        return charset;
-    }
-
-    public void setCharset(String charset) {
-        this.charset = charset;
-    }
+    private HashMap<String, Object> params = new HashMap<String, Object>();
 
     /**
      * 得到设置的参数
@@ -64,11 +38,8 @@ public class Resource implements Cloneable {
      * @param key
      * @return
      */
-    public String getParam(String key) {
-        String value = this.params.get(key);
-        if (value == null) {
-            value = "";
-        }
+    public Object getParam(String key) {
+        Object value = this.params.get(key);
         return value;
     }
 
@@ -78,7 +49,7 @@ public class Resource implements Cloneable {
      * @param key
      * @return
      */
-    public HashMap<String, String> getParams() {
+    public HashMap<String, Object> getParams() {
         return this.params;
     }
 
@@ -88,12 +59,8 @@ public class Resource implements Cloneable {
      * @param key
      * @return
      */
-    public void putParam(String key, String value) {
-        if (value == null) {
-            this.params.put(key.trim(), value);
-        } else {
-            this.params.put(key.trim(), value.trim());
-        }
+    public void putParam(String key, Object value) {
+         this.params.put(key.trim(), value);
     }
 
     /**
@@ -112,39 +79,13 @@ public class Resource implements Cloneable {
     }
 
     public Resource() {
-        this.bytes = new byte[1];
-        this.charset = "utf8";
-    }
-
-    /**
-     * @see getText()
-     * @return
-     */
-    @Override
-    public String toString() {
-        return this.getText();
-    }
-
-    /**
-     * 根据资源设定的字符集转换成字符串
-     *
-     * @return
-     */
-    public String getText() {
-        String result = "";
-        try {
-            result = new String(this.bytes, this.charset);
-        } catch (UnsupportedEncodingException ex) {
-            Log4j.getInstance().error("Resource " + ex.getMessage());
-        }
-        return result;
     }
 
     @Override
     public Object clone() {
         try {
             Resource r = (Resource) super.clone();
-            r.params = (HashMap<String, String>) this.params.clone();
+            r.params = (HashMap<String, Object>) this.params.clone();
             return r;
         } catch (Exception e) {
             System.out.println("Cloning not allowed.");

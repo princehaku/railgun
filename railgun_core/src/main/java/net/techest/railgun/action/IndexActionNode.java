@@ -71,13 +71,13 @@ public class IndexActionNode extends ActionNode {
             if (consist != null) {
                 int pos = colsName.indexOf(consist);
                 if (pos == -1) {
-                    throw new ActionException("Consist字段名不存在");
+                    throw new ActionException(shell.getName() + " Consist字段名不存在" + " [KEY]:" + consist);
                 }
                 // 内容获取
                 ArrayList<String> valueConverted = PatternHelper.convertAll(colsValue.get(pos), res, shell);
                 String content = valueConverted.get(0);
                 if (index.existed(consist, content)) {
-                    Log4j.getInstance().debug("Index : Consist已存在 跳过存入");
+                    Log4j.getInstance().debug(shell.getName() + " Index : Consist已存在" + " [VAL]:" + content);
                     continue;
                 }
             }
@@ -108,11 +108,11 @@ public class IndexActionNode extends ActionNode {
                 doc.add(f);
             }
             index.addToRam(doc);
-            Log4j.getInstance().debug("Index 存入成功");
+            Log4j.getInstance().debug(shell.getName() + " Index 存入成功" + " [VAL]:" + doc);
         }
         index.applyToDisk();
         data.detach();
-        Log4j.getInstance().info("Index 存入完成");
+        Log4j.getInstance().info(shell.getName() + " Index 存入完成");
         return shell;
     }
 }

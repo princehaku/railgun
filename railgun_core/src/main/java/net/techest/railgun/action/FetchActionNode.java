@@ -162,8 +162,10 @@ public class FetchActionNode extends ActionNode {
                         cookie.fromString(hash.get("cookie-string"));
                         client.setCookie(cookie);
                     }
-                    byte[] result = client.exec();
-                    Resource newResNode = new Resource(result, client.getCharset());
+                    byte[] data = client.exec();
+                    Resource newResNode = new Resource();
+                    newResNode.putParam("bytedata", data);
+                    newResNode.putParam("charset", client.getCharset());
                     newResNode.putParam("url", newurl);
                     newResNode.putParam("cookie", client.getCookieString());
                     resnew.add(newResNode);

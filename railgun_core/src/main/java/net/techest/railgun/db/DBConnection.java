@@ -125,7 +125,7 @@ public class DBConnection {
             if (rs.next()) {
                 return rs.getInt(1);
             }
-            Log4j.getInstance().warn("表" + formName + "可能没有主键");
+            Log4j.getInstance().warn("表 " + formName + " 可能没有主键");
         } catch (Exception ex) {
             throw new DBException("DB存储失败 " + ex.getMessage());
         }

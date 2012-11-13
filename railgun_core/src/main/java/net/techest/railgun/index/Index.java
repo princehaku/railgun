@@ -108,7 +108,7 @@ public class Index {
             try {
                 TopDocs tops = ramIs.search(query, 1);
                 if (tops.scoreDocs.length > 0) {
-                    Log4j.getInstance().debug("内存Index命中 " + tops.scoreDocs.length);
+                    Log4j.getInstance().debug("内存Index命中 "+ tops.scoreDocs.length);
                     return true;
                 }
             } catch (IOException ex) {
