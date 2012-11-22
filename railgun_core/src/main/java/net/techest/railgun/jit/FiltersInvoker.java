@@ -34,8 +34,31 @@ public class FiltersInvoker {
      *
      */
     private static HashMap<String, String> fileHashes = new HashMap();
+    /**
+     * 脚本类
+     *
+     */
+    private static HashMap<String, Filter> filters = new HashMap();
 
     public void invoke(Shell shell, String className, String methodName) throws JitException {
+        Filter filter = this.getFilter(className);
+        filters.put(className, filter);
+        Log4j.getInstance().info("Apply Handler " + className);
+        try {
+            Method method = filter.getClass().getDeclaredMethod(methodName, Shell.class);
+            method.setAccessible(true);//设置安全检查，访问私有成员方法必须
+            method.invoke(filter, shell);
+        } catch (Exception ex) {
+            Log4j.getInstance().error("自定义类执行" + methodName + "失败" + ex.getMessage());
+            throw new JitException(className + "自定义类执行" + methodName + "失败" + ex.getMessage());
+        }
+    }
+
+    private Filter getFilter(String className) throws JitException {
+        if (filters.containsKey(className)) {
+            return filters.get(className);
+        }
+
         String scriptDirString = Configure.getSystemConfig().getString("FILTERS_DIR", "filters");
         File scriptDir = new File(scriptDirString);
         scriptDir.mkdirs();
@@ -82,14 +105,7 @@ public class FiltersInvoker {
             throw new JitException(className + "类动态加载失败" + ex.getMessage());
         }
         FiltersInvoker.fileHashes.put(file.getName(), newHash);
-        Log4j.getInstance().info("Apply Handler " + className);
-        try {
-            Method method = filter.getClass().getDeclaredMethod(methodName, Shell.class);
-            method.setAccessible(true);//设置安全检查，访问私有成员方法必须
-            method.invoke(filter, shell);
-        } catch (Exception ex) {
-            Log4j.getInstance().error("自定义类执行" + methodName + "失败" + ex.getMessage());
-            throw new JitException(className + "自定义类执行" + methodName + "失败" + ex.getMessage());
-        }
+        
+        return filter;
     }
 }

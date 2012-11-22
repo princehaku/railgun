@@ -80,7 +80,11 @@ public class PatternHelper {
         PatternHelper.convertDeep(input, strings);
         return strings;
     }
-
+    /**
+     * 一些基本转换
+     * @param input
+     * @return 
+     */
     public static String convertBase(String input) {
         input = input.replaceAll("\\$timestamp", System.currentTimeMillis() + "");
         SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");

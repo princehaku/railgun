@@ -79,34 +79,26 @@ class ParseActionNode extends ActionNode {
                     }
                     Document doc = Jsoup.parse(htmlContent);
                     Elements els = doc.select(rule);
-                    // 如果有set标记 存放到set中 不替换res
-                    if (set != null) {
-                        Resource r = (Resource) resw.clone();
-                        if (els.size() > 0) {
-                            org.jsoup.nodes.Element e = els.get(0);
-                            String elementValue = e.outerHtml();
-                            if (returnType.equals("text")) {
-                                elementValue = e.text();
-                            }
-                            if (returnType.equals("html")) {
-                                elementValue = e.html();
-                            }
-                            if (returnType.equals("outerhtml")) {
-                                elementValue = e.outerHtml();
-                            }
-                            r.putParam(set, elementValue);
-                        } else {
-                            r.putParam(set, null);
-                        }
-                        resnew.add(r);
-                        continue;
-                    }
-                    //循环els存放为新的r节点
+                    // 循环els存放为新的r节点
                     for (Iterator ri = els.iterator(); ri.hasNext();) {
                         org.jsoup.nodes.Element el = (org.jsoup.nodes.Element) ri.next();
-                        Resource r = (Resource) resw.clone();
+                        Resource r = new Resource();
                         byte[] data = el.outerHtml().getBytes(res.getCharset());
                         r.putParam("bytedata", data);
+                        // 如果有set标记 存放到参数中
+                        if (set != null) {
+                                String elementValue = el.outerHtml();
+                                if (returnType.equals("text")) {
+                                    elementValue = el.text();
+                                }
+                                if (returnType.equals("html")) {
+                                    elementValue = el.html();
+                                }
+                                if (returnType.equals("outerhtml")) {
+                                    elementValue = el.outerHtml();
+                                }
+                                r.putParam(set, elementValue);
+                        }
                         resnew.add(r);
                     }
                 } catch (IOException ex) {
@@ -117,23 +109,18 @@ class ParseActionNode extends ActionNode {
                 // 正则搜索
                 Pattern ptn = Pattern.compile(rule);
                 Matcher m = ptn.matcher(res.toString());
-                // 如果有set标记 存放到set中 不替换res
-                if (set != null) {
-                    Resource r = (Resource) resw.clone();
-                    if (m.find()) {
-                        String e = m.group(0);
-                        r.putParam(set, e);
-                    } else {
-                        r.putParam(set, null);
-                    }
-                    resnew.add(r);
-                    continue;
-                }
                 if (m.find()) {
                     try {
-                        Resource r = (Resource) resw.clone();
+                        Resource r = new Resource();
                         r.putParam("bytedata", m.group(0).getBytes(res.getCharset()));
                         r.setRegxpResult(m);
+                        // 如果有set标记 存放到set中
+                        if (set != null) {
+                            if (m.find()) {
+                                String e = m.group(0);
+                                r.putParam(set, e);
+                            }
+                        }
                         resnew.add(r);
                     } catch (UnsupportedEncodingException ex) {
                         Log4j.getInstance().error("不支持的编码 " + ex.getMessage() + res.getCharset());
