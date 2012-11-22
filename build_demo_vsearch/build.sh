@@ -16,8 +16,8 @@ echo "build railgun core done"
 echo "+++++++++++++++++++++++"
 cd ../demo_vsearch/
 sh -c "mvn clean install"
-mkdir -p ${basepath}/dist/src/main/resources/
-cp src/main/resources ${basepath}/dist/src/main/resources/ -R
+mkdir -p ${basepath}/dist/src/main/
+cp src/main/resources ${basepath}/dist/src/main/resources -R
 rm $basepath/dist/src/main/resources/filters/*.class
 cp src/main/java/system.propertie $basepath/dist/
 cp target/*.jar $basepath/dist/
