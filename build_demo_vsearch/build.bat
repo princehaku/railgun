@@ -3,7 +3,7 @@ echo "+++++++++++++++++++++++"
 echo "   building starting   "
 echo "makesure mvn executable"
 echo "+++++++++++++++++++++++"
-rmdir /Q /S dist
+@rmdir /Q /S dist
 mkdir dist\lib\
 cd ../railgun_core/
 cmd /c "mvn install:install-file -DgroupId=wltea -DartifactId=IKAnalyzer -Dversion=2012 -Dpackaging=jar -Dfile=lib/IKAnalyzer-2012.jar"
