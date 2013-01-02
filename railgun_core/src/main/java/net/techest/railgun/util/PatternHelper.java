@@ -64,17 +64,19 @@ public class PatternHelper {
      * @return
      */
     public static ArrayList<String> convertAll(String input, Resource res, Shell shell) {
+        String key = "";
         try {
             Pattern p = Pattern.compile("\\$\\{(.*?)\\}");
             Matcher m = p.matcher(input);
             while (m.find()) {
-                String key = m.group(1);
+                key = m.group(1);
                 input = input.replaceFirst("\\$\\{" + key + "\\}", ((String) res.getParam(key)).replaceAll("\\$", "\\\\\\$"));
                 m = p.matcher(input);
             }
             input = convertBase(input);
         } catch (Exception ex) {
-            Log4j.getInstance().warn("转换失败" + ex.getMessage());
+            Log4j.getInstance().warn(key +"转换失败，请检测配置文件" +  ex.getMessage());
+            ex.printStackTrace();
         }
         ArrayList<String> strings = new ArrayList();
         PatternHelper.convertDeep(input, strings);
